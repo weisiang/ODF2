@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Data>
     <BufferData>
-        <cv_Slot1Type>0</cv_Slot1Type>
-        <cv_Slot2Type>0</cv_Slot2Type>
-        <cv_Slot3Type>0</cv_Slot3Type>
-        <cv_Slot4Type>1</cv_Slot4Type>
-        <cv_Slot5Type>1</cv_Slot5Type>
-        <cv_Slot6Type>1</cv_Slot6Type>
         <cv_Id>1</cv_Id>
         <cv_SlotCount>6</cv_SlotCount>
-        <cv_FilePath>D:\TODO\ODF\bat\\..\config\LGC\Work\BufferData1</cv_FilePath>
+        <cv_FilePath>F:\work\Seeya\ODF2\ODF_2_code\bat\\..\config\LGC\Work\BufferData1</cv_FilePath>
         <cv_GlassDataList>
             <GlassData>
                 <cv_EnterBufferTime/>

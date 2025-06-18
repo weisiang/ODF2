@@ -1,11 +1,17 @@
 <TimeChart>
-	<TimerChart1 EqBitStart="0x8200" EqWordStart="0x3A00" RbBitStart="0x8000"  RbWordStart="0x3200"/>
-	<TimerChart2 EqBitStart="0x8400" EqWordStart="0x4200" RbBitStart="0x8020"  RbWordStart="0x3240"/>
-	<TimerChart3 EqBitStart="0x8600" EqWordStart="0x4A00" RbBitStart="0x8040"  RbWordStart="0x3280"/>
-	<TimerChart4 EqBitStart="0x8800" EqWordStart="0x5200" RbBitStart="0x8060"  RbWordStart="0x32C0"/>
-	<TimerChart5 EqBitStart="0x8820" EqWordStart="0x5240" RbBitStart="0x8080"  RbWordStart="0x3300"/>
-	<TimerChart6 EqBitStart="0x8A00" EqWordStart="0x5A00" RbBitStart="0x80A0"  RbWordStart="0x3340"/>
-	<TimerChart7 EqBitStart="0x8C00" EqWordStart="0x6200" RbBitStart="0x80C0"  RbWordStart="0x3380"/>
-	<TimerChart8 EqBitStart="0x8E00" EqWordStart="0x6A00" RbBitStart="0x80E0"  RbWordStart="0x33C0"/>
-	<TimerChart9 EqBitStart="0x9000" EqWordStart="0x7200" RbBitStart="0x8100"  RbWordStart="0x3400"/>
+	<TimerChart1 	EqBitStart="0x8280" EqWordStart="0x4A60" RbBitStart="0x8000"  RbWordStart="0x3E80"/>
+	<TimerChart2 	EqBitStart="0x8300" EqWordStart="0x53C0" RbBitStart="0x8020"  RbWordStart="0x3EC0"/>	
+	<TimerChart3 	EqBitStart="0x8380" EqWordStart="0x5D20" RbBitStart="0x8040"  RbWordStart="0x3F00"/>	
+	<TimerChart4 	EqBitStart="0x8400" EqWordStart="0x6680" RbBitStart="0x8060"  RbWordStart="0x3F40"/>
+	<TimerChart5 	EqBitStart="0x8480" EqWordStart="0x6FE0" RbBitStart="0x8080"  RbWordStart="0x3F80"/>
+	<TimerChart6 	EqBitStart="0x8500" EqWordStart="0x7940" RbBitStart="0x80A0"  RbWordStart="0x3FC0"/>
+	<TimerChart7 	EqBitStart="0x8580" EqWordStart="0x82A0" RbBitStart="0x80C0"  RbWordStart="0x4000"/>
+	<TimerChart8 	EqBitStart="0x8600" EqWordStart="0x8C00" RbBitStart="0x80E0"  RbWordStart="0x4040"/>
+	<TimerChart9 	EqBitStart="0x8680" EqWordStart="0x9560" RbBitStart="0x8100"  RbWordStart="0x4080"/>
+	<TimerChart10 	EqBitStart="0x8700" EqWordStart="0x9EC0" RbBitStart="0x8120"  RbWordStart="0x40C0"/>
+	<TimerChart11 	EqBitStart="0x8780" EqWordStart="0xA820" RbBitStart="0x8140"  RbWordStart="0x4100"/>
+	<TimerChart12 	EqBitStart="0x8800" EqWordStart="0xB180" RbBitStart="0x8160"  RbWordStart="0x4140"/>
+	<TimerChart13 	EqBitStart="0x8880" EqWordStart="0xBAE0" RbBitStart="0x8180"  RbWordStart="0x4180"/>
+	<TimerChart14 	EqBitStart="0x8900" EqWordStart="0xC440" RbBitStart="0x81A0"  RbWordStart="0x41C0"/>
+	<TimerChart15 	EqBitStart="0x8980" EqWordStart="0xCDA0" RbBitStart="0x81C0"  RbWordStart="0x4200"/>
 </TimeChart>

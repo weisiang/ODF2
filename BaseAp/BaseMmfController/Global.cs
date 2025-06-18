@@ -25,7 +25,7 @@ namespace BaseAp
     public class Global : GlobalBase
     {
         static public string ConfigPathname = string.Empty;
-        static public MmfEventCenter Controller = null;
+        public static BaseEventController Controller = null;
 
         static public KFileLog DebugLog;
 

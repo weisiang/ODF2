@@ -9,11 +9,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BaseAp</RootNamespace>
     <AssemblyName>BaseAp</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -21,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -30,10 +32,11 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="KgsCommonX64">
-      <HintPath>..\dll\NewKeyPro\KgsCommonX64.dll</HintPath>
+    <Reference Include="KgsCommon">
+      <HintPath>..\..\ODF2\dll\NewKeyPro\KgsCommon.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -53,8 +56,10 @@
     <Compile Include="BaseForm\BaseForm.Designer.cs">
       <DependentUpon>BaseForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="BaseMmfController\BaseMmfController.cs" />
+    <Compile Include="BaseMmfController\BaseEventController.cs" />
     <Compile Include="BaseMmfController\Global.cs" />
+    <Compile Include="moduleBase\cimBase.cs" />
+    <Compile Include="moduleBase\lgcBase.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="BaseForm\BaseForm.resx">
@@ -68,7 +73,9 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -83,10 +90,6 @@
     <ProjectReference Include="..\CommonData\CommonData.csproj">
       <Project>{395f747c-8d90-489c-b6fd-6f92908c4678}</Project>
       <Name>CommonData</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\KgsMmfEventCenterDll\KgsMmfEventCenterDll.csproj">
-      <Project>{07ede2fb-e26e-45ee-9115-e91bc3a86586}</Project>
-      <Name>KgsMmfEventCenterDll</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

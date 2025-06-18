@@ -10,7 +10,11 @@
                 <cv_GlassVasDegree>270</cv_GlassVasDegree>
                 <cv_WaferIJPDegree>90</cv_WaferIJPDegree>
                 <cv_WaferVASDegree>90</cv_WaferVASDegree>
+                <cv_WaferSealDegree>0</cv_WaferSealDegree>
+                <cv_WaferAoiDegree>0</cv_WaferAoiDegree>
                 <cv_VasNeedGlass>True</cv_VasNeedGlass>
+                <cv_waferSteps/>
+                <cv_GlassSteps/>
             </RecipeItem>
             <RecipeItem>
                 <cv_Id>5</cv_Id>
@@ -20,7 +24,11 @@
                 <cv_GlassVasDegree>360</cv_GlassVasDegree>
                 <cv_WaferIJPDegree>150</cv_WaferIJPDegree>
                 <cv_WaferVASDegree>0</cv_WaferVASDegree>
+                <cv_WaferSealDegree>0</cv_WaferSealDegree>
+                <cv_WaferAoiDegree>0</cv_WaferAoiDegree>
                 <cv_VasNeedGlass>False</cv_VasNeedGlass>
+                <cv_waferSteps/>
+                <cv_GlassSteps/>
             </RecipeItem>
             <RecipeItem>
                 <cv_Id>4</cv_Id>
@@ -30,7 +38,11 @@
                 <cv_GlassVasDegree>360</cv_GlassVasDegree>
                 <cv_WaferIJPDegree>150</cv_WaferIJPDegree>
                 <cv_WaferVASDegree>0</cv_WaferVASDegree>
+                <cv_WaferSealDegree>0</cv_WaferSealDegree>
+                <cv_WaferAoiDegree>0</cv_WaferAoiDegree>
                 <cv_VasNeedGlass>False</cv_VasNeedGlass>
+                <cv_waferSteps/>
+                <cv_GlassSteps/>
             </RecipeItem>
             <RecipeItem>
                 <cv_Id>3</cv_Id>
@@ -40,7 +52,11 @@
                 <cv_GlassVasDegree>360</cv_GlassVasDegree>
                 <cv_WaferIJPDegree>150</cv_WaferIJPDegree>
                 <cv_WaferVASDegree>0</cv_WaferVASDegree>
+                <cv_WaferSealDegree>0</cv_WaferSealDegree>
+                <cv_WaferAoiDegree>0</cv_WaferAoiDegree>
                 <cv_VasNeedGlass>False</cv_VasNeedGlass>
+                <cv_waferSteps/>
+                <cv_GlassSteps/>
             </RecipeItem>
             <RecipeItem>
                 <cv_Id>2</cv_Id>
@@ -50,7 +66,11 @@
                 <cv_GlassVasDegree>270</cv_GlassVasDegree>
                 <cv_WaferIJPDegree>180</cv_WaferIJPDegree>
                 <cv_WaferVASDegree>90</cv_WaferVASDegree>
+                <cv_WaferSealDegree>0</cv_WaferSealDegree>
+                <cv_WaferAoiDegree>0</cv_WaferAoiDegree>
                 <cv_VasNeedGlass>True</cv_VasNeedGlass>
+                <cv_waferSteps/>
+                <cv_GlassSteps/>
             </RecipeItem>
         </cv_RecipeList>
         <cv_CurRecipeId>1</cv_CurRecipeId>

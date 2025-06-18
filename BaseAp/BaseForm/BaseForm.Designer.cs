@@ -1,4 +1,5 @@
-﻿namespace BaseAp
+﻿
+namespace BaseAp
 {
     partial class BaseForm
     {
@@ -28,9 +29,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.SuspendLayout();
+            // 
+            // BaseForm2
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Text = "BaseForm";
+            this.ClientSize = new System.Drawing.Size(870, 491);
+            this.Name = "BaseForm2";
+            this.Text = "BaseForm2";
+            this.ResumeLayout(false);
+
         }
 
         #endregion

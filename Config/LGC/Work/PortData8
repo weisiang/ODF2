@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Data>
+    <PortData>
+        <cv_LotId/>
+        <cv_CurPPID/>
+        <cv_FoupSeq>0</cv_FoupSeq>
+        <cv_HasCst>0</cv_HasCst>
+        <cv_PortClamp>0</cv_PortClamp>
+        <cv_PortAgvMode>2</cv_PortAgvMode>
+        <cv_PortEnable>1</cv_PortEnable>
+        <cv_PortType>3</cv_PortType>
+        <cv_PortMode>2</cv_PortMode>
+        <cv_LotStatus>0</cv_LotStatus>
+        <cv_PortStatus>0</cv_PortStatus>
+        <cv_WorkCount>0</cv_WorkCount>
+        <cv_WaitUnload>False</cv_WaitUnload>
+        <cv_ProductionType>0</cv_ProductionType>
+        <cv_EfemPortType>0</cv_EfemPortType>
+        <cv_IsWaitCancel>False</cv_IsWaitCancel>
+        <cv_IsWaitAbort>False</cv_IsWaitAbort>
+        <cv_Id>8</cv_Id>
+        <cv_SlotCount>25</cv_SlotCount>
+        <cv_FilePath>F:\work\Seeya\ODF2\ODF_2_code\bat\\..\config\LGC\Work\PortData8</cv_FilePath>
+        <cv_GlassDataList/>
+    </PortData>
+</Data>

@@ -13,4 +13,10 @@ namespace CommonData.HIRATA
             set { Type = (int)value; }
         }
     }
+    public class EventObj
+    {
+        public FdModule module;
+        public string messageId;
+        public Object obj;
+    }
 }

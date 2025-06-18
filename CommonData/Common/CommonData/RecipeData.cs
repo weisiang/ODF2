@@ -17,7 +17,11 @@ namespace CommonData.HIRATA
         public float cv_GlassVasDegree;
         public float cv_WaferIJPDegree;
         public float cv_WaferVASDegree;
+        public float cv_WaferSealDegree;
+        public float cv_WaferAoiDegree;
         public bool cv_VasNeedGlass;
+        public List<int> cv_waferSteps = new List<int>();
+        public List<int> cv_GlassSteps = new List<int>();
         public bool PVasNeedGlass
         {
             get { return cv_VasNeedGlass; }
@@ -58,6 +62,16 @@ namespace CommonData.HIRATA
             get { return cv_WaferVASDegree; }
             set { cv_WaferVASDegree = value; }
         }
+        public float PWaferSealDegree
+        {
+            get { return cv_WaferSealDegree; }
+            set { cv_WaferSealDegree = value; }
+        }
+        public float PWaferAoiDegree
+        {
+            get { return cv_WaferAoiDegree; }
+            set { cv_WaferAoiDegree = value; }
+        }
         public KXmlItem GetXml()
         {
             KXmlItem body = EventCenterBase.ParseObjectToKXmlItem(this, KParseObjToXmlPropertyType.Field);
@@ -72,8 +86,6 @@ namespace CommonData.HIRATA
     {
         public delegate void DeleRecipeAction(DataEidtAction m_Action, List<RecipeItem> m_Recipes);
         public event DeleRecipeAction EventRecipeAction;
-        public delegate void DeleRecipeChange();
-        public event DeleRecipeChange EventRecipeChange;
 
         public List<RecipeItem> cv_RecipeList = new List<RecipeItem>();
         public string cv_CurRecipeId = "";
@@ -165,9 +177,26 @@ namespace CommonData.HIRATA
                 {
                     if (!IsRecipeExist(m_RecipeItem))
                     {
-                        if(m_RecipeItem.PFlow == OdfFlow.Flow1_1 || m_RecipeItem.PFlow == OdfFlow.Flow1_2 ||
-                            m_RecipeItem.PFlow == OdfFlow.FLow4_1 || m_RecipeItem.PFlow == OdfFlow.Flow4_2)
+                        if(
+                            m_RecipeItem.PFlow == OdfFlow.Flow1 ||
+                            m_RecipeItem.PFlow == OdfFlow.Flow2 ||
+                            m_RecipeItem.PFlow == OdfFlow.Flow3 ||
+                            m_RecipeItem.PFlow == OdfFlow.Flow4 ||
+                            m_RecipeItem.PFlow == OdfFlow.Flow5 ||
+                            m_RecipeItem.PFlow == OdfFlow.Flow6 ||
+                            m_RecipeItem.PFlow == OdfFlow.Flow7 ||
+                            m_RecipeItem.PFlow == OdfFlow.Flow8 ||
+                            m_RecipeItem.PFlow == OdfFlow.Flow9 ||
+                            m_RecipeItem.PFlow == OdfFlow.Flow10 ||
+                            m_RecipeItem.PFlow == OdfFlow.Flow11 ||
+                            m_RecipeItem.PFlow == OdfFlow.Flow12 ||
+                            m_RecipeItem.PFlow == OdfFlow.Flow13 ||
+                            m_RecipeItem.PFlow == OdfFlow.Flow14 ||
+                            m_RecipeItem.PFlow == OdfFlow.Flow25 ||
+                            m_RecipeItem.PFlow == OdfFlow.Flow26
+                            )
                         {
+
                             m_RecipeItem.PVasNeedGlass = true;
                         }
                         cv_RecipeList.Add(m_RecipeItem);

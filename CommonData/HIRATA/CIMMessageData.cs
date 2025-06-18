@@ -480,6 +480,7 @@ namespace CommonData.HIRATA
             get { return AlarmItem; }
         }
     }
+
     #endregion
 
     #region Data request

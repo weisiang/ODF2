@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32630.194
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIModule", "UI\UIModule\UIModule\UIModule.csproj", "{06699155-EF77-4906-B9FD-122629489581}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonData", "CommonData\CommonData.csproj", "{395F747C-8D90-489C-B6FD-6F92908C4678}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaseAp", "BaseAp\BaseAp.csproj", "{5A06840F-025E-4D65-8317-C62537E07946}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{06699155-EF77-4906-B9FD-122629489581}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06699155-EF77-4906-B9FD-122629489581}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06699155-EF77-4906-B9FD-122629489581}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06699155-EF77-4906-B9FD-122629489581}.Release|Any CPU.Build.0 = Release|Any CPU
+		{395F747C-8D90-489C-B6FD-6F92908C4678}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{395F747C-8D90-489C-B6FD-6F92908C4678}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{395F747C-8D90-489C-B6FD-6F92908C4678}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{395F747C-8D90-489C-B6FD-6F92908C4678}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A06840F-025E-4D65-8317-C62537E07946}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A06840F-025E-4D65-8317-C62537E07946}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A06840F-025E-4D65-8317-C62537E07946}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A06840F-025E-4D65-8317-C62537E07946}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {71E36AFD-5F98-4923-8396-5911AA552DBF}
+	EndGlobalSection
+EndGlobal

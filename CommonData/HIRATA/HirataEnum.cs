@@ -5,6 +5,7 @@ using System.Text;
 
 namespace CommonData.HIRATA
 {
+    public enum enSideGroup { None , Right , Left , Both };
     public enum AlignerPreAction { None, WaitHome, AlignerHome , SetToAngle, VuccumOff1 , PutAligner, VuccumOn,
         WaitVuccumOn, FindNotch, WaitFindNotch , OcrConnect , WaitConnect , ReadOcr, WaitReadOct , ToAngle , 
         WaitToAngle , VuccumOff2 , WaitVuccomOff2 , GetAligner,};
@@ -41,51 +42,111 @@ namespace CommonData.HIRATA
     public enum RecipeBodyReportType { New = 1, Delete, Modity, Query, }
     public enum EqInterFaceType { None, Load, Unload, Exchange, };
     public enum ApiFoupStatus { None, FoupPlace, FoupRemove, };
-    public enum OdfFlow { Flow1_1=1, Flow1_2, Flow2_1, Flow2_2, Flow3 ,  FLow4_1, Flow4_2 };
-    public enum EqNode { SDP1 = 3  , SDP2 =4  , IJP =5 , VAS =6 ,UV1 = 7 , SDP3 =8  , AOI =9 ,  UV2 = 10};
+    public enum OdfFlow {None=0, Flow1=1, Flow2, Flow3, Flow4, Flow5 ,  Flow6, Flow7 , Flow8, Flow9,
+        Flow10,
+        Flow11,
+        Flow12,
+        Flow13,
+        Flow14,
+        Flow15,
+        Flow16,
+        Flow17,
+        Flow18,
+        Flow19,
+        Flow20,
+        Flow21,
+        Flow22,
+        Flow23,
+        Flow24,
+        Flow25,
+        Flow26,
+    };
+    public enum EqNode { SDP1 = 3  , SDP2 =4 , SDP3 = 5, SDP4 =6 , SDP5 = 7, SDP6 = 8, AOI=9,
+         IJP1 =10 , IJP2=11 , VAS1 =12 , VAS2=13 ,UV1 = 14 , UV2 =15};
     public enum EqGifTimeChartId
     {
         None = 0,
         TIMECHART_ID_SDP1 = 1,
         TIMECHART_ID_SDP2 = 2,
-        TIMECHART_ID_IJP = 3,
-        TIMECHART_ID_VAS_UP = 4,
-        TIMECHART_ID_VAS_DOWN = 5,
-        TIMECHART_ID_UV_1 = 6,
-        TIMECHART_ID_SDP3 = 7,
-        TIMECHART_ID_AOI = 8,
-        TIMECHART_ID_UV_2 = 9,
+        TIMECHART_ID_SDP3 = 3,
+        TIMECHART_ID_SDP4 = 4 ,
+        TIMECHART_ID_SDP5 = 5 ,
+        TIMECHART_ID_SDP6 = 6 ,
+
+        TIMECHART_ID_AOI1 = 7,
+
+        TIMECHART_ID_IJP1 = 8,
+        TIMECHART_ID_IJP2 = 9,
+
+        TIMECHART_ID_VAS1_UP = 10,
+        TIMECHART_ID_VAS1_DOWN = 11,
+        TIMECHART_ID_VAS2_UP = 12,
+        TIMECHART_ID_VAS2_DOWN = 13,
+
+        TIMECHART_ID_UV_1 = 14,
+        TIMECHART_ID_UV_2 = 15,
     }
     public enum EqId
     {
         None = 0,
         SDP1 = 1,
         SDP2 = 2,
-        IJP = 3,
-        VAS = 4,
-        UV_1 = 5,
-        SDP3 = 6,
-        AOI = 7,
-        UV_2 = 8,
+        SDP3 = 3,
+        SDP4 = 4,
+        SDP5 = 5,
+        SDP6 = 6,
+        AOI1 = 7,
+        IJP1 = 8,
+        IJP2 = 9,
+        VAS1 = 10,
+        VAS2 = 11,
+        UV_1 = 12,
+        UV_2 = 13,
     }
-    public enum BufferSlotType { Wafer, Glass };
+    public enum BufferSlotType {None ,  Wafer, Glass , ReverseForRework  };
     public enum AllDevice
     {
         None=0,
         LP=1,
-        Buffer,
+        Buffer1_Left,
+        Buffer2_Mid,
         UP,
-        Aligner,
+        Aligner1_Left,
+        Aligner2_Right,
         SDP1 ,
         SDP2 ,
-        IJP ,
-        VAS ,
-        UV_1 ,
         SDP3 ,
-        AOI ,
-        UV_2 , 
+        SDP4 ,
+        SDP5 ,
+        SDP6 ,
+        AOI1 ,
+        IJP1 ,
+        IJP2 ,
+        VAS1 ,
+        VAS2 ,
+        UV_1 ,
+        UV_2 ,
     }
     public enum SignalTowerColor { All , Red , Yellow , Green , Blue, };
     public enum SignalTowerControl { On , Off , Flash , };
     public enum RobotJobAction { None, preView, Clean,DropTop };
+
+    public enum InitialAllDevice
+    {
+        None=0,
+        LP1,
+        LP2,
+        LP3,
+        LP4,
+        Buffer1_Left,
+        Buffer2_Mid,
+        UP5,
+        UP6,
+        UP7,
+        UP8,
+        Aligner1_Left,
+        Aligner2_Right,
+        RB1,
+        RB2,
+    }
 }

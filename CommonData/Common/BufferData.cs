@@ -7,12 +7,6 @@ namespace CommonData.HIRATA
 {
     public class BufferData : ObjData
     {
-        public int cv_Slot1Type = 0;
-        public int cv_Slot2Type = 0;
-        public int cv_Slot3Type = 0;
-        public int cv_Slot4Type = 0;
-        public int cv_Slot5Type = 0;
-        public int cv_Slot6Type = 0;
         private Dictionary<int, BufferSlotType> cv_Types = new Dictionary<int, BufferSlotType>();
         public BufferData(int m_id, int m_SlotCount)
             : base(m_id, m_SlotCount)
@@ -23,37 +17,16 @@ namespace CommonData.HIRATA
             : base(0, CommonData.HIRATA.CommonStaticData.g_CstSize)
         {
         }
-        public BufferSlotType PSlot1Type
+        public BufferSlotType getBufferSlotType(int m_Slot)
         {
-            get { return (BufferSlotType)cv_Slot1Type; }
-            set { cv_Slot1Type = (int)value; }
+            BufferSlotType rtn = BufferSlotType.None;
+            if(cv_Types.ContainsKey(m_Slot))
+            {
+                rtn = cv_Types[m_Slot];
+            }
+            return rtn;
         }
-        public BufferSlotType PSlot2Type
-        {
-            get { return (BufferSlotType)cv_Slot2Type; }
-            set { cv_Slot2Type = (int)value; }
 
-        }
-        public BufferSlotType PSlot3Type
-        {
-            get { return (BufferSlotType)cv_Slot3Type; }
-            set { cv_Slot3Type = (int)value; }
-        }
-        public BufferSlotType PSlot4Type
-        {
-            get { return (BufferSlotType)cv_Slot4Type; }
-            set { cv_Slot4Type = (int)value; }
-        }
-        public BufferSlotType PSlot5Type
-        {
-            get { return (BufferSlotType)cv_Slot5Type; }
-            set { cv_Slot5Type = (int)value; }
-        }
-        public BufferSlotType PSlot6Type
-        {
-            get { return (BufferSlotType)cv_Slot6Type; }
-            set { cv_Slot6Type = (int)value; }
-        }
         public int IsFreeSlot(BufferSlotType m_Type)
         {
             int slot = -1;
@@ -91,20 +64,9 @@ namespace CommonData.HIRATA
             m_Slot = slot;
             return m_Slot == -1 ? false : true;
         }
-        public void SetSlotType(params BufferSlotType[] m_Para)
+        public void SetSlotType(Dictionary<int, BufferSlotType>  m_Para)
         {
-            PSlot1Type = m_Para[0];
-            cv_Types[1] = PSlot1Type;
-            PSlot2Type = m_Para[1];
-            cv_Types[2] = PSlot2Type;
-            PSlot3Type = m_Para[2];
-            cv_Types[3] = PSlot3Type;
-            PSlot4Type = m_Para[3];
-            cv_Types[4] = PSlot4Type;
-            PSlot5Type = m_Para[4];
-            cv_Types[5] = PSlot5Type;
-            PSlot6Type = m_Para[5];
-            cv_Types[6] = PSlot6Type;
+            cv_Types = m_Para;
         }
         public void LoadFromFile()
         {

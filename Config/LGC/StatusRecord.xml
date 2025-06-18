@@ -3,19 +3,24 @@
     <SystemData>
         <cv_SystemStatus>0</cv_SystemStatus>
         <cv_SystemOnlineMode>4</cv_SystemOnlineMode>
-        <cv_RobotOnlineMode>-1</cv_RobotOnlineMode>
-        <cv_RobotStatus>1</cv_RobotStatus>
-        <cv_OperationMode>0</cv_OperationMode>
+        <cv_apiInlineMode>0</cv_apiInlineMode>
+        <cv_apiVersion/>
+        <cv_apiConnect>False</cv_apiConnect>
+        <cv_Robot1Status>3</cv_Robot1Status>
+        <cv_Robot1Speed>0</cv_Robot1Speed>
+        <cv_OperationModeLeft>0</cv_OperationModeLeft>
+        <cv_Robot2Status>3</cv_Robot2Status>
+        <cv_Robot2Speed>0</cv_Robot2Speed>
+        <cv_OperationModeRight>0</cv_OperationModeRight>
         <cv_OcrMode>1</cv_OcrMode>
         <cv_IsPlcConnect>False</cv_IsPlcConnect>
         <cv_IsBcAlive>False</cv_IsBcAlive>
-        <cv_RobotConnect>False</cv_RobotConnect>
-        <cv_RobotVersion/>
-        <cv_DataCheckRule>14</cv_DataCheckRule>
-        <cv_InitializeOk>False</cv_InitializeOk>
-        <cv_Initializing>False</cv_Initializing>
+        <cv_InitializeOkRight>False</cv_InitializeOkRight>
+        <cv_InitializeOkLeft>False</cv_InitializeOkLeft>
+        <cv_InitializingRight>False</cv_InitializingRight>
+        <cv_InitializingLeft>False</cv_InitializingLeft>
         <cv_OntMode>False</cv_OntMode>
-        <cv_RobotSpeed>60</cv_RobotSpeed>
         <cv_FFUSpeed>3</cv_FFUSpeed>
+        <cv_DataCheckRule>14</cv_DataCheckRule>
     </SystemData>
 </System>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TimeCharts>
-    <TimeChartSequence Id="1" Name="Seal_1" InitialStep="0" ScanInterval="200">
+    <TimeChartSequence Id="1" Name="SDP1" InitialStep="0" ScanInterval="200">
         <Initial>
         </Initial>
         <Sequence>
@@ -368,7 +368,7 @@
             </Step>
         </Sequence>
     </TimeChartSequence>
-    <TimeChartSequence Id="3" Name="IJP" InitialStep="0" ScanInterval="200">
+    <TimeChartSequence Id="3" Name="SDP3" InitialStep="0" ScanInterval="200">
         <Initial>
         </Initial>
         <Sequence>
@@ -552,7 +552,7 @@
             </Step>
         </Sequence>
     </TimeChartSequence>
-    <TimeChartSequence Id="4" Name="VAS_UP" InitialStep="0" ScanInterval="200">
+    <TimeChartSequence Id="4" Name="SDP4" InitialStep="0" ScanInterval="200">
         <Initial>
         </Initial>
         <Sequence>
@@ -736,7 +736,7 @@
             </Step>
         </Sequence>
     </TimeChartSequence>
-    <TimeChartSequence Id="5" Name="VAS_DOWN" InitialStep="0" ScanInterval="200">
+    <TimeChartSequence Id="5" Name="SDP5" InitialStep="0" ScanInterval="200">
         <Initial>
         </Initial>
         <Sequence>
@@ -920,7 +920,7 @@
             </Step>
         </Sequence>
     </TimeChartSequence>
-    <TimeChartSequence Id="6" Name="UV_1" InitialStep="0" ScanInterval="200">
+    <TimeChartSequence Id="6" Name="SDP6" InitialStep="0" ScanInterval="200">
         <Initial>
         </Initial>
         <Sequence>
@@ -1104,7 +1104,7 @@
             </Step>
         </Sequence>
     </TimeChartSequence>
-    <TimeChartSequence Id="7" Name="SDP3" InitialStep="0" ScanInterval="200">
+    <TimeChartSequence Id="7" Name="AOI1" InitialStep="0" ScanInterval="200">
         <Initial>
         </Initial>
         <Sequence>
@@ -1288,7 +1288,7 @@
             </Step>
         </Sequence>
     </TimeChartSequence>
-    <TimeChartSequence Id="8" Name="AOI" InitialStep="0" ScanInterval="200">
+    <TimeChartSequence Id="8" Name="IJP1" InitialStep="0" ScanInterval="200">
         <Initial>
         </Initial>
         <Sequence>
@@ -1472,7 +1472,1111 @@
             </Step>
         </Sequence>
     </TimeChartSequence>
-    <TimeChartSequence Id="9" Name="UV_2" InitialStep="0" ScanInterval="200">
+    <TimeChartSequence Id="9" Name="IJP2" InitialStep="0" ScanInterval="200">
+        <Initial>
+        </Initial>
+        <Sequence>
+            <Step Id="0" Name="CleanSignal" TriggerOnRunning="1" Interlock="0" NextStep="1">
+                <Conditions>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="1" Name="CheckStatusOK" TriggerOnRunning="1" Interlock="1" NextStep="2">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="2" Name="SelectMode" TriggerOnRunning="1" Interlock="1" NextStep="3">
+                <Conditions>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="3" Name="ActionReady" TriggerOnRunning="1" Interlock="1" NextStep="4">
+                <Conditions>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="4" Name="RbReplyOn" TriggerOnRunning="1" Interlock="1" NextStep="5">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="5" Name="WaitLoadEqTransferStart" TriggerOnRunning="1" Interlock="1" NextStep="6">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="6" Name="WaitLoadRbCommand" TriggerOnRunning="1" Interlock="1" NextStep="7">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="7" Name="WaitLoadRbFinish" TriggerOnRunning="1" Interlock="1" NextStep="8">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>					
+                </Actions>
+            </Step>
+            <Step Id="8" Name="WaitRobotCompleteOn" TriggerOnRunning="1" Interlock="1" NextStep="9">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>					
+                </Actions>
+            </Step>
+            <Step Id="9" Name="WaitEqCompleteOn" TriggerOnRunning="1" Interlock="1" NextStep="0">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="20" Name="WaitRobotPutStart" TriggerOnRunning="1" Interlock="1" NextStep="21">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="21" Name="WaitRobotPutEnd" TriggerOnRunning="1" Interlock="1" NextStep="7">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="22" Name="WaitRobotGetStart" TriggerOnRunning="1" Interlock="1" NextStep="23">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="23" Name="WaitRobotGetEnd" TriggerOnRunning="1" Interlock="1" NextStep="7">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="24" Name="WaitRobotPutVasStandByStart" TriggerOnRunning="1" Interlock="1" NextStep="25">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="25" Name="WaitRobotPutVasStandByEnd" TriggerOnRunning="1" Interlock="1" NextStep="20">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="26" Name="WaitRobotGetVasStandByStart" TriggerOnRunning="1" Interlock="1" NextStep="27">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="27" Name="WaitRobotetVasStandByEnd" TriggerOnRunning="1" Interlock="1" NextStep="22">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="30" Name="EqPause" TriggerOnRunning="1" Interlock="1" NextStep="30">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="33" Name="ForceIni" TriggerOnRunning="1" Interlock="1" NextStep="34">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="34" Name="ForceIniFinish" TriggerOnRunning="1" Interlock="1" NextStep="0">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="35" Name="ForceCm" TriggerOnRunning="1" Interlock="1" NextStep="36">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="36" Name="ForceComFinish" TriggerOnRunning="1" Interlock="1" NextStep="0">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+        </Sequence>
+    </TimeChartSequence>
+    <TimeChartSequence Id="10" Name="VAS1_UP" InitialStep="0" ScanInterval="200">
+        <Initial>
+        </Initial>
+        <Sequence>
+            <Step Id="0" Name="CleanSignal" TriggerOnRunning="1" Interlock="0" NextStep="1">
+                <Conditions>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="1" Name="CheckStatusOK" TriggerOnRunning="1" Interlock="1" NextStep="2">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="2" Name="SelectMode" TriggerOnRunning="1" Interlock="1" NextStep="3">
+                <Conditions>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="3" Name="ActionReady" TriggerOnRunning="1" Interlock="1" NextStep="4">
+                <Conditions>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="4" Name="RbReplyOn" TriggerOnRunning="1" Interlock="1" NextStep="5">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="5" Name="WaitLoadEqTransferStart" TriggerOnRunning="1" Interlock="1" NextStep="6">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="6" Name="WaitLoadRbCommand" TriggerOnRunning="1" Interlock="1" NextStep="7">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="7" Name="WaitLoadRbFinish" TriggerOnRunning="1" Interlock="1" NextStep="8">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>					
+                </Actions>
+            </Step>
+            <Step Id="8" Name="WaitRobotCompleteOn" TriggerOnRunning="1" Interlock="1" NextStep="9">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>					
+                </Actions>
+            </Step>
+            <Step Id="9" Name="WaitEqCompleteOn" TriggerOnRunning="1" Interlock="1" NextStep="0">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="20" Name="WaitRobotPutStart" TriggerOnRunning="1" Interlock="1" NextStep="21">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="21" Name="WaitRobotPutEnd" TriggerOnRunning="1" Interlock="1" NextStep="7">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="22" Name="WaitRobotGetStart" TriggerOnRunning="1" Interlock="1" NextStep="23">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="23" Name="WaitRobotGetEnd" TriggerOnRunning="1" Interlock="1" NextStep="7">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="24" Name="WaitRobotPutVasStandByStart" TriggerOnRunning="1" Interlock="1" NextStep="25">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="25" Name="WaitRobotPutVasStandByEnd" TriggerOnRunning="1" Interlock="1" NextStep="20">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="26" Name="WaitRobotGetVasStandByStart" TriggerOnRunning="1" Interlock="1" NextStep="27">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="27" Name="WaitRobotetVasStandByEnd" TriggerOnRunning="1" Interlock="1" NextStep="22">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="30" Name="EqPause" TriggerOnRunning="1" Interlock="1" NextStep="30">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="33" Name="ForceIni" TriggerOnRunning="1" Interlock="1" NextStep="34">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="34" Name="ForceIniFinish" TriggerOnRunning="1" Interlock="1" NextStep="0">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="35" Name="ForceCm" TriggerOnRunning="1" Interlock="1" NextStep="36">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="36" Name="ForceComFinish" TriggerOnRunning="1" Interlock="1" NextStep="0">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+        </Sequence>
+    </TimeChartSequence>
+    <TimeChartSequence Id="11" Name="VAS1_DOWN" InitialStep="0" ScanInterval="200">
+        <Initial>
+        </Initial>
+        <Sequence>
+            <Step Id="0" Name="CleanSignal" TriggerOnRunning="1" Interlock="0" NextStep="1">
+                <Conditions>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="1" Name="CheckStatusOK" TriggerOnRunning="1" Interlock="1" NextStep="2">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="2" Name="SelectMode" TriggerOnRunning="1" Interlock="1" NextStep="3">
+                <Conditions>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="3" Name="ActionReady" TriggerOnRunning="1" Interlock="1" NextStep="4">
+                <Conditions>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="4" Name="RbReplyOn" TriggerOnRunning="1" Interlock="1" NextStep="5">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="5" Name="WaitLoadEqTransferStart" TriggerOnRunning="1" Interlock="1" NextStep="6">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="6" Name="WaitLoadRbCommand" TriggerOnRunning="1" Interlock="1" NextStep="7">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="7" Name="WaitLoadRbFinish" TriggerOnRunning="1" Interlock="1" NextStep="8">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>					
+                </Actions>
+            </Step>
+            <Step Id="8" Name="WaitRobotCompleteOn" TriggerOnRunning="1" Interlock="1" NextStep="9">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>					
+                </Actions>
+            </Step>
+            <Step Id="9" Name="WaitEqCompleteOn" TriggerOnRunning="1" Interlock="1" NextStep="0">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="20" Name="WaitRobotPutStart" TriggerOnRunning="1" Interlock="1" NextStep="21">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="21" Name="WaitRobotPutEnd" TriggerOnRunning="1" Interlock="1" NextStep="7">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="22" Name="WaitRobotGetStart" TriggerOnRunning="1" Interlock="1" NextStep="23">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="23" Name="WaitRobotGetEnd" TriggerOnRunning="1" Interlock="1" NextStep="7">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="24" Name="WaitRobotPutVasStandByStart" TriggerOnRunning="1" Interlock="1" NextStep="25">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="25" Name="WaitRobotPutVasStandByEnd" TriggerOnRunning="1" Interlock="1" NextStep="20">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="26" Name="WaitRobotGetVasStandByStart" TriggerOnRunning="1" Interlock="1" NextStep="27">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="27" Name="WaitRobotetVasStandByEnd" TriggerOnRunning="1" Interlock="1" NextStep="22">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="30" Name="EqPause" TriggerOnRunning="1" Interlock="1" NextStep="30">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="33" Name="ForceIni" TriggerOnRunning="1" Interlock="1" NextStep="34">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="34" Name="ForceIniFinish" TriggerOnRunning="1" Interlock="1" NextStep="0">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="35" Name="ForceCm" TriggerOnRunning="1" Interlock="1" NextStep="36">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="36" Name="ForceComFinish" TriggerOnRunning="1" Interlock="1" NextStep="0">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+        </Sequence>
+    </TimeChartSequence>
+    <TimeChartSequence Id="12" Name="VAS2_UP" InitialStep="0" ScanInterval="200">
+        <Initial>
+        </Initial>
+        <Sequence>
+            <Step Id="0" Name="CleanSignal" TriggerOnRunning="1" Interlock="0" NextStep="1">
+                <Conditions>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="1" Name="CheckStatusOK" TriggerOnRunning="1" Interlock="1" NextStep="2">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="2" Name="SelectMode" TriggerOnRunning="1" Interlock="1" NextStep="3">
+                <Conditions>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="3" Name="ActionReady" TriggerOnRunning="1" Interlock="1" NextStep="4">
+                <Conditions>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="4" Name="RbReplyOn" TriggerOnRunning="1" Interlock="1" NextStep="5">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="5" Name="WaitLoadEqTransferStart" TriggerOnRunning="1" Interlock="1" NextStep="6">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="6" Name="WaitLoadRbCommand" TriggerOnRunning="1" Interlock="1" NextStep="7">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="7" Name="WaitLoadRbFinish" TriggerOnRunning="1" Interlock="1" NextStep="8">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>					
+                </Actions>
+            </Step>
+            <Step Id="8" Name="WaitRobotCompleteOn" TriggerOnRunning="1" Interlock="1" NextStep="9">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>					
+                </Actions>
+            </Step>
+            <Step Id="9" Name="WaitEqCompleteOn" TriggerOnRunning="1" Interlock="1" NextStep="0">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="20" Name="WaitRobotPutStart" TriggerOnRunning="1" Interlock="1" NextStep="21">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="21" Name="WaitRobotPutEnd" TriggerOnRunning="1" Interlock="1" NextStep="7">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="22" Name="WaitRobotGetStart" TriggerOnRunning="1" Interlock="1" NextStep="23">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="23" Name="WaitRobotGetEnd" TriggerOnRunning="1" Interlock="1" NextStep="7">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="24" Name="WaitRobotPutVasStandByStart" TriggerOnRunning="1" Interlock="1" NextStep="25">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="25" Name="WaitRobotPutVasStandByEnd" TriggerOnRunning="1" Interlock="1" NextStep="20">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="26" Name="WaitRobotGetVasStandByStart" TriggerOnRunning="1" Interlock="1" NextStep="27">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="27" Name="WaitRobotetVasStandByEnd" TriggerOnRunning="1" Interlock="1" NextStep="22">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="30" Name="EqPause" TriggerOnRunning="1" Interlock="1" NextStep="30">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="33" Name="ForceIni" TriggerOnRunning="1" Interlock="1" NextStep="34">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="34" Name="ForceIniFinish" TriggerOnRunning="1" Interlock="1" NextStep="0">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="35" Name="ForceCm" TriggerOnRunning="1" Interlock="1" NextStep="36">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="36" Name="ForceComFinish" TriggerOnRunning="1" Interlock="1" NextStep="0">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+        </Sequence>
+    </TimeChartSequence>
+    <TimeChartSequence Id="13" Name="VAS2_DOWN" InitialStep="0" ScanInterval="200">
+        <Initial>
+        </Initial>
+        <Sequence>
+            <Step Id="0" Name="CleanSignal" TriggerOnRunning="1" Interlock="0" NextStep="1">
+                <Conditions>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="1" Name="CheckStatusOK" TriggerOnRunning="1" Interlock="1" NextStep="2">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="2" Name="SelectMode" TriggerOnRunning="1" Interlock="1" NextStep="3">
+                <Conditions>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="3" Name="ActionReady" TriggerOnRunning="1" Interlock="1" NextStep="4">
+                <Conditions>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="4" Name="RbReplyOn" TriggerOnRunning="1" Interlock="1" NextStep="5">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="5" Name="WaitLoadEqTransferStart" TriggerOnRunning="1" Interlock="1" NextStep="6">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="6" Name="WaitLoadRbCommand" TriggerOnRunning="1" Interlock="1" NextStep="7">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="7" Name="WaitLoadRbFinish" TriggerOnRunning="1" Interlock="1" NextStep="8">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>					
+                </Actions>
+            </Step>
+            <Step Id="8" Name="WaitRobotCompleteOn" TriggerOnRunning="1" Interlock="1" NextStep="9">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>					
+                </Actions>
+            </Step>
+            <Step Id="9" Name="WaitEqCompleteOn" TriggerOnRunning="1" Interlock="1" NextStep="0">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="20" Name="WaitRobotPutStart" TriggerOnRunning="1" Interlock="1" NextStep="21">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="21" Name="WaitRobotPutEnd" TriggerOnRunning="1" Interlock="1" NextStep="7">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="22" Name="WaitRobotGetStart" TriggerOnRunning="1" Interlock="1" NextStep="23">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="23" Name="WaitRobotGetEnd" TriggerOnRunning="1" Interlock="1" NextStep="7">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="24" Name="WaitRobotPutVasStandByStart" TriggerOnRunning="1" Interlock="1" NextStep="25">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="25" Name="WaitRobotPutVasStandByEnd" TriggerOnRunning="1" Interlock="1" NextStep="20">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="26" Name="WaitRobotGetVasStandByStart" TriggerOnRunning="1" Interlock="1" NextStep="27">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="27" Name="WaitRobotetVasStandByEnd" TriggerOnRunning="1" Interlock="1" NextStep="22">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="30" Name="EqPause" TriggerOnRunning="1" Interlock="1" NextStep="30">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="33" Name="ForceIni" TriggerOnRunning="1" Interlock="1" NextStep="34">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="34" Name="ForceIniFinish" TriggerOnRunning="1" Interlock="1" NextStep="0">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="35" Name="ForceCm" TriggerOnRunning="1" Interlock="1" NextStep="36">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="36" Name="ForceComFinish" TriggerOnRunning="1" Interlock="1" NextStep="0">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+        </Sequence>
+    </TimeChartSequence>
+    <TimeChartSequence Id="14" Name="UV_1" InitialStep="0" ScanInterval="200">
+        <Initial>
+        </Initial>
+        <Sequence>
+            <Step Id="0" Name="CleanSignal" TriggerOnRunning="1" Interlock="0" NextStep="1">
+                <Conditions>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="1" Name="CheckStatusOK" TriggerOnRunning="1" Interlock="1" NextStep="2">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="2" Name="SelectMode" TriggerOnRunning="1" Interlock="1" NextStep="3">
+                <Conditions>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="3" Name="ActionReady" TriggerOnRunning="1" Interlock="1" NextStep="4">
+                <Conditions>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="4" Name="RbReplyOn" TriggerOnRunning="1" Interlock="1" NextStep="5">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="5" Name="WaitLoadEqTransferStart" TriggerOnRunning="1" Interlock="1" NextStep="6">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="6" Name="WaitLoadRbCommand" TriggerOnRunning="1" Interlock="1" NextStep="7">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="7" Name="WaitLoadRbFinish" TriggerOnRunning="1" Interlock="1" NextStep="8">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>					
+                </Actions>
+            </Step>
+            <Step Id="8" Name="WaitRobotCompleteOn" TriggerOnRunning="1" Interlock="1" NextStep="9">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>					
+                </Actions>
+            </Step>
+            <Step Id="9" Name="WaitEqCompleteOn" TriggerOnRunning="1" Interlock="1" NextStep="0">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="20" Name="WaitRobotPutStart" TriggerOnRunning="1" Interlock="1" NextStep="21">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="21" Name="WaitRobotPutEnd" TriggerOnRunning="1" Interlock="1" NextStep="7">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="22" Name="WaitRobotGetStart" TriggerOnRunning="1" Interlock="1" NextStep="23">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="23" Name="WaitRobotGetEnd" TriggerOnRunning="1" Interlock="1" NextStep="7">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="24" Name="WaitRobotPutVasStandByStart" TriggerOnRunning="1" Interlock="1" NextStep="25">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="25" Name="WaitRobotPutVasStandByEnd" TriggerOnRunning="1" Interlock="1" NextStep="20">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="26" Name="WaitRobotGetVasStandByStart" TriggerOnRunning="1" Interlock="1" NextStep="27">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="27" Name="WaitRobotetVasStandByEnd" TriggerOnRunning="1" Interlock="1" NextStep="22">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="30" Name="EqPause" TriggerOnRunning="1" Interlock="1" NextStep="30">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="33" Name="ForceIni" TriggerOnRunning="1" Interlock="1" NextStep="34">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="34" Name="ForceIniFinish" TriggerOnRunning="1" Interlock="1" NextStep="0">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="35" Name="ForceCm" TriggerOnRunning="1" Interlock="1" NextStep="36">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+            <Step Id="36" Name="ForceComFinish" TriggerOnRunning="1" Interlock="1" NextStep="0">
+                <Conditions>
+                    <Group>
+                    </Group>
+                </Conditions>
+                <Actions>
+                </Actions>
+            </Step>
+        </Sequence>
+    </TimeChartSequence>
+    <TimeChartSequence Id="15" Name="UV_2" InitialStep="0" ScanInterval="200">
         <Initial>
         </Initial>
         <Sequence>

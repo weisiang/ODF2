@@ -9,13 +9,13 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UI</RootNamespace>
     <AssemblyName>FDUI</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -45,9 +45,9 @@
       <HintPath>..\packages\CircularProgressBar.2.5.6403.13419\lib\net35-client\CircularProgressBar.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="KgsCommonX64, Version=1.0.0.18, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="KgsCommon, Version=1.0.0.18, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\dll\NewKeyPro\KgsCommonX64.dll</HintPath>
+      <HintPath>..\..\..\..\ODF2\dll\NewKeyPro\KgsCommon.dll</HintPath>
     </Reference>
     <Reference Include="MaterialSkin, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialSkin.0.2.1\lib\MaterialSkin.dll</HintPath>
@@ -70,40 +70,58 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\StaicData.cs" />
-    <Compile Include="Comm\AlignerComm.cs" />
-    <Compile Include="Comm\BufferComm.cs" />
-    <Compile Include="Comm\EqComm.cs" />
-    <Compile Include="Comm\ObjComm.cs" />
-    <Compile Include="Comm\PortComm.cs" />
-    <Compile Include="Comm\RobotComm.cs" />
-    <Compile Include="CShapeInterface\Aligner.cs" />
-    <Compile Include="CShapeInterface\Robot.cs" />
-    <Compile Include="CShapeInterface\Buffer.cs" />
-    <Compile Include="CShapeInterface\Port.cs" />
-    <Compile Include="CShapeInterface\Eq.cs" />
-    <Compile Include="Instance\Aligner.cs" />
-    <Compile Include="Instance\RobotJobPath.cs" />
-    <Compile Include="Instance\Status.cs" />
-    <Compile Include="UI\Aligner\AlignerUI.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\Aligner\AlignerUI.Designer.cs">
-      <DependentUpon>AlignerUI.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\MonitorForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\MonitorForm.Designer.cs">
-      <DependentUpon>MonitorForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Instance\Buffer.cs" />
-    <Compile Include="Instance\Eq.cs" />
-    <Compile Include="Instance\LotSummary.cs" />
-    <Compile Include="Instance\Obj.cs" />
-    <Compile Include="Instance\Port.cs" />
-    <Compile Include="Instance\Robot.cs" />
-    <Compile Include="Kernel\UIController.cs" />
+    <Compile Include="cimModule\Kernel\CIMController.cs" />
+    <Compile Include="cimModule\Kernel\cimController_baseEvent.cs" />
+    <Compile Include="cimModule\Template\CimModule.cs" />
+    <Compile Include="cimModule\third_part\MDFun.cs" />
+    <Compile Include="cimModule\Timechart\TimechartBcDateTimeCalibration.cs" />
+    <Compile Include="cimModule\Timechart\TimechartBcDisplayMessage.cs" />
+    <Compile Include="cimModule\Timechart\TimechartBcFoupDataDownload.cs" />
+    <Compile Include="cimModule\Timechart\TimechartBcIdleDelayCommand.cs" />
+    <Compile Include="cimModule\Timechart\TimechartBcIndexIntervalCommand.cs" />
+    <Compile Include="cimModule\Timechart\TimechartBcPortCommand.cs" />
+    <Compile Include="cimModule\Timechart\TimechartBcRecipeBodyQuery.cs" />
+    <Compile Include="cimModule\Timechart\TimechartBcRecipeExistCommand.cs" />
+    <Compile Include="cimModule\Timechart\TimechartController.cs" />
+    <Compile Include="cimModule\Timechart\TimechartControllerBase.cs" />
+    <Compile Include="cimModule\Timechart\TimechartEqAlarmReport.cs" />
+    <Compile Include="cimModule\Timechart\TimechartEqFetchReport.cs" />
+    <Compile Include="cimModule\Timechart\TimechartEqLastWorkProcessStartReport.cs" />
+    <Compile Include="cimModule\Timechart\TimechartEqReceiveReport.cs" />
+    <Compile Include="cimModule\Timechart\TimechartEqRecipeBodyReport.cs" />
+    <Compile Include="cimModule\Timechart\TimechartEqRecipeExistReport.cs" />
+    <Compile Include="cimModule\Timechart\TimechartEqSendReport.cs" />
+    <Compile Include="cimModule\Timechart\TimechartEqStoreReport.cs" />
+    <Compile Include="cimModule\Timechart\TimechartEqVCRReadReport.cs" />
+    <Compile Include="cimModule\Timechart\TimechartEqWorkDataRemoveReport.cs" />
+    <Compile Include="cimModule\Timechart\TimechartEqWorkDataRequest.cs" />
+    <Compile Include="cimModule\Timechart\TimechartEqWorkDataUpdateReport.cs" />
+    <Compile Include="cimModule\Timechart\TimechartRecipeListReport.cs" />
+    <Compile Include="lgcModule\Comm\AlignerComm.cs" />
+    <Compile Include="lgcModule\Comm\BufferComm.cs" />
+    <Compile Include="lgcModule\Comm\EqComm.cs" />
+    <Compile Include="lgcModule\Comm\ObjComm.cs" />
+    <Compile Include="lgcModule\Comm\PortComm.cs" />
+    <Compile Include="lgcModule\Comm\RobotComm.cs" />
+    <Compile Include="lgcModule\Instance\Aligner.cs" />
+    <Compile Include="lgcModule\Instance\Buffer.cs" />
+    <Compile Include="lgcModule\Instance\Eq.cs" />
+    <Compile Include="lgcModule\Instance\Obj.cs" />
+    <Compile Include="lgcModule\Instance\Port.cs" />
+    <Compile Include="lgcModule\Instance\Robot.cs" />
+    <Compile Include="lgcModule\Kernel\Global.cs" />
+    <Compile Include="lgcModule\Kernel\LGCController.cs" />
+    <Compile Include="lgcModule\Kernel\lgcController_baseEvent.cs" />
+    <Compile Include="lgcModule\Kernel\LogBase.cs" />
+    <Compile Include="lgcModule\RobotInterface\Hirata\HIRATADevice.cs" />
+    <Compile Include="lgcModule\RobotInterface\Hirata\RbController.cs" />
+    <Compile Include="lgcModule\StaicData.cs" />
+    <Compile Include="lgcModule\Template\lgcModule.cs" />
+    <Compile Include="lgcModule\Template\lgcModule_API.cs" />
+    <Compile Include="lgcModule\Timechart\Parser.cs" />
+    <Compile Include="lgcModule\Timechart\TimechartController.cs" />
+    <Compile Include="lgcModule\Timechart\TimechartControllerBase.cs" />
+    <Compile Include="lgcModule\Timechart\TimechartNormal.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -111,297 +129,307 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Template\UiForm.cs">
+    <Compile Include="uiModule\CShapeInterface\Aligner.cs" />
+    <Compile Include="uiModule\CShapeInterface\Buffer.cs" />
+    <Compile Include="uiModule\CShapeInterface\Eq.cs" />
+    <Compile Include="uiModule\CShapeInterface\Port.cs" />
+    <Compile Include="uiModule\CShapeInterface\Robot.cs" />
+    <Compile Include="uiModule\Instance\Aligner.cs" />
+    <Compile Include="uiModule\Instance\Buffer.cs" />
+    <Compile Include="uiModule\Instance\Eq.cs" />
+    <Compile Include="uiModule\Instance\LotSummary.cs" />
+    <Compile Include="uiModule\Instance\Obj.cs" />
+    <Compile Include="uiModule\Instance\Port.cs" />
+    <Compile Include="uiModule\Instance\Robot.cs" />
+    <Compile Include="uiModule\Instance\Status.cs" />
+    <Compile Include="uiModule\Kernel\StaicData.cs" />
+    <Compile Include="uiModule\Kernel\UIController.cs" />
+    <Compile Include="uiModule\Kernel\uiiController_baseEvent.cs" />
+    <Compile Include="uiModule\Template\UiForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Template\UiForm.Designer.cs">
+    <Compile Include="uiModule\Template\UiForm.Designer.cs">
       <DependentUpon>UiForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\Buffer\BufferUI.cs">
+    <Compile Include="uiModule\UI\Aligner\AlignerUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UI\Buffer\BufferUI.Designer.cs">
+    <Compile Include="uiModule\UI\Aligner\AlignerUI.Designer.cs">
+      <DependentUpon>AlignerUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="uiModule\UI\Buffer\BufferUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="uiModule\UI\Buffer\BufferUI.Designer.cs">
       <DependentUpon>BufferUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\CopyLogForm.cs">
+    <Compile Include="uiModule\UI\CopyLogForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\CopyLogForm.Designer.cs">
+    <Compile Include="uiModule\UI\CopyLogForm.Designer.cs">
       <DependentUpon>CopyLogForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\DownLog.cs">
+    <Compile Include="uiModule\UI\CstDataConfirm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\DownLog.Designer.cs">
-      <DependentUpon>DownLog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\EQ\EqUI.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\EQ\EqUI.Designer.cs">
-      <DependentUpon>EqUI.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\CstDataConfirm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\CstDataConfirm.designer.cs">
+    <Compile Include="uiModule\UI\CstDataConfirm.designer.cs">
       <DependentUpon>CstDataConfirm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\GlassDataOperator.cs">
+    <Compile Include="uiModule\UI\DownLog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\GlassDataOperator.Designer.cs">
+    <Compile Include="uiModule\UI\DownLog.Designer.cs">
+      <DependentUpon>DownLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="uiModule\UI\EQ\EqUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="uiModule\UI\EQ\EqUI.Designer.cs">
+      <DependentUpon>EqUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="uiModule\UI\GlassDataOperator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="uiModule\UI\GlassDataOperator.Designer.cs">
       <DependentUpon>GlassDataOperator.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\GlassEdit.cs">
+    <Compile Include="uiModule\UI\GlassEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\GlassEdit.Designer.cs">
+    <Compile Include="uiModule\UI\GlassEdit.Designer.cs">
       <DependentUpon>GlassEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\GlassInterface.cs">
+    <Compile Include="uiModule\UI\GlassInterface.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\GlassInterface.Designer.cs">
+    <Compile Include="uiModule\UI\GlassInterface.Designer.cs">
       <DependentUpon>GlassInterface.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\IFMonitor.cs">
+    <Compile Include="uiModule\UI\IFMonitor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UI\IFMonitor.Designer.cs">
+    <Compile Include="uiModule\UI\IFMonitor.Designer.cs">
       <DependentUpon>IFMonitor.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\KLogPage.cs">
+    <Compile Include="uiModule\UI\KLogPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UI\KLogPage.designer.cs">
+    <Compile Include="uiModule\UI\KLogPage.designer.cs">
       <DependentUpon>KLogPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\Login.cs">
+    <Compile Include="uiModule\UI\Login.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\Login.Designer.cs">
+    <Compile Include="uiModule\UI\Login.Designer.cs">
       <DependentUpon>Login.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\LotHold.cs">
+    <Compile Include="uiModule\UI\LotHold.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\LotHold.Designer.cs">
+    <Compile Include="uiModule\UI\LotHold.Designer.cs">
       <DependentUpon>LotHold.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\LotSummary\LotSummaryUI.cs">
+    <Compile Include="uiModule\UI\LotSummary\LotSummaryUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UI\LotSummary\LotSummaryUI.Designer.cs">
+    <Compile Include="uiModule\UI\LotSummary\LotSummaryUI.Designer.cs">
       <DependentUpon>LotSummaryUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\MgvForm.cs">
+    <Compile Include="uiModule\UI\MgvForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\MgvForm.Designer.cs">
+    <Compile Include="uiModule\UI\MgvForm.Designer.cs">
       <DependentUpon>MgvForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\ModuleLabel.cs">
+    <Compile Include="uiModule\UI\ModuleLabel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UI\ModuleLabel.Designer.cs">
+    <Compile Include="uiModule\UI\ModuleLabel.Designer.cs">
       <DependentUpon>ModuleLabel.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\OcrDecide.cs">
+    <Compile Include="uiModule\UI\MonitorForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\OcrDecide.Designer.cs">
+    <Compile Include="uiModule\UI\MonitorForm.Designer.cs">
+      <DependentUpon>MonitorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="uiModule\UI\OcrDecide.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="uiModule\UI\OcrDecide.Designer.cs">
       <DependentUpon>OcrDecide.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\OcrErrorForm.cs">
+    <Compile Include="uiModule\UI\OcrErrorForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\OcrErrorForm.Designer.cs">
+    <Compile Include="uiModule\UI\OcrErrorForm.Designer.cs">
       <DependentUpon>OcrErrorForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\palette.cs">
+    <Compile Include="uiModule\UI\palette.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\palette.designer.cs">
+    <Compile Include="uiModule\UI\palette.designer.cs">
       <DependentUpon>palette.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\PermissionSetting.cs">
+    <Compile Include="uiModule\UI\PermissionSetting.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UI\PermissionSetting.Designer.cs">
+    <Compile Include="uiModule\UI\PermissionSetting.Designer.cs">
       <DependentUpon>PermissionSetting.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\Port\PortUI.cs">
+    <Compile Include="uiModule\UI\Port\PortUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UI\Port\PortUI.Designer.cs">
+    <Compile Include="uiModule\UI\Port\PortUI.Designer.cs">
       <DependentUpon>PortUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\Recipe.cs">
+    <Compile Include="uiModule\UI\Recipe.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\Recipe.Designer.cs">
+    <Compile Include="uiModule\UI\Recipe.Designer.cs">
       <DependentUpon>Recipe.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\RecipeCheckForm.cs">
+    <Compile Include="uiModule\UI\RecipeCheckForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\RecipeCheckForm.Designer.cs">
+    <Compile Include="uiModule\UI\RecipeCheckForm.Designer.cs">
       <DependentUpon>RecipeCheckForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\RecipeSetting.cs">
+    <Compile Include="uiModule\UI\RecipeSetting.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UI\RecipeSetting.Designer.cs">
+    <Compile Include="uiModule\UI\RecipeSetting.Designer.cs">
       <DependentUpon>RecipeSetting.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\RequestData.cs">
+    <Compile Include="uiModule\UI\RequestData.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\RequestData.Designer.cs">
+    <Compile Include="uiModule\UI\RequestData.Designer.cs">
       <DependentUpon>RequestData.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\RobotJobPathForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\RobotJobPathForm.Designer.cs">
-      <DependentUpon>RobotJobPathForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\RobotJob\RobotJobPathUI.cs">
+    <Compile Include="uiModule\UI\Robot\RobotUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UI\RobotJob\RobotJobPathUI.Designer.cs">
-      <DependentUpon>RobotJobPathUI.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\Robot\RobotUI.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\Robot\RobotUI.Designer.cs">
+    <Compile Include="uiModule\UI\Robot\RobotUI.Designer.cs">
       <DependentUpon>RobotUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\SlotCondition.cs">
+    <Compile Include="uiModule\UI\SlotCondition.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UI\SlotCondition.designer.cs">
+    <Compile Include="uiModule\UI\SlotCondition.designer.cs">
       <DependentUpon>SlotCondition.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\SlotItem.cs">
+    <Compile Include="uiModule\UI\SlotItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UI\SlotItem.designer.cs">
+    <Compile Include="uiModule\UI\SlotItem.designer.cs">
       <DependentUpon>SlotItem.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\Stauts\Status.cs">
+    <Compile Include="uiModule\UI\Stauts\Status.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UI\Stauts\Status.Designer.cs">
+    <Compile Include="uiModule\UI\Stauts\Status.Designer.cs">
       <DependentUpon>Status.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\TimrOutForm.cs">
+    <Compile Include="uiModule\UI\TimrOutForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\TimrOutForm.Designer.cs">
+    <Compile Include="uiModule\UI\TimrOutForm.Designer.cs">
       <DependentUpon>TimrOutForm.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="UI\Aligner\AlignerUI.resx">
-      <DependentUpon>AlignerUI.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\MonitorForm.resx">
-      <DependentUpon>MonitorForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Template\UiForm.resx">
+    <EmbeddedResource Include="uiModule\Template\UiForm.resx">
       <DependentUpon>UiForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\Buffer\BufferUI.resx">
+    <EmbeddedResource Include="uiModule\UI\Aligner\AlignerUI.resx">
+      <DependentUpon>AlignerUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="uiModule\UI\Buffer\BufferUI.resx">
       <DependentUpon>BufferUI.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\CopyLogForm.resx">
+    <EmbeddedResource Include="uiModule\UI\CopyLogForm.resx">
       <DependentUpon>CopyLogForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\DownLog.resx">
-      <DependentUpon>DownLog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\EQ\EqUI.resx">
-      <DependentUpon>EqUI.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\CstDataConfirm.resx">
+    <EmbeddedResource Include="uiModule\UI\CstDataConfirm.resx">
       <DependentUpon>CstDataConfirm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\GlassDataOperator.resx">
+    <EmbeddedResource Include="uiModule\UI\DownLog.resx">
+      <DependentUpon>DownLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="uiModule\UI\EQ\EqUI.resx">
+      <DependentUpon>EqUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="uiModule\UI\GlassDataOperator.resx">
       <DependentUpon>GlassDataOperator.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\GlassEdit.resx">
+    <EmbeddedResource Include="uiModule\UI\GlassEdit.resx">
       <DependentUpon>GlassEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\GlassInterface.resx">
+    <EmbeddedResource Include="uiModule\UI\GlassInterface.resx">
       <DependentUpon>GlassInterface.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\IFMonitor.resx">
+    <EmbeddedResource Include="uiModule\UI\IFMonitor.resx">
       <DependentUpon>IFMonitor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\KLogPage.resx">
+    <EmbeddedResource Include="uiModule\UI\KLogPage.resx">
       <DependentUpon>KLogPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\Login.resx">
+    <EmbeddedResource Include="uiModule\UI\Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\LotHold.resx">
+    <EmbeddedResource Include="uiModule\UI\LotHold.resx">
       <DependentUpon>LotHold.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\LotSummary\LotSummaryUI.resx">
+    <EmbeddedResource Include="uiModule\UI\LotSummary\LotSummaryUI.resx">
       <DependentUpon>LotSummaryUI.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\MgvForm.resx">
+    <EmbeddedResource Include="uiModule\UI\MgvForm.resx">
       <DependentUpon>MgvForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\OcrDecide.resx">
+    <EmbeddedResource Include="uiModule\UI\MonitorForm.resx">
+      <DependentUpon>MonitorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="uiModule\UI\OcrDecide.resx">
       <DependentUpon>OcrDecide.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\palette.resx">
+    <EmbeddedResource Include="uiModule\UI\palette.resx">
       <DependentUpon>palette.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\PermissionSetting.resx">
+    <EmbeddedResource Include="uiModule\UI\PermissionSetting.resx">
       <DependentUpon>PermissionSetting.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\Port\PortUI.resx">
+    <EmbeddedResource Include="uiModule\UI\Port\PortUI.resx">
       <DependentUpon>PortUI.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\Recipe.resx">
+    <EmbeddedResource Include="uiModule\UI\Recipe.resx">
       <DependentUpon>Recipe.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\RecipeCheckForm.resx">
+    <EmbeddedResource Include="uiModule\UI\RecipeCheckForm.resx">
       <DependentUpon>RecipeCheckForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\RecipeSetting.resx">
+    <EmbeddedResource Include="uiModule\UI\RecipeSetting.resx">
       <DependentUpon>RecipeSetting.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\RequestData.resx">
+    <EmbeddedResource Include="uiModule\UI\RequestData.resx">
       <DependentUpon>RequestData.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\RobotJobPathForm.resx">
-      <DependentUpon>RobotJobPathForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\RobotJob\RobotJobPathUI.resx">
-      <DependentUpon>RobotJobPathUI.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\Robot\RobotUI.resx">
+    <EmbeddedResource Include="uiModule\UI\Robot\RobotUI.resx">
       <DependentUpon>RobotUI.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\SlotCondition.resx">
+    <EmbeddedResource Include="uiModule\UI\SlotCondition.resx">
       <DependentUpon>SlotCondition.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\SlotItem.resx">
+    <EmbeddedResource Include="uiModule\UI\SlotItem.resx">
       <DependentUpon>SlotItem.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\Stauts\Status.resx">
+    <EmbeddedResource Include="uiModule\UI\Stauts\Status.resx">
       <DependentUpon>Status.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\TimrOutForm.resx">
+    <EmbeddedResource Include="uiModule\UI\TimrOutForm.resx">
       <DependentUpon>TimrOutForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.manifest">
@@ -417,6 +445,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="uiModule\Resources\kgsIcon.ico" />
+    <None Include="uiModule\Resources\wafer.jpg" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -427,12 +457,6 @@
     <None Include="bin\Debug\kgsIcon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\kgsIcon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\wafer.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\..\BaseAp\BaseAp.csproj">
       <Project>{5a06840f-025e-4d65-8317-c62537e07946}</Project>
       <Name>BaseAp</Name>
@@ -441,12 +465,11 @@
       <Project>{395f747c-8d90-489c-b6fd-6f92908c4678}</Project>
       <Name>CommonData</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\KgsMmfEventCenterDll\KgsMmfEventCenterDll.csproj">
-      <Project>{07ede2fb-e26e-45ee-9115-e91bc3a86586}</Project>
-      <Name>KgsMmfEventCenterDll</Name>
-    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Config\RemoveHistory.xml" />
+    <Content Include="uiModule\Resources\wafer2.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>rd  /s /q "$(ProjectDir)obj"</PostBuildEvent>

@@ -1,48 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <HIRATA KGS_TYPE="L" KGS_ITEM_NUMBER="5" Name="HIRATA" CassetteSlotSize="25" BufferSlotSize="6" EqSlotSize="1" LineId="ODF" ToolId="LDUD">
-    <PortList KGS_TYPE="L" KGS_ITEM_NUMBER="6">
-        <Port KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Port 1" ID="1" ToolId="" Capacity="13" Show="1"/>
-        <Port KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Port 2" ID="2" ToolId="" Capacity="13" Show="1"/>
-        <Port KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Port 3" ID="3" ToolId="" Capacity="13" Show="1"/>
-        <Port KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Port 4" ID="4" ToolId="" Capacity="25" Show="1"/>
-        <Port KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Port 5" ID="5" ToolId="" Capacity="25" Show="1"/>
-        <Port KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Port 6" ID="6" ToolId="" Capacity="25" Show="1"/>
+    <PortList KGS_TYPE="L" KGS_ITEM_NUMBER="8">
+        <Port KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Port 1" ID="1" ToolId="" Capacity="25" Show="1" SideGroup="left"/>
+        <Port KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Port 2" ID="2" ToolId="" Capacity="25" Show="1" SideGroup="left"/>
+        <Port KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Port 3" ID="3" ToolId="" Capacity="25" Show="1" SideGroup="right"/>
+        <Port KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Port 4" ID="4" ToolId="" Capacity="25" Show="1" SideGroup="right"/>
+        <Port KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Port 5" ID="5" ToolId="" Capacity="13" Show="1" SideGroup="right"/>
+        <Port KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Port 6" ID="6" ToolId="" Capacity="13" Show="1" SideGroup="right"/>
+        <Port KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Port 7" ID="7" ToolId="" Capacity="13" Show="1" SideGroup="right"/>
+        <Port KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Port 8" ID="8" ToolId="" Capacity="13" Show="1" SideGroup="right"/>
     </PortList>
-    <BufferList KGS_TYPE="L" KGS_ITEM_NUMBER="1">
-        <Buffer KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Buffer 1" ID="1" ToolId="" Capacity="6" Show="1" Stage="9"/>
+    <BufferList KGS_TYPE="L" KGS_ITEM_NUMBER="2">
+        <Buffer KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Buffer 1" ID="1" ToolId="" Capacity="12" Show="1" Stage="17" SideGroup="left"/>
+        <Buffer KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Buffer 2" ID="1" ToolId="" Capacity="12" Show="1" Stage="15" SideGroup="both"/>
     </BufferList>
-    <AlignerList KGS_TYPE="L" KGS_ITEM_NUMBER="1">
-        <Aligner KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Aligner 1" ID="1" ToolId="" Capacity="1" Show="1"/>
+    <AlignerList KGS_TYPE="L" KGS_ITEM_NUMBER="2">
+        <Aligner KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Aligner 1" ID="1" ToolId="" Capacity="1" Show="1" SideGroup="left"/>
+        <Aligner KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Aligner 2" ID="2" ToolId="" Capacity="1" Show="1" SideGroup="right"/>
     </AlignerList>
     <EquipmentList KGS_TYPE="L" KGS_ITEM_NUMBER="8">
-        <Equipment KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="EQ1" ID="1" Node="3" ToolId="SDP1" Capacity="1" TimeChat="1" Show="0" Stage="6" GetArm="Low" PutArm="Up"/>
-        <Equipment KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="EQ2" ID="2" Node="4" ToolId="SDP2" Capacity="1" TimeChat="2" Show="0" Stage="5" GetArm="Low" PutArm="Up"/>
-        <Equipment KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="EQ3" ID="3" Node="5" ToolId="IJP" Capacity="1" TimeChat="3" Show="0" Stage="4" GetArm="Up" PutArm="Low"/>
-        <Equipment KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="EQ4" ID="4" Node="6" ToolId="VAS" Capacity="2" TimeChat="4" Show="0" Stage="3" MultiTimeChart="1" GetArm="Low" PutArm="Up"/>
-        <Equipment KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="EQ5" ID="5" Node="7" ToolId="UV1" Capacity="1" TimeChat="6" Show="0" Stage="2" GetArm="Up" PutArm="Low"/>
-        <Equipment KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="EQ6" ID="6" Node="8" ToolId="SDP3" Capacity="1" TimeChat="7" Show="0" Stage="7" GetArm="Low" PutArm="Up"/>
-        <Equipment KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="EQ7" ID="7" Node="9" ToolId="AOI" Capacity="1" TimeChat="8" Show="0" Stage="8" GetArm="Both" PutArm="Both"/>
-        <Equipment KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="EQ8" ID="8" Node="10" ToolId="UV2" Capacity="1" TimeChat="9" Show="0" Stage="1" GetArm="Up" PutArm="Low"/>
+        <Equipment KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="EQ1" 	ID="1" Node="3" 	ToolId="SDP1" 	Capacity="1" TimeChat="1" Show="0" Stage="0" GetArm="Low" PutArm="Up" />
+        <Equipment KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="EQ2" 	ID="2" Node="4" 	ToolId="SDP2" 	Capacity="1" TimeChat="2" Show="0" Stage="0" GetArm="Low" PutArm="Up"/>
+        <Equipment KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="EQ3" 	ID="3" Node="5" 	ToolId="SDP3" 	Capacity="1" TimeChat="1" Show="0" Stage="0" GetArm="Low" PutArm="Up" />
+        <Equipment KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="EQ4" 	ID="4" Node="6" 	ToolId="SDP4" 	Capacity="1" TimeChat="2" Show="0" Stage="0" GetArm="Low" PutArm="Up"/>
+        <Equipment KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="EQ5" 	ID="5" Node="7" 	ToolId="SDP5" 	Capacity="1" TimeChat="1" Show="0" Stage="0" GetArm="Low" PutArm="Up" />
+        <Equipment KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="EQ6" 	ID="6" Node="8" 	ToolId="SDP6" 	Capacity="1" TimeChat="2" Show="0" Stage="0" GetArm="Low" PutArm="Up"/>
+        <Equipment KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="EQ7" 	ID="7" Node="9" 	ToolId="AOI"  	Capacity="1" TimeChat="8" Show="0" Stage="0" GetArm="Both" PutArm="Both"/>
+        <Equipment KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="EQ8" 	ID="8" Node="10" 	ToolId="IJP1" 	Capacity="1" TimeChat="3" Show="0" Stage="0" GetArm="Up" PutArm="Low"/>
+        <Equipment KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="EQ9" 	ID="9" Node="11" 	ToolId="IJP2" 	Capacity="1" TimeChat="3" Show="0" Stage="0" GetArm="Up" PutArm="Low"/>
+        <Equipment KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="EQ10" ID="10" Node="12" 	ToolId="VAS1" 	Capacity="2" TimeChat="4" Show="0" Stage="0" MultiTimeChart="1" GetArm="Low" PutArm="Up"/>
+        <Equipment KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="EQ11" ID="11" Node="13" 	ToolId="VAS2" 	Capacity="2" TimeChat="4" Show="0" Stage="0" MultiTimeChart="1" GetArm="Low" PutArm="Up"/>
+        <Equipment KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="EQ12" ID="12" Node="7" 	ToolId="UV1" 	Capacity="1" TimeChat="6" Show="0" Stage="0" GetArm="Up" PutArm="Low"/>
+        <Equipment KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="EQ13" ID="13" Node="7" 	ToolId="UV2" 	Capacity="1" TimeChat="6" Show="0" Stage="0" GetArm="Up" PutArm="Low"/>
+
     </EquipmentList>
-    <RobotList KGS_TYPE="L" KGS_ITEM_NUMBER="1">
-        <Robot KGS_TYPE="L" KGS_ITEM_NUMBER="2" Name="KgsPlc" ID="1" PreparatoryPosition="14" Capacity="2" Show="1" IP="127.0.0.1" Port="5000">
-            <EquipmentInterfaceList KGS_TYPE="L" KGS_ITEM_NUMBER="7">
-                <EquipmentInterface KGS_TYPE="A" KGS_ITEM_NUMBER="0" ID="1" Position="7" EqType="0"/>
-                <EquipmentInterface KGS_TYPE="A" KGS_ITEM_NUMBER="0" ID="2" Position="7" EqType="0"/>
-                <EquipmentInterface KGS_TYPE="A" KGS_ITEM_NUMBER="0" ID="3" Position="7" EqType="0"/>
-                <EquipmentInterface KGS_TYPE="A" KGS_ITEM_NUMBER="0" ID="4" Position="7" EqType="0"/>
-                <EquipmentInterface KGS_TYPE="A" KGS_ITEM_NUMBER="0" ID="5" Position="7" EqType="0"/>
-                <EquipmentInterface KGS_TYPE="A" KGS_ITEM_NUMBER="0" ID="6" Position="7" EqType="0"/>
-                <EquipmentInterface KGS_TYPE="A" KGS_ITEM_NUMBER="0" ID="7" Position="7" EqType="0"/>
-            </EquipmentInterfaceList>
-            <PortInterfaceList KGS_TYPE="L" KGS_ITEM_NUMBER="6">
-                <PortInterface KGS_TYPE="A" KGS_ITEM_NUMBER="0" ID="1" Position="1" PortType="1" GetAlignment="1" PutAlignment="1"/>
-                <PortInterface KGS_TYPE="A" KGS_ITEM_NUMBER="0" ID="2" Position="2" PortType="1" GetAlignment="1" PutAlignment="1"/>
-                <PortInterface KGS_TYPE="A" KGS_ITEM_NUMBER="0" ID="3" Position="3" PortType="1" GetAlignment="1" PutAlignment="1"/>
-                <PortInterface KGS_TYPE="A" KGS_ITEM_NUMBER="0" ID="4" Position="4" PortType="1" GetAlignment="1" PutAlignment="1"/>
-                <PortInterface KGS_TYPE="A" KGS_ITEM_NUMBER="0" ID="5" Position="5" PortType="1" GetAlignment="1" PutAlignment="1"/>
-                <PortInterface KGS_TYPE="A" KGS_ITEM_NUMBER="0" ID="6" Position="6" PortType="1" GetAlignment="1" PutAlignment="1"/>
-            </PortInterfaceList>
-        </Robot>
+    <RobotList KGS_TYPE="L" KGS_ITEM_NUMBER="1" IP="127.0.0.1" Port="5001">
+        <Robot KGS_TYPE="L" KGS_ITEM_NUMBER="2" Name="KgsPlc" ID="1" PreparatoryPosition="14" Capacity="2" Show="1" SideGroup="left"/>
+        <Robot KGS_TYPE="L" KGS_ITEM_NUMBER="2" Name="KgsPlc" ID="2" PreparatoryPosition="14" Capacity="2" Show="1" SideGroup="right"/>        
     </RobotList>
 </HIRATA>
