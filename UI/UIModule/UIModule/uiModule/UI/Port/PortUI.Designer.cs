@@ -66,6 +66,7 @@
             // 
             // cv_glassDataView
             // 
+            this.cv_glassDataView.AllowUserToAddRows = false;
             this.cv_glassDataView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders;
             this.cv_glassDataView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.cv_glassDataView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -73,6 +74,7 @@
             this.Column2});
             this.cv_glassDataView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cv_glassDataView.Location = new System.Drawing.Point(3, 80);
+            this.cv_glassDataView.MultiSelect = false;
             this.cv_glassDataView.Name = "cv_glassDataView";
             this.cv_glassDataView.ReadOnly = true;
             this.cv_glassDataView.RowHeadersVisible = false;

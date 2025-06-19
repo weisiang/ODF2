@@ -25,7 +25,7 @@ namespace UI.GUI
             cv_Id = m_Id;
             this.gb_Buffer.Text = "Aligner " + Convert.ToString(m_Id);
             cv_glassDataView.Rows.Clear();
-            //cv_glassDataView.Rows.Add(m_SlotCount-1);
+            cv_glassDataView.Rows.Add(m_SlotCount);
             cv_glassDataView.AutoGenerateColumns = false;
             cv_glassDataView.RowHeadersVisible = false;
             cv_glassDataView.Rows[0].Cells[0].Value = "";
@@ -85,6 +85,8 @@ namespace UI.GUI
 
         private void cv_glassDataView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex == -1)
+                return;
             cv_glassDataView.Rows[e.RowIndex].Selected = false;
         }
         private void dELETEToolStripMenuItem_Click(object sender, EventArgs e)

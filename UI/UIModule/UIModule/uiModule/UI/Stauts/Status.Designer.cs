@@ -94,7 +94,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.groupBox1.BackColor = System.Drawing.Color.LightSkyBlue;
             this.groupBox1.Controls.Add(this.cv_txtHistoryCount);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.cv_txtDummyCount);
@@ -104,7 +104,7 @@
             this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(157, 117);
+            this.groupBox1.Size = new System.Drawing.Size(160, 169);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Work Count";
@@ -165,7 +165,7 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.groupBox2.BackColor = System.Drawing.Color.LightSkyBlue;
             this.groupBox2.Controls.Add(this.lbl_RobotEnable);
             this.groupBox2.Controls.Add(this.label49);
             this.groupBox2.Controls.Add(this.lbl_RobotMode);
@@ -219,9 +219,9 @@
             this.groupBox2.Controls.Add(this.lbl_pressure);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.groupBox2.Location = new System.Drawing.Point(0, 117);
+            this.groupBox2.Location = new System.Drawing.Point(166, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(157, 881);
+            this.groupBox2.Size = new System.Drawing.Size(200, 166);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "EFEM status";
@@ -230,7 +230,7 @@
             // 
             this.lbl_RobotEnable.BackColor = System.Drawing.Color.Yellow;
             this.lbl_RobotEnable.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_RobotEnable.Location = new System.Drawing.Point(111, 829);
+            this.lbl_RobotEnable.Location = new System.Drawing.Point(121, 137);
             this.lbl_RobotEnable.Name = "lbl_RobotEnable";
             this.lbl_RobotEnable.Size = new System.Drawing.Size(23, 22);
             this.lbl_RobotEnable.TabIndex = 52;
@@ -246,12 +246,13 @@
             this.label49.TabIndex = 51;
             this.label49.Text = "Robot Enable";
             this.label49.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label49.Visible = false;
             // 
             // lbl_RobotMode
             // 
             this.lbl_RobotMode.BackColor = System.Drawing.Color.Yellow;
             this.lbl_RobotMode.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_RobotMode.Location = new System.Drawing.Point(111, 797);
+            this.lbl_RobotMode.Location = new System.Drawing.Point(92, 137);
             this.lbl_RobotMode.Name = "lbl_RobotMode";
             this.lbl_RobotMode.Size = new System.Drawing.Size(23, 22);
             this.lbl_RobotMode.TabIndex = 50;
@@ -267,12 +268,13 @@
             this.label51.TabIndex = 49;
             this.label51.Text = "Robot Mode";
             this.label51.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label51.Visible = false;
             // 
             // lbl_power
             // 
             this.lbl_power.BackColor = System.Drawing.Color.Yellow;
             this.lbl_power.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_power.Location = new System.Drawing.Point(111, 765);
+            this.lbl_power.Location = new System.Drawing.Point(63, 137);
             this.lbl_power.Name = "lbl_power";
             this.lbl_power.Size = new System.Drawing.Size(23, 22);
             this.lbl_power.TabIndex = 48;
@@ -288,12 +290,13 @@
             this.label8.TabIndex = 47;
             this.label8.Text = "Power";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label8.Visible = false;
             // 
             // lbl_Emo
             // 
             this.lbl_Emo.BackColor = System.Drawing.Color.Yellow;
             this.lbl_Emo.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_Emo.Location = new System.Drawing.Point(83, 733);
+            this.lbl_Emo.Location = new System.Drawing.Point(34, 137);
             this.lbl_Emo.Name = "lbl_Emo";
             this.lbl_Emo.Size = new System.Drawing.Size(23, 22);
             this.lbl_Emo.TabIndex = 46;
@@ -309,12 +312,13 @@
             this.label39.TabIndex = 45;
             this.label39.Text = "EMO";
             this.label39.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label39.Visible = false;
             // 
             // lbl_Door
             // 
             this.lbl_Door.BackColor = System.Drawing.Color.Yellow;
             this.lbl_Door.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_Door.Location = new System.Drawing.Point(83, 701);
+            this.lbl_Door.Location = new System.Drawing.Point(5, 137);
             this.lbl_Door.Name = "lbl_Door";
             this.lbl_Door.Size = new System.Drawing.Size(23, 22);
             this.lbl_Door.TabIndex = 44;
@@ -330,12 +334,13 @@
             this.label41.TabIndex = 43;
             this.label41.Text = "Door";
             this.label41.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label41.Visible = false;
             // 
             // lbl_FFU11
             // 
             this.lbl_FFU11.BackColor = System.Drawing.Color.Yellow;
             this.lbl_FFU11.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_FFU11.Location = new System.Drawing.Point(83, 669);
+            this.lbl_FFU11.Location = new System.Drawing.Point(121, 105);
             this.lbl_FFU11.Name = "lbl_FFU11";
             this.lbl_FFU11.Size = new System.Drawing.Size(23, 22);
             this.lbl_FFU11.TabIndex = 42;
@@ -351,12 +356,13 @@
             this.label43.TabIndex = 41;
             this.label43.Text = "FFU 11";
             this.label43.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label43.Visible = false;
             // 
             // lbl_FFU10
             // 
             this.lbl_FFU10.BackColor = System.Drawing.Color.Yellow;
             this.lbl_FFU10.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_FFU10.Location = new System.Drawing.Point(83, 637);
+            this.lbl_FFU10.Location = new System.Drawing.Point(92, 105);
             this.lbl_FFU10.Name = "lbl_FFU10";
             this.lbl_FFU10.Size = new System.Drawing.Size(23, 22);
             this.lbl_FFU10.TabIndex = 40;
@@ -372,12 +378,13 @@
             this.label45.TabIndex = 39;
             this.label45.Text = "FFU 10";
             this.label45.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label45.Visible = false;
             // 
             // lbl_FFU9
             // 
             this.lbl_FFU9.BackColor = System.Drawing.Color.Yellow;
             this.lbl_FFU9.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_FFU9.Location = new System.Drawing.Point(83, 605);
+            this.lbl_FFU9.Location = new System.Drawing.Point(63, 105);
             this.lbl_FFU9.Name = "lbl_FFU9";
             this.lbl_FFU9.Size = new System.Drawing.Size(23, 22);
             this.lbl_FFU9.TabIndex = 38;
@@ -393,12 +400,13 @@
             this.label47.TabIndex = 37;
             this.label47.Text = "FFU 9";
             this.label47.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label47.Visible = false;
             // 
             // lbl_FFU8
             // 
             this.lbl_FFU8.BackColor = System.Drawing.Color.Yellow;
             this.lbl_FFU8.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_FFU8.Location = new System.Drawing.Point(83, 573);
+            this.lbl_FFU8.Location = new System.Drawing.Point(34, 105);
             this.lbl_FFU8.Name = "lbl_FFU8";
             this.lbl_FFU8.Size = new System.Drawing.Size(23, 22);
             this.lbl_FFU8.TabIndex = 36;
@@ -414,12 +422,13 @@
             this.label36.TabIndex = 35;
             this.label36.Text = "FFU 8";
             this.label36.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label36.Visible = false;
             // 
             // lbl_FFU7
             // 
             this.lbl_FFU7.BackColor = System.Drawing.Color.Yellow;
             this.lbl_FFU7.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_FFU7.Location = new System.Drawing.Point(83, 541);
+            this.lbl_FFU7.Location = new System.Drawing.Point(5, 105);
             this.lbl_FFU7.Name = "lbl_FFU7";
             this.lbl_FFU7.Size = new System.Drawing.Size(23, 22);
             this.lbl_FFU7.TabIndex = 34;
@@ -435,12 +444,13 @@
             this.label38.TabIndex = 33;
             this.label38.Text = "FFU 7";
             this.label38.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label38.Visible = false;
             // 
             // lbl_FFU6
             // 
             this.lbl_FFU6.BackColor = System.Drawing.Color.Yellow;
             this.lbl_FFU6.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_FFU6.Location = new System.Drawing.Point(83, 510);
+            this.lbl_FFU6.Location = new System.Drawing.Point(121, 73);
             this.lbl_FFU6.Name = "lbl_FFU6";
             this.lbl_FFU6.Size = new System.Drawing.Size(23, 22);
             this.lbl_FFU6.TabIndex = 32;
@@ -456,12 +466,13 @@
             this.label20.TabIndex = 31;
             this.label20.Text = "FFU 6";
             this.label20.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label20.Visible = false;
             // 
             // lbl_FFU5
             // 
             this.lbl_FFU5.BackColor = System.Drawing.Color.Yellow;
             this.lbl_FFU5.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_FFU5.Location = new System.Drawing.Point(83, 478);
+            this.lbl_FFU5.Location = new System.Drawing.Point(92, 73);
             this.lbl_FFU5.Name = "lbl_FFU5";
             this.lbl_FFU5.Size = new System.Drawing.Size(23, 22);
             this.lbl_FFU5.TabIndex = 30;
@@ -477,12 +488,13 @@
             this.label22.TabIndex = 29;
             this.label22.Text = "FFU 5";
             this.label22.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label22.Visible = false;
             // 
             // lbl_FFU4
             // 
             this.lbl_FFU4.BackColor = System.Drawing.Color.Yellow;
             this.lbl_FFU4.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_FFU4.Location = new System.Drawing.Point(83, 446);
+            this.lbl_FFU4.Location = new System.Drawing.Point(63, 73);
             this.lbl_FFU4.Name = "lbl_FFU4";
             this.lbl_FFU4.Size = new System.Drawing.Size(23, 22);
             this.lbl_FFU4.TabIndex = 28;
@@ -498,12 +510,13 @@
             this.label24.TabIndex = 27;
             this.label24.Text = "FFU 4";
             this.label24.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label24.Visible = false;
             // 
             // lbl_FFU3
             // 
             this.lbl_FFU3.BackColor = System.Drawing.Color.Yellow;
             this.lbl_FFU3.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_FFU3.Location = new System.Drawing.Point(83, 414);
+            this.lbl_FFU3.Location = new System.Drawing.Point(34, 73);
             this.lbl_FFU3.Name = "lbl_FFU3";
             this.lbl_FFU3.Size = new System.Drawing.Size(23, 22);
             this.lbl_FFU3.TabIndex = 26;
@@ -519,12 +532,13 @@
             this.label26.TabIndex = 25;
             this.label26.Text = "FFU 3";
             this.label26.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label26.Visible = false;
             // 
             // lbl_FFU2
             // 
             this.lbl_FFU2.BackColor = System.Drawing.Color.Yellow;
             this.lbl_FFU2.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_FFU2.Location = new System.Drawing.Point(83, 382);
+            this.lbl_FFU2.Location = new System.Drawing.Point(5, 73);
             this.lbl_FFU2.Name = "lbl_FFU2";
             this.lbl_FFU2.Size = new System.Drawing.Size(23, 22);
             this.lbl_FFU2.TabIndex = 24;
@@ -540,12 +554,13 @@
             this.label28.TabIndex = 23;
             this.label28.Text = "FFU 2";
             this.label28.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label28.Visible = false;
             // 
             // lbl_FFU1
             // 
             this.lbl_FFU1.BackColor = System.Drawing.Color.Yellow;
             this.lbl_FFU1.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_FFU1.Location = new System.Drawing.Point(83, 350);
+            this.lbl_FFU1.Location = new System.Drawing.Point(121, 41);
             this.lbl_FFU1.Name = "lbl_FFU1";
             this.lbl_FFU1.Size = new System.Drawing.Size(23, 22);
             this.lbl_FFU1.TabIndex = 22;
@@ -561,12 +576,13 @@
             this.label30.TabIndex = 21;
             this.label30.Text = "FFU 1";
             this.label30.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label30.Visible = false;
             // 
             // lbl_Ionizer8
             // 
             this.lbl_Ionizer8.BackColor = System.Drawing.Color.Yellow;
             this.lbl_Ionizer8.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_Ionizer8.Location = new System.Drawing.Point(83, 318);
+            this.lbl_Ionizer8.Location = new System.Drawing.Point(92, 41);
             this.lbl_Ionizer8.Name = "lbl_Ionizer8";
             this.lbl_Ionizer8.Size = new System.Drawing.Size(23, 22);
             this.lbl_Ionizer8.TabIndex = 20;
@@ -582,12 +598,13 @@
             this.label32.TabIndex = 19;
             this.label32.Text = "Lonizer 8";
             this.label32.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label32.Visible = false;
             // 
             // lbl_Ionizer7
             // 
             this.lbl_Ionizer7.BackColor = System.Drawing.Color.Yellow;
             this.lbl_Ionizer7.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_Ionizer7.Location = new System.Drawing.Point(83, 286);
+            this.lbl_Ionizer7.Location = new System.Drawing.Point(63, 41);
             this.lbl_Ionizer7.Name = "lbl_Ionizer7";
             this.lbl_Ionizer7.Size = new System.Drawing.Size(23, 22);
             this.lbl_Ionizer7.TabIndex = 18;
@@ -603,12 +620,13 @@
             this.label34.TabIndex = 17;
             this.label34.Text = "Lonizer 7";
             this.label34.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label34.Visible = false;
             // 
             // lbl_Ionizer6
             // 
             this.lbl_Ionizer6.BackColor = System.Drawing.Color.Yellow;
             this.lbl_Ionizer6.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_Ionizer6.Location = new System.Drawing.Point(83, 255);
+            this.lbl_Ionizer6.Location = new System.Drawing.Point(34, 41);
             this.lbl_Ionizer6.Name = "lbl_Ionizer6";
             this.lbl_Ionizer6.Size = new System.Drawing.Size(23, 22);
             this.lbl_Ionizer6.TabIndex = 16;
@@ -624,12 +642,13 @@
             this.label18.TabIndex = 15;
             this.label18.Text = "Lonizer 6";
             this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label18.Visible = false;
             // 
             // lbl_Ionizer5
             // 
             this.lbl_Ionizer5.BackColor = System.Drawing.Color.Yellow;
             this.lbl_Ionizer5.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_Ionizer5.Location = new System.Drawing.Point(83, 223);
+            this.lbl_Ionizer5.Location = new System.Drawing.Point(5, 41);
             this.lbl_Ionizer5.Name = "lbl_Ionizer5";
             this.lbl_Ionizer5.Size = new System.Drawing.Size(23, 22);
             this.lbl_Ionizer5.TabIndex = 14;
@@ -645,12 +664,13 @@
             this.label16.TabIndex = 13;
             this.label16.Text = "Lonizer 5";
             this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label16.Visible = false;
             // 
             // lbl_Ionizer4
             // 
             this.lbl_Ionizer4.BackColor = System.Drawing.Color.Yellow;
             this.lbl_Ionizer4.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_Ionizer4.Location = new System.Drawing.Point(83, 191);
+            this.lbl_Ionizer4.Location = new System.Drawing.Point(149, 15);
             this.lbl_Ionizer4.Name = "lbl_Ionizer4";
             this.lbl_Ionizer4.Size = new System.Drawing.Size(23, 22);
             this.lbl_Ionizer4.TabIndex = 12;
@@ -666,12 +686,13 @@
             this.label14.TabIndex = 11;
             this.label14.Text = "Lonizer 4";
             this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label14.Visible = false;
             // 
             // lbl_Ionizer3
             // 
             this.lbl_Ionizer3.BackColor = System.Drawing.Color.Yellow;
             this.lbl_Ionizer3.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_Ionizer3.Location = new System.Drawing.Point(83, 159);
+            this.lbl_Ionizer3.Location = new System.Drawing.Point(120, 15);
             this.lbl_Ionizer3.Name = "lbl_Ionizer3";
             this.lbl_Ionizer3.Size = new System.Drawing.Size(23, 22);
             this.lbl_Ionizer3.TabIndex = 10;
@@ -687,12 +708,13 @@
             this.label12.TabIndex = 9;
             this.label12.Text = "Lonizer 3";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label12.Visible = false;
             // 
             // lbl_Ionizer2
             // 
             this.lbl_Ionizer2.BackColor = System.Drawing.Color.Yellow;
             this.lbl_Ionizer2.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_Ionizer2.Location = new System.Drawing.Point(83, 127);
+            this.lbl_Ionizer2.Location = new System.Drawing.Point(91, 15);
             this.lbl_Ionizer2.Name = "lbl_Ionizer2";
             this.lbl_Ionizer2.Size = new System.Drawing.Size(23, 22);
             this.lbl_Ionizer2.TabIndex = 8;
@@ -708,12 +730,13 @@
             this.label10.TabIndex = 7;
             this.label10.Text = "Lonizer 2";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label10.Visible = false;
             // 
             // lbl_Ionizer1
             // 
             this.lbl_Ionizer1.BackColor = System.Drawing.Color.Yellow;
             this.lbl_Ionizer1.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_Ionizer1.Location = new System.Drawing.Point(83, 95);
+            this.lbl_Ionizer1.Location = new System.Drawing.Point(62, 15);
             this.lbl_Ionizer1.Name = "lbl_Ionizer1";
             this.lbl_Ionizer1.Size = new System.Drawing.Size(23, 22);
             this.lbl_Ionizer1.TabIndex = 6;
@@ -729,12 +752,13 @@
             this.label9.TabIndex = 5;
             this.label9.Text = "Lonizer 1";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label9.Visible = false;
             // 
             // lbl_Vacuum
             // 
             this.lbl_Vacuum.BackColor = System.Drawing.Color.Yellow;
             this.lbl_Vacuum.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_Vacuum.Location = new System.Drawing.Point(83, 63);
+            this.lbl_Vacuum.Location = new System.Drawing.Point(33, 15);
             this.lbl_Vacuum.Name = "lbl_Vacuum";
             this.lbl_Vacuum.Size = new System.Drawing.Size(23, 22);
             this.lbl_Vacuum.TabIndex = 4;
@@ -750,12 +774,13 @@
             this.label6.TabIndex = 3;
             this.label6.Text = "Vacuum";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label6.Visible = false;
             // 
             // lbl_pressure
             // 
             this.lbl_pressure.BackColor = System.Drawing.Color.Yellow;
             this.lbl_pressure.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbl_pressure.Location = new System.Drawing.Point(83, 31);
+            this.lbl_pressure.Location = new System.Drawing.Point(4, 15);
             this.lbl_pressure.Name = "lbl_pressure";
             this.lbl_pressure.Size = new System.Drawing.Size(23, 22);
             this.lbl_pressure.TabIndex = 2;
@@ -771,6 +796,7 @@
             this.label4.TabIndex = 1;
             this.label4.Text = "Pressure";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label4.Visible = false;
             // 
             // StatusTable
             // 
@@ -780,7 +806,7 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "StatusTable";
-            this.Size = new System.Drawing.Size(140, 959);
+            this.Size = new System.Drawing.Size(372, 174);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);

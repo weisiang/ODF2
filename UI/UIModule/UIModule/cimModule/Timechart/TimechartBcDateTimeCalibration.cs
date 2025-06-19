@@ -75,7 +75,7 @@ namespace CIM
                 {
                     BcSec = tmp3;
                     cv_Date = SysUtils.Now();
-                    BaseForm.PSystemData.PBcAlive = true;
+                    lgcBase.PSystemData.PBcAlive = true;
                 }
                 else
                 {
@@ -88,7 +88,7 @@ namespace CIM
                     {
                         if (diff > 5000)
                         {
-                            BaseForm.PSystemData.PBcAlive = false;
+                            lgcBase.PSystemData.PBcAlive = false;
                         }
                     }
                 }

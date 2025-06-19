@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using KgsCommon;
 using CommonData.HIRATA;
+using BaseAp;
 
 namespace UI.GUI
 {
@@ -23,7 +24,7 @@ namespace UI.GUI
             cv_Id = m_Id;
             cv_SlotCount = m_SlotCount;
             this.gb_port.Text = "PORT " + Convert.ToString(m_Id);
-            cv_glassDataView.Rows.Add(cv_SlotCount-1);
+            cv_glassDataView.Rows.Add(cv_SlotCount);
             cv_glassDataView.AutoGenerateColumns = false;
             //cv_glassDataView.RowHeadersVisible = false;
             cv_glassDataView.Rows[0].Cells[0].Value = "";
@@ -167,7 +168,7 @@ namespace UI.GUI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if(!UiForm.PSystemData.PapiConnect)
+            if(!lgcBase.PSystemData.PapiConnect)
             {
                 CommonStaticData.PopForm("Port cancel can't exe , buz robot disconnect!!", true, false);
             }
@@ -222,7 +223,7 @@ namespace UI.GUI
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            if (!UiForm.PSystemData.PapiConnect)
+            if (!lgcBase.PSystemData.PapiConnect)
             {
                 CommonStaticData.PopForm("Port cancel can't exe , buz robot disconnect!!", true, false);
             }

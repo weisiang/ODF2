@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CommonData.HIRATA;
 using UI;
 using LGC;
+using BaseAp;
 
 namespace CIM
 {
@@ -28,7 +29,7 @@ namespace CIM
         protected override void OnAlarmActionEvent(AlarmStatus m_Action, List<CommonData.HIRATA.AlarmItem> m_Alarms)
         {
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
-            cv_TimechartController.GetTimeChartInstance(TimechartEqAlarmReport.TIMECHART_ID_EqAlarmReport).AddJob(UiForm.cv_Alarms);
+            cv_TimechartController.GetTimeChartInstance(TimechartEqAlarmReport.TIMECHART_ID_EqAlarmReport).AddJob(lgcBase.cv_Alarms);
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
         }
 
@@ -39,7 +40,7 @@ namespace CIM
 
             byte[] tmp = new byte[1 << 1];
             tmp[0] = 0;
-            tmp[1] = Convert.ToByte(((UiForm.cv_Alarms.IsHasAlarm() ? 1 : 0) << 4) + (UiForm.cv_Alarms.IsHasWarning() ? 1 : 0));
+            tmp[1] = Convert.ToByte(((lgcBase.cv_Alarms.IsHasAlarm() ? 1 : 0) << 4) + (lgcBase.cv_Alarms.IsHasWarning() ? 1 : 0));
 
             cv_Driver.SetBinaryLengthData(0x3445, tmp, 1, false);
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
@@ -51,11 +52,11 @@ namespace CIM
         protected override void OnRecipeActionEvent(DataEidtAction m_Action, List<RecipeItem> m_Recipes)
         {
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
-            cv_TimechartController.GetTimeChartInstance(TimechartRecipeListReport.TIMECHART_ID_EqRecipeListReport).AddJob(UiForm.cv_Recipes);
+            cv_TimechartController.GetTimeChartInstance(TimechartRecipeListReport.TIMECHART_ID_EqRecipeListReport).AddJob(lgcBase.cv_Recipes);
 
             byte[] tmp = new byte[1<<1];
             RecipeItem cur_recipe = null;
-            if (UiForm.cv_Recipes.GetCurRecipe(out cur_recipe))
+            if (lgcBase.cv_Recipes.GetCurRecipe(out cur_recipe))
             {
                 int value = Convert.ToInt32(cur_recipe.PId.Trim()); // obj.PCurReipe;
                 tmp[0] = Convert.ToByte(value & 0x00ff);
@@ -75,26 +76,26 @@ namespace CIM
 
             byte[] tmp = new byte[1 << 2];
             Array.Clear(tmp, 0, tmp.Length);
-            int value = (UiForm.cv_TimeoutData.PIdleDelayTime / 1000 + ((UiForm.cv_TimeoutData.PIntervalTime / 1000) << 12));
+            int value = (lgcBase.cv_TimeoutData.PIdleDelayTime / 1000 + ((lgcBase.cv_TimeoutData.PIntervalTime / 1000) << 12));
             tmp[0] = Convert.ToByte(value & 0x00ff);
             tmp[1] = Convert.ToByte((value & 0xff00) >> 8);
             cv_Driver.SetBinaryLengthData(0x3446, tmp, 1, false);
 
-            if (UiForm.cv_TimeoutData.PIntervalTime != cv_TimechartController.IntervalTime)
+            if (lgcBase.cv_TimeoutData.PIntervalTime != cv_TimechartController.IntervalTime)
             {
-                cv_TimechartController.IntervalTime = UiForm.cv_TimeoutData.PIntervalTime;
+                cv_TimechartController.IntervalTime = lgcBase.cv_TimeoutData.PIntervalTime;
             }
-            if (UiForm.cv_TimeoutData.PTsTime != cv_TimechartController.TsTime)
+            if (lgcBase.cv_TimeoutData.PTsTime != cv_TimechartController.TsTime)
             {
-                cv_TimechartController.TsTime = UiForm.cv_TimeoutData.PTsTime;
+                cv_TimechartController.TsTime = lgcBase.cv_TimeoutData.PTsTime;
             }
-            if (UiForm.cv_TimeoutData.PTeTime != cv_TimechartController.TeTime)
+            if (lgcBase.cv_TimeoutData.PTeTime != cv_TimechartController.TeTime)
             {
-                cv_TimechartController.TeTime = UiForm.cv_TimeoutData.PTeTime;
+                cv_TimechartController.TeTime = lgcBase.cv_TimeoutData.PTeTime;
             }
-            if (UiForm.cv_TimeoutData.PTmTime != cv_TimechartController.TmTime)
+            if (lgcBase.cv_TimeoutData.PTmTime != cv_TimechartController.TmTime)
             {
-                cv_TimechartController.TmTime = UiForm.cv_TimeoutData.PTmTime;
+                cv_TimechartController.TmTime = lgcBase.cv_TimeoutData.PTmTime;
             }
 
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
@@ -106,15 +107,15 @@ namespace CIM
         {
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
             byte[] tmp = new byte[4 << 1];
-            int value = UiForm.cv_GlassCountData.PProductCount;
+            int value = lgcBase.cv_GlassCountData.PProductCount;
             tmp[0] = Convert.ToByte(value & 0x00ff);
             tmp[1] = Convert.ToByte((value & 0xff00) >> 8);
 
-            value = UiForm.cv_GlassCountData.PDummyCount;
+            value = lgcBase.cv_GlassCountData.PDummyCount;
             tmp[2] = Convert.ToByte(value & 0x00ff);
             tmp[3] = Convert.ToByte((value & 0xff00) >> 8);
 
-            value = UiForm.cv_GlassCountData.PHistoryCount;
+            value = lgcBase.cv_GlassCountData.PHistoryCount;
             tmp[4] = Convert.ToByte(value & 0x000000ff);
             tmp[5] = Convert.ToByte((value & 0x0000ff00) >> 8);
             tmp[6] = Convert.ToByte((value & 0x00ff0000) >> 16);
@@ -133,22 +134,22 @@ namespace CIM
             byte[] tmp = new byte[10];
             Array.Clear(tmp, 0, tmp.Length);
 
-            if (UiForm.PSystemData.PSystemStatus == EquipmentStatus.WaitIdle)
+            if (lgcBase.PSystemData.PSystemStatus == EquipmentStatus.WaitIdle)
             {
                 cv_Driver.SetPortValue(0x344F, (int)EquipmentStatus.Run);
                 tmp[0] = Convert.ToByte((int)EquipmentStatus.Run);
             }
             else
             {
-                tmp[0] = Convert.ToByte((int)UiForm.PSystemData.PSystemStatus);
-                cv_Driver.SetPortValue(0x344F, (int)UiForm.PSystemData.PSystemStatus);
+                tmp[0] = Convert.ToByte((int)lgcBase.PSystemData.PSystemStatus);
+                cv_Driver.SetPortValue(0x344F, (int)lgcBase.PSystemData.PSystemStatus);
             }
             cv_Driver.SetBinaryLengthData(0x344F, tmp, 5, false);
 
             tmp = null;
             tmp = new byte[11 << 1];
-            int value = ((UiForm.PSystemData.PSystemOnlineMode == OnlineMode.Control ? 1 : 0) << 4) +
-                (UiForm.PSystemData.POperationModeLeft == OperationMode.Manual ? 0 : 1) + (2 << 8);
+            int value = ((lgcBase.PSystemData.PSystemOnlineMode == OnlineMode.Control ? 1 : 0) << 4) +
+                (lgcBase.PSystemData.POperationModeLeft == OperationMode.Manual ? 0 : 1) + (2 << 8);
             tmp[0] = Convert.ToByte(value & 0x00ff);
             tmp[1] = Convert.ToByte((value & 0xff00) >> 8);
 

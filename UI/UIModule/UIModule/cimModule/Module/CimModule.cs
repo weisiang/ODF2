@@ -68,16 +68,16 @@ namespace CIM
             {
                 if ((cv_MdFun.mdBdLedRead() & 0x0020) > 0)
                 {
-                    if (!BaseForm.PSystemData.PPlcConnect)
+                    if (!lgcBase.PSystemData.PPlcConnect)
                     {
-                         BaseForm.PSystemData.PPlcConnect= true;
+                        lgcBase.PSystemData.PPlcConnect= true;
                     }
                 }
                 else
                 {
-                    if (BaseForm.PSystemData.PPlcConnect)
+                    if (lgcBase.PSystemData.PPlcConnect)
                     {
-                         BaseForm.PSystemData.PPlcConnect= false;
+                        lgcBase.PSystemData.PPlcConnect= false;
                     }
                 }
             }

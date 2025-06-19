@@ -141,6 +141,37 @@ namespace UI
             {
                 cv_LgcModule = new LgcModule();
             }
+            int eq_number = CommonData.HIRATA.CommonStaticData.g_EqNumber;
+            int port_number = CommonData.HIRATA.CommonStaticData.g_PortNumber;
+            int robot_number = CommonData.HIRATA.CommonStaticData.g_RobotNumber;
+            int buffer_number = CommonData.HIRATA.CommonStaticData.g_BufferNumber;
+            int aligner_number = CommonData.HIRATA.CommonStaticData.g_AlignerNumber;
+            for (int i=1; i<= port_number;i++ )
+            {
+                GetPort(i).cv_Data = LgcModule.GetPortById(i).cv_Data;
+                GetPort(i).reFresh();
+                cv_SummaryPortData[(int)LgcModule.GetPortById(i).cv_Data.PId - 1] = LgcModule.GetPortById(i).cv_Data;
+            }
+            for (int i=1; i<= eq_number; i++ )
+            {
+                GetEq(i).cv_Data = LgcModule.GetEqById(i).cv_Data;
+                GetEq(i).reFresh();
+            }
+            for (int i=1; i<= robot_number; i++ )
+            {
+                GetRobot(i).cv_Data = LgcModule.GetRobotById(i).cv_Data;
+                GetRobot(i).reFresh();
+            }
+            for (int i=1; i<= buffer_number; i++ )
+            {
+                GetBuffer(i).cv_Data = LgcModule.GetBufferById(i).cv_Data;
+                GetBuffer(i).reFresh();
+            }
+            for (int i=1; i<= aligner_number; i++ )
+            {
+                GetAligner(i).cv_Data = LgcModule.GetAlignerById(i).cv_Data;
+                GetAligner(i).reFresh();
+            }
         }
         private void InitPermissionGroups()
         {
@@ -318,9 +349,6 @@ namespace UI
             UiForm.cv_AccountData.SetFilePath(CommonData.HIRATA.CommonStaticData.g_SysAccountFile);
             UiForm.cv_AccountData.PIsAutoSave = true;
             UiForm.cv_AccountData.LoadFromFile();
-
-            UiForm.cv_Recipes.PIsAutoSave = false;
-            UiForm.cv_Alarms.PIsAutoSave = false;
         }
 
         private void IniMonitorForm()
@@ -990,12 +1018,12 @@ cb_PortActionSlotType
         }
         private void CheckInitializeColor()
         {
-            if (UiForm.PSystemData.PInitaiizeOkRight)
+            if (lgcBase.PSystemData.PInitaiizeOkRight)
             {
                 if (btn_ReIni.BackColor != Color.Lime)
                     btn_ReIni.BackColor = Color.Lime;
             }
-            else if (UiForm.PSystemData.PInitaiizingRight)
+            else if (lgcBase.PSystemData.PInitaiizingRight)
             {
                 long diff = SysUtils.MilliSecondsBetween(SysUtils.Now(), cv_InitialButtonFlashTime);
                 if (diff < 0)
@@ -1059,7 +1087,8 @@ cb_PortActionSlotType
         {
             //WriteNormalIn
             string log = "User press Change to CIM OFF mode" + Environment.NewLine;
-            if (UiForm.PSystemData.PSystemOnlineMode == OnlineMode.Control)
+            //if (UiForm.PSystemData.PSystemOnlineMode == OnlineMode.Control)
+            if (lgcBase.PSystemData.PSystemOnlineMode == OnlineMode.Control)
             {
                 log += "Send change to CIM off msg";
                 CommonData.HIRATA.MDOnlineRequest obj = new MDOnlineRequest();
@@ -1069,7 +1098,7 @@ cb_PortActionSlotType
             }
             else
             {
-                log += "Cur CIM mode : " + UiForm.PSystemData.PSystemOnlineMode.ToString() + " reject user ask.";
+                log += "Cur CIM mode : " + lgcBase.PSystemData.PSystemOnlineMode.ToString() + " reject user ask.";
             }
             WriteLog(LogLevelType.General, log);
             //WriteNormalOut
@@ -1078,7 +1107,7 @@ cb_PortActionSlotType
         {
             //WriteNormalIn
             string log = "User press Change to CIM ON mode" + Environment.NewLine;
-            if (UiForm.PSystemData.PSystemOnlineMode == OnlineMode.Offline)
+            if (lgcBase.PSystemData.PSystemOnlineMode == OnlineMode.Offline)
             {
                 log += "Send change to CIM ON msg";
                 CommonData.HIRATA.MDOnlineRequest obj = new MDOnlineRequest();
@@ -1088,7 +1117,7 @@ cb_PortActionSlotType
             }
             else
             {
-                log += "Cur CIM mode : " + UiForm.PSystemData.PSystemOnlineMode.ToString() + " reject user ask.";
+                log += "Cur CIM mode : " + lgcBase.PSystemData.PSystemOnlineMode.ToString() + " reject user ask.";
             }
             WriteLog(LogLevelType.General, log);
             //WriteNormalOut
@@ -1106,27 +1135,27 @@ cb_PortActionSlotType
                 return;
             }
 
-            if (UiForm.PSystemData.PapiConnect)
+            if (lgcBase.PSystemData.PapiConnect)
             {
                 CommonStaticData.PopForm("Can't initialize because API disconnected!!!", false, false);
                 return;
             }
-            if (UiForm.PSystemData.PapiInlineMode != EquipmentInlineMode.Remote && UiForm.PSystemData.PapiInlineMode != EquipmentInlineMode.Local)
+            if (lgcBase.PSystemData.PapiInlineMode != EquipmentInlineMode.Remote && lgcBase.PSystemData.PapiInlineMode != EquipmentInlineMode.Local)
             {
                 CommonStaticData.PopForm("Can't initialize because API inline mode Error , maybe re-start program can solve!!!", false, false);
                 return;
             }
-            if (m_Side == enSideGroup.Left && UiForm.PSystemData.POperationModeLeft != OperationMode.Manual)
+            if (m_Side == enSideGroup.Left && lgcBase.PSystemData.POperationModeLeft != OperationMode.Manual)
             {
                 CommonStaticData.PopForm("Can't initialize because " + side + " not at manual mode!!!", false, false);
                 return;
             }
-            if (m_Side == enSideGroup.Right && UiForm.PSystemData.POperationModeRight != OperationMode.Manual)
+            if (m_Side == enSideGroup.Right && lgcBase.PSystemData.POperationModeRight != OperationMode.Manual)
             {
                 CommonStaticData.PopForm("Can't initialize because " + side + " not at manual mode!!!", false, false);
                 return;
             }
-            if (m_Side == enSideGroup.Both && (UiForm.PSystemData.POperationModeRight != OperationMode.Manual || UiForm.PSystemData.POperationModeLeft != OperationMode.Manual))
+            if (m_Side == enSideGroup.Both && (lgcBase.PSystemData.POperationModeRight != OperationMode.Manual || lgcBase.PSystemData.POperationModeLeft != OperationMode.Manual))
             {
                 CommonStaticData.PopForm("Can't initialize because " + side + " not at manual mode!!!", false, false);
                 return;
@@ -1141,7 +1170,7 @@ cb_PortActionSlotType
             //btn_ReIni.Enabled = false;
 
             AlarmData obj = new AlarmData();
-            obj.cv_AlarmList.AddRange(new List<AlarmItem>(UiForm.cv_Alarms.cv_AlarmList));
+            obj.cv_AlarmList.AddRange(new List<AlarmItem>(lgcBase.cv_Alarms.cv_AlarmList));
             for (int i = 0; i < obj.cv_AlarmList.Count; i++)
             {
                 obj.cv_AlarmList[i].PStatus = AlarmStatus.Clean;
@@ -2075,23 +2104,23 @@ cb_PortActionSlotType
             {
                 this.Invoke(new Action(() =>
                 {
-                    cv_AlarmDataView.DataSource = UiForm.cv_Alarms.cv_AlarmList;
+                    cv_AlarmDataView.DataSource = lgcBase.cv_Alarms.cv_AlarmList;
                 }));
             }
             else
             {
-                cv_AlarmDataView.DataSource = UiForm.cv_Alarms.cv_AlarmList;
+                cv_AlarmDataView.DataSource = lgcBase.cv_Alarms.cv_AlarmList;
             }
 
-            if (UiForm.cv_Alarms.IsHasAlarm() && cv_tcBar.SelectedTab != cv_tpAlarm)
+            if (lgcBase.cv_Alarms.IsHasAlarm() && cv_tcBar.SelectedTab != cv_tpAlarm)
             {
                 cv_tcBar.SelectedTab = cv_tpAlarm;
             }
 
-            if (UiForm.cv_Alarms.IsHasAlarm()) lbl_alarmStatus.BackColor = Color.Red;
+            if (lgcBase.cv_Alarms.IsHasAlarm()) lbl_alarmStatus.BackColor = Color.Red;
             else
                 lbl_alarmStatus.BackColor = SystemColors.ActiveCaption;
-            if (UiForm.cv_Alarms.IsHasWarning()) lbl_warningStatus.BackColor = Color.Red;
+            if (lgcBase.cv_Alarms.IsHasWarning()) lbl_warningStatus.BackColor = Color.Red;
             else
                 lbl_warningStatus.BackColor = SystemColors.ActiveCaption;
 
@@ -2252,13 +2281,13 @@ cb_PortActionSlotType
             //CommonData.HIRATA.MDApiErrorReset reset = new MDApiErrorReset();
             //Global.Controller.SendMmfNotifyObject(typeof(CommonData.HIRATA.MDApiErrorReset).Name, reset, KParseObjToXmlPropertyType.Field);
 
-            if (UiForm.cv_Alarms.IsHasAlarm())
+            if (lgcBase.cv_Alarms.IsHasAlarm())
             {
                 CommonStaticData.PopForm("Has alarms , please use initial.", true, false);
                 return;
             }
             AlarmData obj = new AlarmData();
-            obj.cv_AlarmList.AddRange(new List<AlarmItem>(UiForm.cv_Alarms.cv_AlarmList));
+            obj.cv_AlarmList.AddRange(new List<AlarmItem>(lgcBase.cv_Alarms.cv_AlarmList));
             for (int i = 0; i < obj.cv_AlarmList.Count; i++)
             {
                 obj.cv_AlarmList[i].PStatus = AlarmStatus.Clean;
@@ -2417,7 +2446,7 @@ cb_PortActionSlotType
         {
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
             string log = "[User press Operation(auto/manual) Button]" + Environment.NewLine;
-            if (UiForm.PSystemData.POperationModeLeft == OperationMode.Auto)
+            if (lgcBase.PSystemData.POperationModeLeft == OperationMode.Auto)
             {
                 bool is_force = false;
                 if (Control.ModifierKeys == Keys.Control)
@@ -2432,22 +2461,22 @@ cb_PortActionSlotType
             }
             else
             {
-                if (!UiForm.PSystemData.PInitaiizeOkRight)
+                if (!lgcBase.PSystemData.PInitaiizeOkRight)
                 {
                     log += "Can't change Auto buz not initialize., Please initial first";
                     CommonStaticData.PopForm("Can't change Auto buz not initialize., Please initial first", true, false);
 
                 }
-                else if (UiForm.PSystemData.PSystemStatus == EquipmentStatus.Down)
+                else if (lgcBase.PSystemData.PSystemStatus == EquipmentStatus.Down)
                 {
                     log += "Can't change Auto buz status down, Please initial first";
                     CommonStaticData.PopForm("Can't change Auto buz status down, Please initial first", true, false);
                 }
                 else
                 {
-                    if (UiForm.PSystemData.PapiInlineMode == EquipmentInlineMode.Remote)
+                    if (lgcBase.PSystemData.PapiInlineMode == EquipmentInlineMode.Remote)
                     {
-                        if (UiForm.cv_Alarms.IsHasAlarm())
+                        if (lgcBase.cv_Alarms.IsHasAlarm())
                         {
                             log += "Can't change Auto buz has alarm";
                             CommonStaticData.PopForm("System has alarm!!", true, false);
@@ -2486,7 +2515,7 @@ cb_PortActionSlotType
         private void lbl_RobotStatus_Click(object sender, EventArgs e)
         {
             //WriteNormalIn
-            if (UiForm.PSystemData.PInitaiizingRight)
+            if (lgcBase.PSystemData.PInitaiizingRight)
             {
                 CommonStaticData.PopForm("Please wait initialize finish.", true, false);
                 return;
@@ -3079,7 +3108,7 @@ cb_IoFfu
             if (Regex.Match(cb_RobotActionName.Text.Trim(), @"aligner", RegexOptions.IgnoreCase).Success)
             {
                 RecipeItem recipe = null;
-                if (UiForm.cv_Recipes.GetCurRecipe(out recipe))
+                if (lgcBase.cv_Recipes.GetCurRecipe(out recipe))
                 {
                     cb_robotActionDeg.Items.Add(recipe.PWaferIJPDegree.ToString());
                     cb_robotActionDeg.Items.Add(recipe.PWaferVASDegree.ToString());

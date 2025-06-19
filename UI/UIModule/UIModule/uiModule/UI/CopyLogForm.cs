@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using KgsCommon;
+using BaseAp;
 
 
 namespace UI
@@ -41,7 +42,7 @@ namespace UI
 
         private void cv_BtCopy_Click(object sender, EventArgs e)
         {
-            if(UiForm.PSystemData.POperationModeLeft != CommonData.HIRATA.OperationMode.Manual)
+            if(lgcBase.PSystemData.POperationModeLeft != CommonData.HIRATA.OperationMode.Manual)
             {
                 CommonStaticData.PopForm("Please change to mnaual mode.", true
                     , false);

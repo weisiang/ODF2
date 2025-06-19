@@ -133,14 +133,14 @@ namespace LGC
             {
                 if (obj.PChangeMode == OnlineMode.Offline)
                 {
-                    BaseForm.PSystemData.PSystemOnlineMode = obj.PChangeMode;
+                    lgcBase.PSystemData.PSystemOnlineMode = obj.PChangeMode;
                     log += "Change online mode successful";
                 }
                 else if (obj.PChangeMode == OnlineMode.Control)
                 {
-                    if (BaseForm.PSystemData.PPlcConnect && BaseForm.PSystemData.PBcAlive)
+                    if (lgcBase.PSystemData.PPlcConnect && lgcBase.PSystemData.PBcAlive)
                     {
-                        BaseForm.PSystemData.PSystemOnlineMode = obj.PChangeMode;
+                        lgcBase.PSystemData.PSystemOnlineMode = obj.PChangeMode;
                         log += "Change online mode successful";
                     }
                     else
@@ -163,7 +163,7 @@ namespace LGC
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
             base.ProcessInitialize(m_SourceModule , m_MessageId, m_Object);
             CommonData.HIRATA.MDInitial obj = m_Object as CommonData.HIRATA.MDInitial;
-            if (BaseForm.PSystemData.PapiConnect && BaseForm.PSystemData.PapiInlineMode != EquipmentInlineMode.None)
+            if (lgcBase.PSystemData.PapiConnect && lgcBase.PSystemData.PapiInlineMode != EquipmentInlineMode.None)
             {
                 if(obj.PSide == enSideGroup.Left)
                 {
@@ -209,7 +209,7 @@ namespace LGC
             {
                 if (obj.cv_AlarmList[i].PStatus == AlarmStatus.Clean)
                 {
-                    BaseForm.cv_Alarms.DelAlarm(obj.cv_AlarmList[i]);
+                    lgcBase.cv_Alarms.DelAlarm(obj.cv_AlarmList[i]);
                 }
             }
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
@@ -219,7 +219,7 @@ namespace LGC
             WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
             CommonData.HIRATA.MDOntMode obj = m_Object as CommonData.HIRATA.MDOntMode;
             bool is_on = obj.PIsOn;
-            BaseForm.PSystemData.PONT = is_on;
+            lgcBase.PSystemData.PONT = is_on;
             WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
         }
         protected override void ProcessSetTimeOut(FdModule m_SourceModule, string m_MessageId, Object m_Object)
@@ -228,17 +228,17 @@ namespace LGC
             base.ProcessSetTimeOut(m_SourceModule , m_MessageId , m_Object);
             CommonData.HIRATA.MDSetTimeOut obj = m_Object as CommonData.HIRATA.MDSetTimeOut;
 
-            BaseForm.cv_TimeoutData.cv_IdleDelayTime = obj.PIdleTIme;
-            BaseForm.cv_TimeoutData.cv_IntervalTime = obj.PIntervalTIme;
-            BaseForm.cv_TimeoutData.cv_T0Time = obj.PT0TIme;
-            BaseForm.cv_TimeoutData.cv_T1Time = obj.PT1TIme;
-            BaseForm.cv_TimeoutData.cv_T3Time = obj.PT3TIme;
-            BaseForm.cv_TimeoutData.cv_TsTime = obj.PTsTIme;
-            BaseForm.cv_TimeoutData.cv_TeTime = obj.PTeTIme;
-            BaseForm.cv_TimeoutData.cv_ApiT3TIme = obj.PApiT3TIme;
-            BaseForm.cv_TimeoutData.cv_TmTime = obj.PTmTIme;
-            BaseForm.cv_TimeoutData.cv_TmTime = obj.PTmTIme;
-            BaseForm.cv_TimeoutData.SaveToFile();
+            lgcBase.cv_TimeoutData.cv_IdleDelayTime = obj.PIdleTIme;
+            lgcBase.cv_TimeoutData.cv_IntervalTime = obj.PIntervalTIme;
+            lgcBase.cv_TimeoutData.cv_T0Time = obj.PT0TIme;
+            lgcBase.cv_TimeoutData.cv_T1Time = obj.PT1TIme;
+            lgcBase.cv_TimeoutData.cv_T3Time = obj.PT3TIme;
+            lgcBase.cv_TimeoutData.cv_TsTime = obj.PTsTIme;
+            lgcBase.cv_TimeoutData.cv_TeTime = obj.PTeTIme;
+            lgcBase.cv_TimeoutData.cv_ApiT3TIme = obj.PApiT3TIme;
+            lgcBase.cv_TimeoutData.cv_TmTime = obj.PTmTIme;
+            lgcBase.cv_TimeoutData.cv_TmTime = obj.PTmTIme;
+            lgcBase.cv_TimeoutData.SaveToFile();
             SetTimeChartTimeOut();
 
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
@@ -253,7 +253,7 @@ namespace LGC
             {
                 foreach (CommonData.HIRATA.RecipeItem recipe in obj.Recipes)
                 {
-                    if (BaseForm.cv_Recipes.AddRecipe(recipe))
+                    if (lgcBase.cv_Recipes.AddRecipe(recipe))
                     {
                         /*
                         CommonData.HIRATA.MDBCRecipeBodyReport report = new MDBCRecipeBodyReport();
@@ -270,7 +270,7 @@ namespace LGC
             {
                 foreach (CommonData.HIRATA.RecipeItem recipe in obj.Recipes)
                 {
-                    if (BaseForm.cv_Recipes.DelRecipe(recipe))
+                    if (lgcBase.cv_Recipes.DelRecipe(recipe))
                     {
                         /*
                         CommonData.HIRATA.MDBCRecipeBodyReport report = new MDBCRecipeBodyReport();
@@ -287,7 +287,7 @@ namespace LGC
             {
                 foreach (CommonData.HIRATA.RecipeItem recipe in obj.Recipes)
                 {
-                    if (BaseForm.cv_Recipes.ModifyRecipe(recipe))
+                    if (lgcBase.cv_Recipes.ModifyRecipe(recipe))
                     {
                         /*
                         CommonData.HIRATA.MDBCRecipeBodyReport report = new MDBCRecipeBodyReport();
@@ -304,9 +304,9 @@ namespace LGC
             {
                 foreach (CommonData.HIRATA.RecipeItem recipe in obj.Recipes)
                 {
-                    if (BaseForm.cv_Recipes.IsRecipeExist(recipe.PId))
+                    if (lgcBase.cv_Recipes.IsRecipeExist(recipe.PId))
                     {
-                        BaseForm.cv_Recipes.SetCurRecipe(recipe.PId);
+                        lgcBase.cv_Recipes.SetCurRecipe(recipe.PId);
                     }
                     /*
                     if (LgcForm.cv_Recipes.ModifyRecipe(recipe))

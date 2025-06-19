@@ -72,7 +72,7 @@
   <ItemGroup>
     <Compile Include="cimModule\Kernel\CIMController.cs" />
     <Compile Include="cimModule\Kernel\cimController_baseEvent.cs" />
-    <Compile Include="cimModule\Template\CimModule.cs" />
+    <Compile Include="cimModule\Module\CimModule.cs" />
     <Compile Include="cimModule\third_part\MDFun.cs" />
     <Compile Include="cimModule\Timechart\TimechartBcDateTimeCalibration.cs" />
     <Compile Include="cimModule\Timechart\TimechartBcDisplayMessage.cs" />
@@ -113,11 +113,17 @@
     <Compile Include="lgcModule\Kernel\LGCController.cs" />
     <Compile Include="lgcModule\Kernel\lgcController_baseEvent.cs" />
     <Compile Include="lgcModule\Kernel\LogBase.cs" />
+    <Compile Include="lgcModule\Module\lgcModule_Logic.cs" />
+    <Compile Include="lgcModule\Module\lgcModule_SystemData.cs" />
+    <Compile Include="lgcModule\Module\lgcModule_GlassCount.cs" />
+    <Compile Include="lgcModule\Module\lgcModule_TimeOutData.cs" />
+    <Compile Include="lgcModule\Module\lgcModule_Recipe.cs" />
+    <Compile Include="lgcModule\Module\lgcModule_Alarm.cs" />
     <Compile Include="lgcModule\RobotInterface\Hirata\HIRATADevice.cs" />
     <Compile Include="lgcModule\RobotInterface\Hirata\RbController.cs" />
     <Compile Include="lgcModule\StaicData.cs" />
-    <Compile Include="lgcModule\Template\lgcModule.cs" />
-    <Compile Include="lgcModule\Template\lgcModule_API.cs" />
+    <Compile Include="lgcModule\Module\lgcModule.cs" />
+    <Compile Include="lgcModule\Module\lgcModule_API.cs" />
     <Compile Include="lgcModule\Timechart\Parser.cs" />
     <Compile Include="lgcModule\Timechart\TimechartController.cs" />
     <Compile Include="lgcModule\Timechart\TimechartControllerBase.cs" />

@@ -65,6 +65,8 @@
             // 
             // dataGrid_LotSummary
             // 
+            this.dataGrid_LotSummary.AllowUserToAddRows = false;
+            this.dataGrid_LotSummary.BackgroundColor = System.Drawing.Color.LightSkyBlue;
             this.dataGrid_LotSummary.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGrid_LotSummary.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,

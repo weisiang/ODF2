@@ -24,7 +24,7 @@ namespace UI.GUI
             cv_SlotCount = m_SlotCount;
             cv_Id = m_Id;
             this.gb_Buffer.Text = "Buffer " + Convert.ToString(m_Id);
-            cv_glassDataView.Rows.Add(m_SlotCount-1);
+            cv_glassDataView.Rows.Add(m_SlotCount);
             cv_glassDataView.AutoGenerateColumns = false;
             cv_glassDataView.RowHeadersVisible = false;
             cv_glassDataView.Rows[0].Cells[0].Value = "";
@@ -48,7 +48,7 @@ namespace UI.GUI
                 if (cv_glassDataView.Rows[i].Cells[0].Value == null || string.IsNullOrEmpty(cv_glassDataView.Rows[i].Cells[0].Value.ToString()) ||
                    cv_glassDataView.Rows[i].Cells[0].Value.ToString().Substring(0, 1) != buffer.cv_Data.getBufferSlotType(i+1).ToString().Substring(0, 1))
                 {
-                    cv_glassDataView.Rows[i].Cells[0].Value = buffer.cv_Data.getBufferSlotType(i+1).ToString().Substring(0, 1) + ":" + i+1;
+                    cv_glassDataView.Rows[i].Cells[0].Value = buffer.cv_Data.getBufferSlotType(i+1).ToString().Substring(0, 1) + ":" + (i+1);
                 }
             }
         }
@@ -98,6 +98,8 @@ namespace UI.GUI
 
         private void cv_glassDataView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex == -1)
+                return;
             cv_glassDataView.Rows[e.RowIndex].Selected = false;
         }
         private void dELETEToolStripMenuItem_Click(object sender, EventArgs e)

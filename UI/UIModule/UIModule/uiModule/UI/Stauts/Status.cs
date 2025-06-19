@@ -8,12 +8,40 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CommonData;
+using BaseAp;
+
 
 namespace UI
 {
     public partial class StatusTable : UserControl
     {
         Dictionary<CommonData.HIRATA.APIEnum.EventCommand, Label> cv_map = new Dictionary<CommonData.HIRATA.APIEnum.EventCommand, Label>();
+        ToolTip Pressure = new ToolTip();
+        ToolTip Vacuum = new ToolTip();
+        ToolTip Ionizer1 = new ToolTip();
+        ToolTip Ionizer2 = new ToolTip();
+        ToolTip Ionizer3 = new ToolTip();
+        ToolTip Ionizer4 = new ToolTip();
+        ToolTip Ionizer5 = new ToolTip();
+        ToolTip Ionizer6 = new ToolTip();
+        ToolTip Ionizer7 = new ToolTip();
+        ToolTip Ionizer8 = new ToolTip();
+        ToolTip FFU1 = new ToolTip();
+        ToolTip FFU2 = new ToolTip();
+        ToolTip FFU3 = new ToolTip();
+        ToolTip FFU4 = new ToolTip();
+        ToolTip FFU5 = new ToolTip();
+        ToolTip FFU6 = new ToolTip();
+        ToolTip FFU7 = new ToolTip();
+        ToolTip FFU8 = new ToolTip();
+        ToolTip FFU9 = new ToolTip();
+        ToolTip FFU10 = new ToolTip();
+        ToolTip FFU11 = new ToolTip();
+        ToolTip Door = new ToolTip();
+        ToolTip EMO = new ToolTip();
+        ToolTip Power = new ToolTip();
+        ToolTip RobotMode = new ToolTip();
+        ToolTip RobotEnable = new ToolTip();
         public StatusTable()
         {
             InitializeComponent();
@@ -48,6 +76,33 @@ namespace UI
             cv_map.Add(CommonData.HIRATA.APIEnum.EventCommand.Power, lbl_power);
             cv_map.Add(CommonData.HIRATA.APIEnum.EventCommand.RobotMode, lbl_RobotMode);
             cv_map.Add(CommonData.HIRATA.APIEnum.EventCommand.RobotEnable, lbl_RobotEnable);
+
+            Pressure.SetToolTip(lbl_pressure, "Pressure");
+            Vacuum.SetToolTip(lbl_Vacuum, "Vacuum");
+            Ionizer1.SetToolTip(lbl_Ionizer1, "Ionizer1");
+            Ionizer2.SetToolTip(lbl_Ionizer2, "Ionizer2");
+            Ionizer3.SetToolTip(lbl_Ionizer3, "Ionizer3");
+            Ionizer4.SetToolTip(lbl_Ionizer4, "Ionizer4");
+            Ionizer5.SetToolTip(lbl_Ionizer5, "Ionizer5");
+            Ionizer6.SetToolTip(lbl_Ionizer6, "Ionizer6");
+            Ionizer7.SetToolTip(lbl_Ionizer7, "Ionizer7");
+            Ionizer8.SetToolTip(lbl_Ionizer8, "Ionizer8");
+            FFU1.SetToolTip(lbl_FFU1, "FFU1");
+            FFU2.SetToolTip(lbl_FFU2, "FFU2");
+            FFU3.SetToolTip(lbl_FFU3, "FFU3");
+            FFU4.SetToolTip(lbl_FFU4, "FFU4");
+            FFU5.SetToolTip(lbl_FFU5, "FFU5");
+            FFU6.SetToolTip(lbl_FFU6, "FFU6");
+            FFU7.SetToolTip(lbl_FFU7, "FFU7");
+            FFU8.SetToolTip(lbl_FFU8, "FFU8");
+            FFU9.SetToolTip(lbl_FFU9, "FFU9");
+            FFU10.SetToolTip(lbl_FFU10, "FFU10");
+            FFU11.SetToolTip(lbl_FFU11, "FFU11");
+            Door.SetToolTip(lbl_Door, "Door");
+            EMO.SetToolTip(lbl_Emo, "EMO");
+            Power.SetToolTip(lbl_power, "Power");
+            RobotMode.SetToolTip(lbl_RobotMode, "RobotMode");
+            RobotEnable.SetToolTip(lbl_RobotEnable, "RobotEnable");
         }
         private void SetCircle()
         {
@@ -195,17 +250,17 @@ namespace UI
         }
         public void SetGlassCount()
         {
-            if (cv_txtProductionCount.Text != UiForm.cv_GlassCountData.PProductCount.ToString())
+            if (cv_txtProductionCount.Text != lgcBase.cv_GlassCountData.PProductCount.ToString())
             {
-                cv_txtProductionCount.Text = UiForm.cv_GlassCountData.PProductCount.ToString();
+                cv_txtProductionCount.Text = lgcBase.cv_GlassCountData.PProductCount.ToString();
             }
-            if (cv_txtDummyCount.Text != UiForm.cv_GlassCountData.PDummyCount.ToString())
+            if (cv_txtDummyCount.Text != lgcBase.cv_GlassCountData.PDummyCount.ToString())
             {
-                cv_txtDummyCount.Text = UiForm.cv_GlassCountData.PDummyCount.ToString();
+                cv_txtDummyCount.Text = lgcBase.cv_GlassCountData.PDummyCount.ToString();
             }
-            if (cv_txtHistoryCount.Text != UiForm.cv_GlassCountData.PHistoryCount.ToString())
+            if (cv_txtHistoryCount.Text != lgcBase.cv_GlassCountData.PHistoryCount.ToString())
             {
-                cv_txtHistoryCount.Text = UiForm.cv_GlassCountData.PHistoryCount.ToString();
+                cv_txtHistoryCount.Text = lgcBase.cv_GlassCountData.PHistoryCount.ToString();
             }
         }
     }

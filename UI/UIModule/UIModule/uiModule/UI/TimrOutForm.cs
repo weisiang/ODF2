@@ -33,15 +33,15 @@ namespace UI
             cv_TbIFTm.Text = (Convert.ToDouble(UiForm.PSystemData.PTmTime) / 1000).ToString();
             base.Show();
             */
-            cv_TbIDTime.Text = (Convert.ToDouble(UiForm.cv_TimeoutData.PIdleDelayTime) / 1000).ToString();
-            txt_Interval.Text = (Convert.ToDouble(UiForm.cv_TimeoutData.PIntervalTime) / 1000).ToString();
-            cv_TbHST0.Text = (Convert.ToDouble(UiForm.cv_TimeoutData.PT0Time) / 1000).ToString();
-            cv_TbHST1.Text = (Convert.ToDouble(UiForm.cv_TimeoutData.PT1Time) / 1000).ToString();
-            cv_TbHST3.Text = (Convert.ToDouble(UiForm.cv_TimeoutData.PT3Time) / 1000).ToString();
-            cv_TbIFTs.Text = (Convert.ToDouble(UiForm.cv_TimeoutData.PTsTime) / 1000).ToString();
-            cv_TbIFTe.Text = (Convert.ToDouble(UiForm.cv_TimeoutData.PTeTime) / 1000).ToString();
-            txt_ApiT3.Text = (Convert.ToDouble(UiForm.cv_TimeoutData.PApiT3TIme) / 1000).ToString();
-            cv_TbIFTm.Text = (Convert.ToDouble(UiForm.cv_TimeoutData.PTmTime) / 1000).ToString();
+            cv_TbIDTime.Text = (Convert.ToDouble(lgcBase.cv_TimeoutData.PIdleDelayTime) / 1000).ToString();
+            txt_Interval.Text = (Convert.ToDouble(lgcBase.cv_TimeoutData.PIntervalTime) / 1000).ToString();
+            cv_TbHST0.Text = (Convert.ToDouble(lgcBase.cv_TimeoutData.PT0Time) / 1000).ToString();
+            cv_TbHST1.Text = (Convert.ToDouble(lgcBase.cv_TimeoutData.PT1Time) / 1000).ToString();
+            cv_TbHST3.Text = (Convert.ToDouble(lgcBase.cv_TimeoutData.PT3Time) / 1000).ToString();
+            cv_TbIFTs.Text = (Convert.ToDouble(lgcBase.cv_TimeoutData.PTsTime) / 1000).ToString();
+            cv_TbIFTe.Text = (Convert.ToDouble(lgcBase.cv_TimeoutData.PTeTime) / 1000).ToString();
+            txt_ApiT3.Text = (Convert.ToDouble(lgcBase.cv_TimeoutData.PApiT3TIme) / 1000).ToString();
+            cv_TbIFTm.Text = (Convert.ToDouble(lgcBase.cv_TimeoutData.PTmTime) / 1000).ToString();
             base.Show();
 
             //WriteNormalOut
@@ -49,15 +49,15 @@ namespace UI
         public void Set()
         {
             //WriteNormalIn
-            cv_TbIDTime.Text = (Convert.ToDouble(UiForm.cv_TimeoutData.PIdleDelayTime) / 1000).ToString();
-            txt_Interval.Text = (Convert.ToDouble(UiForm.cv_TimeoutData.PIntervalTime) / 1000).ToString();
-            cv_TbHST0.Text = (Convert.ToDouble(UiForm.cv_TimeoutData.PT0Time) / 1000).ToString();
-            cv_TbHST1.Text = (Convert.ToDouble(UiForm.cv_TimeoutData.PT1Time) / 1000).ToString();
-            cv_TbHST3.Text = (Convert.ToDouble(UiForm.cv_TimeoutData.PT3Time) / 1000).ToString();
-            cv_TbIFTs.Text = (Convert.ToDouble(UiForm.cv_TimeoutData.PTsTime) / 1000).ToString();
-            cv_TbIFTe.Text = (Convert.ToDouble(UiForm.cv_TimeoutData.PTeTime) / 1000).ToString();
-            txt_ApiT3.Text = (Convert.ToDouble(UiForm.cv_TimeoutData.PApiT3TIme) / 1000).ToString();
-            cv_TbIFTm.Text = (Convert.ToDouble(UiForm.cv_TimeoutData.PTmTime) / 1000).ToString();
+            cv_TbIDTime.Text = (Convert.ToDouble(lgcBase.cv_TimeoutData.PIdleDelayTime) / 1000).ToString();
+            txt_Interval.Text = (Convert.ToDouble(lgcBase.cv_TimeoutData.PIntervalTime) / 1000).ToString();
+            cv_TbHST0.Text = (Convert.ToDouble(lgcBase.cv_TimeoutData.PT0Time) / 1000).ToString();
+            cv_TbHST1.Text = (Convert.ToDouble(lgcBase.cv_TimeoutData.PT1Time) / 1000).ToString();
+            cv_TbHST3.Text = (Convert.ToDouble(lgcBase.cv_TimeoutData.PT3Time) / 1000).ToString();
+            cv_TbIFTs.Text = (Convert.ToDouble(lgcBase.cv_TimeoutData.PTsTime) / 1000).ToString();
+            cv_TbIFTe.Text = (Convert.ToDouble(lgcBase.cv_TimeoutData.PTeTime) / 1000).ToString();
+            txt_ApiT3.Text = (Convert.ToDouble(lgcBase.cv_TimeoutData.PApiT3TIme) / 1000).ToString();
+            cv_TbIFTm.Text = (Convert.ToDouble(lgcBase.cv_TimeoutData.PTmTime) / 1000).ToString();
             //WriteNormalOut
         }
 

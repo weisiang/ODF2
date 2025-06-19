@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using CommonData.HIRATA;
 using UI;
+using BaseAp;
 
 namespace UI.GUI
 {
@@ -104,21 +105,21 @@ namespace UI.GUI
         }
         public void refresh(RobotData m_Data)
         {
-            if (UiForm.PSystemData.PapiConnect)
+            if (lgcBase.PSystemData.PapiConnect)
             {
-                if (UiForm.PSystemData.PRobot1Status == CommonData.HIRATA.EquipmentStatus.Down)
+                if (lgcBase.PSystemData.PRobot1Status == CommonData.HIRATA.EquipmentStatus.Down)
                 {
                     lbl_RobotStatus.BackColor = Color.Red;
                 }
-                else if (UiForm.PSystemData.PRobot1Status == CommonData.HIRATA.EquipmentStatus.Idle)
+                else if (lgcBase.PSystemData.PRobot1Status == CommonData.HIRATA.EquipmentStatus.Idle)
                 {
                     lbl_RobotStatus.BackColor = Color.Yellow;
                 }
-                else if (UiForm.PSystemData.PRobot1Status == CommonData.HIRATA.EquipmentStatus.Run)
+                else if (lgcBase.PSystemData.PRobot1Status == CommonData.HIRATA.EquipmentStatus.Run)
                 {
                     lbl_RobotStatus.BackColor = Color.Lime;
                 }
-                else if (UiForm.PSystemData.PRobot1Status == CommonData.HIRATA.EquipmentStatus.Stop)
+                else if (lgcBase.PSystemData.PRobot1Status == CommonData.HIRATA.EquipmentStatus.Stop)
                 {
                     lbl_RobotStatus.BackColor = Color.Pink;
                 }

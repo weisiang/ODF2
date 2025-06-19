@@ -170,7 +170,7 @@ namespace LGC
             {
                 if (m_Command.PCommandType != APIEnum.CommandType.Event && m_Command.PEventCommand != APIEnum.EventCommand.ERROR)
                 {
-                    if ((!BaseForm.PSystemData.PInitaiizingRight) || (!BaseForm.PSystemData.PInitaiizingLeft))
+                    if ((!lgcBase.PSystemData.PInitaiizingRight) || (!lgcBase.PSystemData.PInitaiizingLeft))
                     {
                         ApiReplyAbnormal(m_Command);
                         return;
@@ -181,7 +181,7 @@ namespace LGC
                             (m_Command.PCommandType == APIEnum.CommandType.Common && m_Command.PCommonCommand == APIEnum.CommonCommand.GetStatus) ||
                             (m_Command.PCommandType == APIEnum.CommandType.Common && m_Command.PCommonCommand == APIEnum.CommonCommand.Home))
                         {
-                            SendinitCompleteFail(BaseForm.PSystemData.PWhichSideInInitilation);
+                            SendinitCompleteFail(lgcBase.PSystemData.PWhichSideInInitilation);
                             ShowMsg("At Initial , Command :" + m_Command.PCommonCommand.ToString() + "failure!!! Please check and re-initilize", false, false);
                             ApiReplyAbnormal(m_Command);
                             return;
@@ -267,7 +267,7 @@ namespace LGC
         }
         private void OnConnect(bool m_Isconnect)
         {
-            BaseForm.PSystemData.PapiConnect = m_Isconnect;
+            lgcBase.PSystemData.PapiConnect = m_Isconnect;
             WriteLog(LogLevelType.General, "Exe OnConnect : " + m_Isconnect.ToString());
             if (m_Isconnect)
             {
@@ -295,7 +295,7 @@ namespace LGC
             alarm.PMainDescription = "Send API Comand T3 TimeOut : " + m_Command.GetCommandStr();
             alarm.PStatus = AlarmStatus.Occur;
             EditAlarm(alarm);
-            if (BaseForm.PSystemData.PIsInInitialation)
+            if (lgcBase.PSystemData.PIsInInitialation)
             {
                 if ((m_Command.PCommandType == APIEnum.CommandType.Common && m_Command.PCommonCommand == APIEnum.CommonCommand.ResetError) ||
                     (m_Command.PCommandType == APIEnum.CommandType.Common && m_Command.PCommonCommand == APIEnum.CommonCommand.GetStatus) ||
@@ -303,7 +303,7 @@ namespace LGC
                     (m_Command.PCommandType == APIEnum.CommandType.API && m_Command.PApiCommand == APIEnum.APICommand.Remote)
                     )
                 {
-                    SendinitCompleteFail(BaseForm.PSystemData.PWhichSideInInitilation);
+                    SendinitCompleteFail(lgcBase.PSystemData.PWhichSideInInitilation);
                     ShowMsg("At Initial , Command :" + m_Command.PCommonCommand.ToString() + "failure!!! Please check and re-initilize", false, false);
                     ApiReplyAbnormal(m_Command);
                     return;
@@ -318,12 +318,12 @@ namespace LGC
             if (m_Command.PApiCommand == APIEnum.APICommand.Remote)
             {
                 SetApiCommonCommand(APIEnum.APICommand.Version);
-                BaseForm.PSystemData.PapiInlineMode = EquipmentInlineMode.Remote;
-                if (BaseForm.PSystemData.PIsInInitialation)
+                lgcBase.PSystemData.PapiInlineMode = EquipmentInlineMode.Remote;
+                if (lgcBase.PSystemData.PIsInInitialation)
                 {
                     foreach (Robot rb in cv_RobotContainer.Values)
                     {
-                        if (BaseForm.PSystemData.PWhichSideInInitilation == rb.PSideGroup || BaseForm.PSystemData.PWhichSideInInitilation == enSideGroup.Both)
+                        if (lgcBase.PSystemData.PWhichSideInInitilation == rb.PSideGroup || lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both)
                         {
                             SetErrorReset(APIEnum.CommnadDevice.Robot, rb.cv_Id);
                         }
@@ -332,21 +332,21 @@ namespace LGC
             }
             else if (m_Command.PApiCommand == APIEnum.APICommand.Local)
             {
-                BaseForm.PSystemData.PapiInlineMode = EquipmentInlineMode.Local;
+                lgcBase.PSystemData.PapiInlineMode = EquipmentInlineMode.Local;
             }
             else if (m_Command.PApiCommand == APIEnum.APICommand.Version)
             {
-                BaseForm.PSystemData.PapiVersion = m_Command.cv_ReplyParaList[0];
+                lgcBase.PSystemData.PapiVersion = m_Command.cv_ReplyParaList[0];
             }
             else if (m_Command.PApiCommand == APIEnum.APICommand.CurrentMode)
             {
                 if (Regex.Match(m_Command.cv_ReplyParaList[0], @"remote", RegexOptions.IgnoreCase).Success)
                 {
-                    BaseForm.PSystemData.PapiInlineMode = EquipmentInlineMode.Remote;
+                    lgcBase.PSystemData.PapiInlineMode = EquipmentInlineMode.Remote;
                 }
                 else
                 {
-                    BaseForm.PSystemData.PapiInlineMode = EquipmentInlineMode.Local;
+                    lgcBase.PSystemData.PapiInlineMode = EquipmentInlineMode.Local;
                 }
             }
         }
@@ -435,7 +435,7 @@ namespace LGC
                 {
                     job_port.PPortStatus = PortStaus.LDCM;
                 }
-                if ((BaseForm.PSystemData.PWhichSideInInitilation == job_port.PSideGroup) || (BaseForm.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
+                if ((lgcBase.PSystemData.PWhichSideInInitilation == job_port.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
                 {
                     SetGetMappingData(m_Command.cv_DeviceId);
                 }
@@ -501,7 +501,7 @@ namespace LGC
                         }
                         else
                         {
-                            if ((BaseForm.PSystemData.PWhichSideInInitilation == job_port.PSideGroup) || (BaseForm.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
+                            if ((lgcBase.PSystemData.PWhichSideInInitilation == job_port.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
                             {
                                 job_port.PIsRemapping = true;
                                 GetPortById(job_port.cv_Id).PIsRemapping = true;
@@ -521,7 +521,7 @@ namespace LGC
                     SetLoadUnloadLed(false, SignalTowerControl.On, m_Command.cv_DeviceId);
                 }
                 RemovePortToProcessList(m_Command.cv_DeviceId);
-                if (BaseForm.PSystemData.PONT)
+                if (lgcBase.PSystemData.PONT)
                 {
                     job_port.PLotStatus = LotStatus.FoupSensorOn;
                     job_port.cv_Data.PPortStatus = PortStaus.LDCM;
@@ -622,7 +622,7 @@ namespace LGC
             else if (m_Command.PRobotCommand == APIEnum.RobotCommand.ReStart)
             {
                 //if (!cv_HadInit && cv_Initilizing)
-                if ((BaseForm.PSystemData.PWhichSideInInitilation == rb.PSideGroup) || (BaseForm.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
+                if ((lgcBase.PSystemData.PWhichSideInInitilation == rb.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
                 {
                     SetHome(APIEnum.CommnadDevice.Robot, rb.cv_Id);
                 }
@@ -631,16 +631,16 @@ namespace LGC
             {
                 if (m_Command.cv_DeviceId == 1)
                 {
-                    BaseForm.PSystemData.PRobot1Speed = rb.cv_WaitRobotSpeed;
+                    lgcBase.PSystemData.PRobot1Speed = rb.cv_WaitRobotSpeed;
                 }
                 else if (m_Command.cv_DeviceId == 2)
                 {
-                    BaseForm.PSystemData.PRobot2Speed = rb.cv_WaitRobotSpeed;
+                    lgcBase.PSystemData.PRobot2Speed = rb.cv_WaitRobotSpeed;
                 }
-                if (BaseForm.PSystemData.PIsInInitialation)
+                if (lgcBase.PSystemData.PIsInInitialation)
                 {
-                    SetSetFFUVoltage(BaseForm.PSystemData.PFFUSpeed);
-                    cv_WaitFfuSpeed = BaseForm.PSystemData.PFFUSpeed;
+                    SetSetFFUVoltage(lgcBase.PSystemData.PFFUSpeed);
+                    cv_WaitFfuSpeed = lgcBase.PSystemData.PFFUSpeed;
                 }
             }
             /*
@@ -718,10 +718,10 @@ namespace LGC
             }
             else if (m_Command.PIoCommand == APIEnum.IoCommand.SetFFUVoltage)
             {
-                BaseForm.PSystemData.PFFUSpeed = cv_WaitFfuSpeed;
-                if (BaseForm.PSystemData.PIsInInitialation)
+                lgcBase.PSystemData.PFFUSpeed = cv_WaitFfuSpeed;
+                if (lgcBase.PSystemData.PIsInInitialation)
                 {
-                    SendinitComplete(BaseForm.PSystemData.PWhichSideInInitilation);
+                    SendinitComplete(lgcBase.PSystemData.PWhichSideInInitilation);
                 }
             }
         }
@@ -765,7 +765,7 @@ namespace LGC
                             //report BC ocr read.
                             cv_eventController.SendWorkDataUpdateReport(aligner.cv_Data.GlassDataMap[1]);
 
-                            if (BaseForm.PSystemData.POperationModeLeft == OperationMode.Auto && BaseForm.PSystemData.POcrMode == OCRMode.ErrorHold)
+                            if (lgcBase.PSystemData.POperationModeLeft == OperationMode.Auto && lgcBase.PSystemData.POcrMode == OCRMode.ErrorHold)
                             {
                                 cv_eventController.SendShowOcrDecide();
                             }
@@ -954,7 +954,7 @@ namespace LGC
             {
                 rb.PIsHome = true;
                 //if (!cv_HadInit && cv_Initilizing)
-                if ((BaseForm.PSystemData.PWhichSideInInitilation == rb.PSideGroup) || (BaseForm.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
+                if ((lgcBase.PSystemData.PWhichSideInInitilation == rb.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
                 {
                     if (!rb.PIsSensorUnmatch)
                     {
@@ -962,7 +962,7 @@ namespace LGC
                     }
                     else
                     {
-                        SendinitCompleteFail(BaseForm.PSystemData.PWhichSideInInitilation);
+                        SendinitCompleteFail(lgcBase.PSystemData.PWhichSideInInitilation);
                     }
                 }
                 rtn = true;
@@ -974,11 +974,11 @@ namespace LGC
             bool rtn = false;
             Aligner aligner = LgcModule.GetAlignerById(m_Command.cv_DeviceId);
             aligner.PIsHome = true;
-            if ((BaseForm.PSystemData.PWhichSideInInitilation == aligner.PSideGroup) || (BaseForm.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
+            if ((lgcBase.PSystemData.PWhichSideInInitilation == aligner.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
             {
                 foreach (Buffer bf in cv_BufferContainer.Values)
                 {
-                    if ((bf.PSideGroup == BaseForm.PSystemData.PWhichSideInInitilation) || (BaseForm.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
+                    if ((bf.PSideGroup == lgcBase.PSystemData.PWhichSideInInitilation) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
                     {
                         SetStatus(APIEnum.CommnadDevice.Buffer, bf.cv_Id);
                     }
@@ -1006,13 +1006,13 @@ namespace LGC
             port.PPortStatus = PortStaus.UDRQ;
             port.PClamp = PortClamp.Unclamp;
             port.cv_Data.SaveToFile();
-            if ((BaseForm.PSystemData.PWhichSideInInitilation == port.PSideGroup) || (BaseForm.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
+            if ((lgcBase.PSystemData.PWhichSideInInitilation == port.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
             {
                 if (CheckAllPortHome())
                 {
                     foreach (Aligner al in cv_AlignerContainer.Values)
                     {
-                        if ((BaseForm.PSystemData.PWhichSideInInitilation == al.PSideGroup) || (BaseForm.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
+                        if ((lgcBase.PSystemData.PWhichSideInInitilation == al.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
                         {
                             SetStatus(APIEnum.CommnadDevice.Aligner, al.cv_Id);
                         }
@@ -1033,12 +1033,12 @@ namespace LGC
                     Robot rb = GetRobotById(m_Command.cv_DeviceId);
                     rb.PIsResetError = true;
 
-                    if ((BaseForm.PSystemData.PWhichSideInInitilation == rb.PSideGroup) || (BaseForm.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
+                    if ((lgcBase.PSystemData.PWhichSideInInitilation == rb.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
                     {
                         for (int i = 1; i <= CommonData.HIRATA.CommonStaticData.g_PortNumber; i++)
                         {
                             Port port1 = GetPortById(i);
-                            if ((BaseForm.PSystemData.PWhichSideInInitilation == port1.PSideGroup) || (BaseForm.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
+                            if ((lgcBase.PSystemData.PWhichSideInInitilation == port1.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
                             {
                                 SetErrorReset(APIEnum.CommnadDevice.P, i);
                             }
@@ -1048,13 +1048,13 @@ namespace LGC
                 case APIEnum.CommnadDevice.P:
                     Port port = GetPortById(m_Command.cv_DeviceId);
                     port.PIsResetError = true;
-                    if ((BaseForm.PSystemData.PWhichSideInInitilation == port.PSideGroup) || (BaseForm.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
+                    if ((lgcBase.PSystemData.PWhichSideInInitilation == port.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
                     {
                         if (CheckAllPortResetError())
                         {
                             foreach (Aligner al1 in cv_AlignerContainer.Values)
                             {
-                                if ((BaseForm.PSystemData.PWhichSideInInitilation == al1.PSideGroup) || (BaseForm.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
+                                if ((lgcBase.PSystemData.PWhichSideInInitilation == al1.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
                                 {
                                     SetErrorReset(APIEnum.CommnadDevice.Aligner, 1);
                                 }
@@ -1065,11 +1065,11 @@ namespace LGC
                 case APIEnum.CommnadDevice.Aligner:
                     Aligner al = GetAlignerById(m_Command.cv_DeviceId);
                     al.PIsResetError = true;
-                    if ((BaseForm.PSystemData.PWhichSideInInitilation == al.PSideGroup) || (BaseForm.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
+                    if ((lgcBase.PSystemData.PWhichSideInInitilation == al.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
                     {
                         foreach (Robot rb1 in cv_RobotContainer.Values)
                         {
-                            if ((BaseForm.PSystemData.PWhichSideInInitilation == rb1.PSideGroup) || (BaseForm.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
+                            if ((lgcBase.PSystemData.PWhichSideInInitilation == rb1.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
                             {
                                 SetStatus(APIEnum.CommnadDevice.Robot, rb1.cv_Id);
                             }
@@ -1173,33 +1173,33 @@ namespace LGC
             {
                 if (m_Command.cv_DeviceId == 1)
                 {
-                    BaseForm.PSystemData.PRobot1Status = EquipmentStatus.Idle;
+                    lgcBase.PSystemData.PRobot1Status = EquipmentStatus.Idle;
                 }
                 else if (m_Command.cv_DeviceId == 2)
                 {
-                    BaseForm.PSystemData.PRobot1Status = EquipmentStatus.Idle;
+                    lgcBase.PSystemData.PRobot1Status = EquipmentStatus.Idle;
                 }
             }
             else if (m_Command.cv_ReplyParaList[0].Trim() == "4401")
             {
                 if (m_Command.cv_DeviceId == 1)
                 {
-                    BaseForm.PSystemData.PRobot1Status = EquipmentStatus.Run;
+                    lgcBase.PSystemData.PRobot1Status = EquipmentStatus.Run;
                 }
                 else if (m_Command.cv_DeviceId == 2)
                 {
-                    BaseForm.PSystemData.PRobot1Status = EquipmentStatus.Run;
+                    lgcBase.PSystemData.PRobot1Status = EquipmentStatus.Run;
                 }
             }
             else if (m_Command.cv_ReplyParaList[0].Trim() == "0621")
             {
                 if (m_Command.cv_DeviceId == 1)
                 {
-                    BaseForm.PSystemData.PRobot1Status = EquipmentStatus.Stop;
+                    lgcBase.PSystemData.PRobot1Status = EquipmentStatus.Stop;
                 }
                 else if (m_Command.cv_DeviceId == 2)
                 {
-                    BaseForm.PSystemData.PRobot1Status = EquipmentStatus.Stop;
+                    lgcBase.PSystemData.PRobot1Status = EquipmentStatus.Stop;
                 }
             }
             else
@@ -1218,7 +1218,7 @@ namespace LGC
             {
                 rb.PIsStatus = true;
                 rb.SendDataViaMmf();
-                if ((BaseForm.PSystemData.PWhichSideInInitilation == rb.PSideGroup) || (BaseForm.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
+                if ((lgcBase.PSystemData.PWhichSideInInitilation == rb.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
                 {
                     List<int> tmp = new List<int>();
                     if (!rb.cv_Data.IsSensorDataMatch(out tmp))
@@ -1238,7 +1238,7 @@ namespace LGC
                         //if(m_Command.cv_ReplyParaList[0].Trim() == "0621")
                         if (rb.cv_Id == 1)
                         {
-                            if (BaseForm.PSystemData.PRobot1Status == EquipmentStatus.Stop)
+                            if (lgcBase.PSystemData.PRobot1Status == EquipmentStatus.Stop)
                             {
                                 SetRobotRestart(rb.cv_Id);
                             }
@@ -1249,7 +1249,7 @@ namespace LGC
                         }
                         else if (rb.cv_Id == 2)
                         {
-                            if (BaseForm.PSystemData.PRobot2Status == EquipmentStatus.Stop)
+                            if (lgcBase.PSystemData.PRobot2Status == EquipmentStatus.Stop)
                             {
                                 SetRobotRestart(rb.cv_Id);
                             }
@@ -1263,7 +1263,7 @@ namespace LGC
             }
             else
             {
-                if ((BaseForm.PSystemData.PWhichSideInInitilation == rb.PSideGroup) || (BaseForm.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
+                if ((lgcBase.PSystemData.PWhichSideInInitilation == rb.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
                 {
                     SendinitCompleteFail(rb.PSideGroup);
                 }
@@ -1577,7 +1577,7 @@ namespace LGC
                         {
                             if (!GetPortById(port.cv_Id).PIsRemapping)
                             {
-                                if (!BaseForm.PSystemData.PIsForceInitial)
+                                if (!lgcBase.PSystemData.PIsForceInitial)
                                 {
                                     SetPortLoadAction(port.cv_Id);
                                     ok = false;
@@ -1809,9 +1809,9 @@ FFU2, FFU3, FFU4, FFU5, FFU6, FFU7, FFU8, FFU9, FFU10, FFU11,Robot Mode, Robot E
                             alarm.PStatus = AlarmStatus.Occur;
                             alarm.PTime = DateTime.Now.ToString("yyyyMMDDHHmmss");
                             EditAlarm(alarm);
-                            if(BaseForm.PSystemData.PIsInInitialation)
+                            if(lgcBase.PSystemData.PIsInInitialation)
                             {
-                                SendinitCompleteFail(BaseForm.PSystemData.PWhichSideInInitilation);
+                                SendinitCompleteFail(lgcBase.PSystemData.PWhichSideInInitilation);
                             }
                         }
                     }
@@ -1828,14 +1828,14 @@ FFU2, FFU3, FFU4, FFU5, FFU6, FFU7, FFU8, FFU9, FFU10, FFU11,Robot Mode, Robot E
                 alarm.PStatus = AlarmStatus.Occur;
                 alarm.PTime = DateTime.Now.ToString("yyyyMMDDHHmmss");
                 EditAlarm(alarm);
-                if(BaseForm.PSystemData.PIsInInitialation)
+                if(lgcBase.PSystemData.PIsInInitialation)
                 {
-                    SendinitCompleteFail(BaseForm.PSystemData.PWhichSideInInitilation);
+                    SendinitCompleteFail(lgcBase.PSystemData.PWhichSideInInitilation);
                 }
             }
             if (ok)
             {
-                if(BaseForm.PSystemData.PIsInInitialation)
+                if(lgcBase.PSystemData.PIsInInitialation)
                 {
                     foreach(Robot rb in cv_RobotContainer.Values)
                     {
@@ -1843,13 +1843,13 @@ FFU2, FFU3, FFU4, FFU5, FFU6, FFU7, FFU8, FFU9, FFU10, FFU11,Robot Mode, Robot E
                         {
                             if(rb.cv_Id == 1)
                             {
-                                SetRobotSpeed(BaseForm.PSystemData.PRobot1Speed, rb.cv_Id);
-                                rb.cv_WaitRobotSpeed = BaseForm.PSystemData.PRobot1Speed;
+                                SetRobotSpeed(lgcBase.PSystemData.PRobot1Speed, rb.cv_Id);
+                                rb.cv_WaitRobotSpeed = lgcBase.PSystemData.PRobot1Speed;
                             }
                             else if(rb.cv_Id == 2)
                             {
-                                SetRobotSpeed(BaseForm.PSystemData.PRobot2Speed, rb.cv_Id);
-                                rb.cv_WaitRobotSpeed = BaseForm.PSystemData.PRobot2Speed;
+                                SetRobotSpeed(lgcBase.PSystemData.PRobot2Speed, rb.cv_Id);
+                                rb.cv_WaitRobotSpeed = lgcBase.PSystemData.PRobot2Speed;
                             }
                         }
                     }
@@ -1862,7 +1862,7 @@ FFU2, FFU3, FFU4, FFU5, FFU6, FFU7, FFU8, FFU9, FFU10, FFU11,Robot Mode, Robot E
         public static bool isInInitialationSide(enSideGroup m_Side)
         {
             bool rtn = false;
-            if ((BaseForm.PSystemData.PWhichSideInInitilation == m_Side) || (BaseForm.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
+            if ((lgcBase.PSystemData.PWhichSideInInitilation == m_Side) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
             {
                 rtn = true;
             }
@@ -2206,7 +2206,7 @@ FFU2, FFU3, FFU4, FFU5, FFU6, FFU7, FFU8, FFU9, FFU10, FFU11,Robot Mode, Robot E
                 //tmp don't check data.
                 if ((port.cv_Data.PPortHasCst == PortHasCst.Has))//) && (port.PPortStatus != PortStaus.LDCM))
                 {
-                    if (!BaseForm.PSystemData.PIsForceInitial)
+                    if (!lgcBase.PSystemData.PIsForceInitial)
                     {
                         if (port.PPortStatus != PortStaus.LDCM)
                         {

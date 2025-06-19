@@ -84,15 +84,15 @@ namespace UI
             UiForm.WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
             if (e.RowIndex == -1) return;
             string select_str = cv_RecipeDataView.Rows[e.RowIndex].Cells[0].Value.ToString().Trim();
-            int index = UiForm.cv_Recipes.cv_RecipeList.FindIndex(x => x.cv_Id == select_str);
+            int index = lgcBase.cv_Recipes.cv_RecipeList.FindIndex(x => x.cv_Id == select_str);
             if (-1 != index)
             {
-                cv_TxRecipeId.Text = UiForm.cv_Recipes.cv_RecipeList[index].PId;
-                cb_Flow.Text = UiForm.cv_Recipes.cv_RecipeList[index].PFlow.ToString();
-                cv_TxWaferIjp.Text = UiForm.cv_Recipes.cv_RecipeList[index].PWaferVASDegree.ToString();
-                cv_TxWaferSdp.Text = UiForm.cv_Recipes.cv_RecipeList[index].PWaferIJPDegree.ToString();
-                cv_TxGlassVas.Text = UiForm.cv_Recipes.cv_RecipeList[index].PGlassVASDegree.ToString();
-                lbl_RecipeDescription.Text = UiForm.cv_Recipes.cv_RecipeList[index].PDecription;
+                cv_TxRecipeId.Text = lgcBase.cv_Recipes.cv_RecipeList[index].PId;
+                cb_Flow.Text = lgcBase.cv_Recipes.cv_RecipeList[index].PFlow.ToString();
+                cv_TxWaferIjp.Text = lgcBase.cv_Recipes.cv_RecipeList[index].PWaferVASDegree.ToString();
+                cv_TxWaferSdp.Text = lgcBase.cv_Recipes.cv_RecipeList[index].PWaferIJPDegree.ToString();
+                cv_TxGlassVas.Text = lgcBase.cv_Recipes.cv_RecipeList[index].PGlassVASDegree.ToString();
+                lbl_RecipeDescription.Text = lgcBase.cv_Recipes.cv_RecipeList[index].PDecription;
             }
             UiForm.WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
         }
@@ -129,7 +129,7 @@ namespace UI
                 return is_ok;
             }
 
-            bool is_exist = UiForm.cv_Recipes.cv_RecipeList.Exists(x => x.cv_Id == cv_TxRecipeId.Text.Trim());
+            bool is_exist = lgcBase.cv_Recipes.cv_RecipeList.Exists(x => x.cv_Id == cv_TxRecipeId.Text.Trim());
 
             if (m_Action == CommonData.HIRATA.DataEidtAction.Add && is_exist)
             {
@@ -164,7 +164,7 @@ namespace UI
             string recipe_id = cv_TxRecipeId.Text.Trim();
             string log = "User press recipe modify : " + recipe_id + Environment.NewLine;
             RecipeItem recipe = null;
-            if (UiForm.cv_Recipes.GetCurRecipe(out recipe))
+            if (lgcBase.cv_Recipes.GetCurRecipe(out recipe))
             {
                 if (recipe != null)
                 {
@@ -196,7 +196,7 @@ namespace UI
             UiForm.WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
             string recipe_id = cv_TxRecipeId.Text.Trim();
             RecipeItem recipe = null;
-            if (UiForm.cv_Recipes.GetCurRecipe(out recipe))
+            if (lgcBase.cv_Recipes.GetCurRecipe(out recipe))
             {
                 if (recipe != null)
                 {
@@ -278,7 +278,7 @@ namespace UI
             int _irecipe = 0;
             if (int.TryParse(recipe, out _irecipe))
             {
-                if (UiForm.cv_Recipes.IsRecipeExist(_irecipe.ToString()))
+                if (lgcBase.cv_Recipes.IsRecipeExist(_irecipe.ToString()))
                 {
                     if (IsHasCstLDCM())
                     {
@@ -291,7 +291,7 @@ namespace UI
                     obj.PAction = DataEidtAction.SetCur;
                     List<RecipeItem> recipes = new List<RecipeItem>();
                     RecipeItem recipe_item = null;
-                    if (UiForm.cv_Recipes.GetRecipeItem(_irecipe.ToString(), out recipe_item))
+                    if (lgcBase.cv_Recipes.GetRecipeItem(_irecipe.ToString(), out recipe_item))
                     {
                         recipes.Add(recipe_item);
                         string rtn;
@@ -313,11 +313,11 @@ namespace UI
         public void UpdateCurRecipeCombobox()
         {
             UiForm.WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
-            if (UiForm.cv_Recipes != null)
+            if (lgcBase.cv_Recipes != null)
             {
                 cb_CurRecipe.Items.Clear();
                 cb_CurRecipe.SelectedIndex = -1;
-                foreach (RecipeItem recipe in UiForm.cv_Recipes.cv_RecipeList)
+                foreach (RecipeItem recipe in lgcBase.cv_Recipes.cv_RecipeList)
                 {
                     cb_CurRecipe.Items.Add(recipe.PId);
                 }
@@ -329,7 +329,7 @@ namespace UI
             TextBox tmp = sender as TextBox;
             string recipe_id = tmp.Text.Trim();
             RecipeItem recipe = null;
-            if (UiForm.cv_Recipes.GetRecipeItem(recipe_id, out recipe))
+            if (lgcBase.cv_Recipes.GetRecipeItem(recipe_id, out recipe))
             {
                 if (recipe != null)
                 {

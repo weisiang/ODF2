@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.gb_Buffer = new System.Windows.Forms.GroupBox();
             this.cv_glassDataView = new System.Windows.Forms.DataGridView();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cv_menuDataEdit = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.dELETEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gb_Buffer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cv_glassDataView)).BeginInit();
@@ -54,6 +54,7 @@
             // 
             // cv_glassDataView
             // 
+            this.cv_glassDataView.AllowUserToAddRows = false;
             this.cv_glassDataView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.cv_glassDataView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
@@ -61,10 +62,20 @@
             this.cv_glassDataView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cv_glassDataView.Location = new System.Drawing.Point(3, 18);
             this.cv_glassDataView.Name = "cv_glassDataView";
+            this.cv_glassDataView.ReadOnly = true;
             this.cv_glassDataView.RowTemplate.Height = 16;
             this.cv_glassDataView.Size = new System.Drawing.Size(184, 336);
             this.cv_glassDataView.TabIndex = 0;
             this.cv_glassDataView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.cv_glassDataView_CellClick);
+            // 
+            // Column1
+            // 
+            this.Column1.ContextMenuStrip = this.cv_menuDataEdit;
+            this.Column1.DataPropertyName = "Slot";
+            this.Column1.HeaderText = "Slot";
+            this.Column1.Name = "Column1";
+            this.Column1.ReadOnly = true;
+            this.Column1.Width = 40;
             // 
             // cv_menuDataEdit
             // 
@@ -79,20 +90,11 @@
             this.dELETEToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
             this.dELETEToolStripMenuItem.Text = "DataAction";
             // 
-            // Column1
-            // 
-            this.Column1.ContextMenuStrip = this.cv_menuDataEdit;
-            this.Column1.DataPropertyName = "Slot";
-            this.Column1.HeaderText = "Slot";
-            this.Column1.Name = "Column1";
-            this.Column1.ReadOnly = true;
-            this.Column1.Width = 40;
-            // 
             // Column2
             // 
             this.Column2.DataPropertyName = "Id";
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Times New Roman", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Column2.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Times New Roman", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Column2.DefaultCellStyle = dataGridViewCellStyle2;
             this.Column2.HeaderText = "Id";
             this.Column2.Name = "Column2";
             this.Column2.ReadOnly = true;

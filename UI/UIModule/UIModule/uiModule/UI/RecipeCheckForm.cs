@@ -26,7 +26,7 @@ namespace UI
         }
         public void SetNodeChecked()
         {
-            if(UiForm.PSystemData.IsCheckId)
+            if(lgcBase.PSystemData.IsCheckId)
             {
                 if (btn_id.BackColor != Color.Green)
                     btn_id.BackColor = Color.Green;
@@ -36,7 +36,7 @@ namespace UI
                 if (btn_id.BackColor != Color.Gray)
                     btn_id.BackColor = Color.Gray;
             }
-            if (UiForm.PSystemData.IsCheckRecipe)
+            if (lgcBase.PSystemData.IsCheckRecipe)
             {
                 if (btn_recipe.BackColor != Color.Green)
                     btn_recipe.BackColor = Color.Green;
@@ -46,7 +46,7 @@ namespace UI
                 if (btn_recipe.BackColor != Color.Gray)
                     btn_recipe.BackColor = Color.Gray;
             }
-            if (UiForm.PSystemData.IsCheckSeq)
+            if (lgcBase.PSystemData.IsCheckSeq)
             {
                 if (btn_seq.BackColor != Color.Green)
                     btn_seq.BackColor = Color.Green;
@@ -56,7 +56,7 @@ namespace UI
                 if (btn_seq.BackColor != Color.Gray)
                     btn_seq.BackColor = Color.Gray;
             }
-            if (UiForm.PSystemData.IsCheckSlot)
+            if (lgcBase.PSystemData.IsCheckSlot)
             {
                 if (btn_slot.BackColor != Color.Green)
                     btn_slot.BackColor = Color.Green;
@@ -80,31 +80,31 @@ namespace UI
             obj.PType = CommonData.HIRATA.MmfEventClientEventType.etRequest;
             if(Regex.Match(btn.Name , @"id" , RegexOptions.IgnoreCase).Success)
             {
-                obj.PCheckRecipeNo = UiForm.PSystemData.IsCheckRecipe;
-                obj.PCheckWorkId = !UiForm.PSystemData.IsCheckId;
-                obj.PCheckFoupSeq = UiForm.PSystemData.IsCheckSeq;
-                obj.PCheckWorkSlot = UiForm.PSystemData.IsCheckSlot;
+                obj.PCheckRecipeNo = lgcBase.PSystemData.IsCheckRecipe;
+                obj.PCheckWorkId = !lgcBase.PSystemData.IsCheckId;
+                obj.PCheckFoupSeq = lgcBase.PSystemData.IsCheckSeq;
+                obj.PCheckWorkSlot = lgcBase.PSystemData.IsCheckSlot;
             }
             else if(Regex.Match(btn.Name , @"recipe" , RegexOptions.IgnoreCase).Success)
             {
-                obj.PCheckRecipeNo = !UiForm.PSystemData.IsCheckRecipe;
-                obj.PCheckWorkId = UiForm.PSystemData.IsCheckId;
-                obj.PCheckFoupSeq = UiForm.PSystemData.IsCheckSeq;
-                obj.PCheckWorkSlot = UiForm.PSystemData.IsCheckSlot;
+                obj.PCheckRecipeNo = !lgcBase.PSystemData.IsCheckRecipe;
+                obj.PCheckWorkId = lgcBase.PSystemData.IsCheckId;
+                obj.PCheckFoupSeq = lgcBase.PSystemData.IsCheckSeq;
+                obj.PCheckWorkSlot = lgcBase.PSystemData.IsCheckSlot;
             }
             else if(Regex.Match(btn.Name , @"slot" , RegexOptions.IgnoreCase).Success)
             {
-                obj.PCheckRecipeNo = UiForm.PSystemData.IsCheckRecipe;
-                obj.PCheckWorkId = UiForm.PSystemData.IsCheckId;
-                obj.PCheckFoupSeq = UiForm.PSystemData.IsCheckSeq;
-                obj.PCheckWorkSlot = !UiForm.PSystemData.IsCheckSlot;
+                obj.PCheckRecipeNo = lgcBase.PSystemData.IsCheckRecipe;
+                obj.PCheckWorkId = lgcBase.PSystemData.IsCheckId;
+                obj.PCheckFoupSeq = lgcBase.PSystemData.IsCheckSeq;
+                obj.PCheckWorkSlot = !lgcBase.PSystemData.IsCheckSlot;
             }
             else if(Regex.Match(btn.Name , @"seq" , RegexOptions.IgnoreCase).Success)
             {
-                obj.PCheckRecipeNo = UiForm.PSystemData.IsCheckRecipe;
-                obj.PCheckWorkId = UiForm.PSystemData.IsCheckId;
-                obj.PCheckFoupSeq = !UiForm.PSystemData.IsCheckSeq;
-                obj.PCheckWorkSlot = UiForm.PSystemData.IsCheckSlot;
+                obj.PCheckRecipeNo = lgcBase.PSystemData.IsCheckRecipe;
+                obj.PCheckWorkId = lgcBase.PSystemData.IsCheckId;
+                obj.PCheckFoupSeq = !lgcBase.PSystemData.IsCheckSeq;
+                obj.PCheckWorkSlot = lgcBase.PSystemData.IsCheckSlot;
             }
             if (checkData(obj))
             {

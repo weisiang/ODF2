@@ -359,7 +359,7 @@ namespace LGC
                             {
                                 cur_command.cv_Time = SysUtils.Now();
                             }
-                            else if (diff > BaseForm.cv_TimeoutData.PApiT3TIme)
+                            else if (diff > lgcBase.cv_TimeoutData.PApiT3TIme)
                             {
                                 if (OnRecvTimeOutEvent != null)
                                 {

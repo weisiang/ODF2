@@ -45,9 +45,9 @@ namespace LGC
                     if(value == LotStatus.MappingEnd)
                     {
                         SysUtils.Sleep(500);
-                        if(BaseForm.PSystemData.PSystemOnlineMode == OnlineMode.Offline)
+                        if(lgcBase.PSystemData.PSystemOnlineMode == OnlineMode.Offline)
                         {
-                            if(BaseForm.PSystemData.PONT)
+                            if(lgcBase.PSystemData.PONT)
                             {
                                 GetOntModeData();
                             }
@@ -141,7 +141,7 @@ namespace LGC
                     this.cv_Data.GlassDataMap[i].cv_SlotInEq = (uint)i;// = new GlassData();
                     this.cv_Data.GlassDataMap[i].PHasSensor = true;// = (uint)i;
                     this.cv_Data.GlassDataMap[i].PWorkSlot = (uint)i;
-                    this.cv_Data.GlassDataMap[i].PCimMode = BaseForm.PSystemData.PSystemOnlineMode;
+                    this.cv_Data.GlassDataMap[i].PCimMode = lgcBase.PSystemData.PSystemOnlineMode;
                     this.cv_Data.GlassDataMap[i].PWorkType = CommonData.HIRATA.WorkType.Test;
                     this.cv_Data.GlassDataMap[i].PFoupSeq = 100;
                     this.cv_Data.GlassDataMap[i].PId = "ONT" + cv_Id.ToString() + "Glass" + i.ToString();

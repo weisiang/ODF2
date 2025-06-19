@@ -18,8 +18,6 @@ namespace LGC
 {
     public partial class LgcModule : lgcBase
     {
-        public static KMemoLog cv_AlarmLog;
-        public static Dictionary<string, List<AlarmItem>> cv_ApiAlarm = new Dictionary<string, List<AlarmItem>>();
         public static Dictionary<int, List<AllDevice>> cv_CurRecipeFlowStepSetting = new Dictionary<int, List<AllDevice>>();
         public static List<int> cv_InProcessPort = new List<int>();
         internal static Dictionary<int, Eq> cv_EqContainer = new Dictionary<int, Eq>();
@@ -50,48 +48,14 @@ namespace LGC
             ParserFlowStep();
             initTimer();
             cv_eventController.initTimer();
-            cv_Mio.SetPortValue(0x344d, (int)BaseForm.PSystemData.POcrMode + (1 << 4));
+            cv_Mio.SetPortValue(0x344d, (int)lgcBase.PSystemData.POcrMode + (1 << 4));
             WriteLog(LogLevelType.General, "[LGC module start]");
             cv_Timer.Start();
         }
         protected override void initLog()
         {
             base.initLog();
-            if (cv_AlarmLog == null)
-            {
-                string enviPath = CommonData.HIRATA.CommonStaticData.g_RootLogsFolderPath + CommonData.HIRATA.CommonStaticData.g_FDModuleName;
-                cv_AlarmLog = new KMemoLog();
-                cv_AlarmLog.LoadFromIni(CommonData.HIRATA.CommonStaticData.g_ModuleLogsIniFile, "AlarmLog");
-                cv_AlarmLog.LogFileName = enviPath + "\\AlarmLog.log";
-                cv_AlarmLog.SaveToIni(CommonData.HIRATA.CommonStaticData.g_ModuleLogsIniFile, "AlarmLog");
-                /*
-                for(int i=1 ; i<10000 ; i++)
-                {
-                    AlarmItem tmp = new AlarmItem();
-                    tmp.PTime = DateTime.Now.ToString("yyyyMMddHHmmss");
-                    tmp.cv_Code = i.ToString();
-                    if(i%2 == 0)
-                    tmp.PLevel = AlarmLevele.Light;
-                    else
-                    tmp.PLevel = AlarmLevele.Serious;
-                    tmp.PMainDescription = "test";
-                    tmp.PSubDescription = i.ToString();
-                    WriteAlarmLog(tmp);
-                }
-                */
-            }
-        }
-        public static void WriteAlarmLog(CommonData.HIRATA.AlarmItem m_AlarmItem)
-        {
-            if(cv_AlarmLog != null)
-            {
-                string log = m_AlarmItem.PTime + ",";
-                log += m_AlarmItem.PCode + ",";
-                log += m_AlarmItem.PLevel + ",";
-                log += m_AlarmItem.PUnit + ",";
-                log += m_AlarmItem.PMsg;
-                cv_AlarmLog.WriteLog(log);
-            }
+            initAlarmLog();
         }
 
 
@@ -103,7 +67,7 @@ namespace LGC
             KIniFile stepIni = new KIniFile(CommonStaticData.g_FlowStepSettingFile);
             Dictionary<string, string> tmp = new Dictionary<string, string>();
             RecipeItem recipe = null;
-            if (BaseForm.cv_Recipes.GetCurRecipe(out recipe))
+            if (lgcBase.cv_Recipes.GetCurRecipe(out recipe))
             {
                 string section = recipe.PFlow.ToString().Substring(4);
                 stepIni.ReadSection(section, tmp);
@@ -168,1342 +132,6 @@ namespace LGC
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
         }
 
-        private void OnRobotActionTimer()
-        {
-        }
-
-        #region Do Robot Action for each Eqp.
-        private void ProcessPortGetPutJob(RobotAction m_Type)
-        {
-            /*
-            RobotJob job = cv_RobotJobPath.Peek();
-            Robot robot = GetRobotById(1);
-            Port port = GetPortById(job.PTargetId);
-            if (m_Type == RobotAction.Get)
-            {
-                if (port.cv_Data.GlassDataMap[job.PTargetSlot].PHasSensor &&
-                    port.cv_Data.GlassDataMap[job.PTargetSlot].PHasData &&
-                    !robot.cv_Data.GlassDataMap[(int)job.PGetArm].PHasSensor &&
-                    !robot.cv_Data.GlassDataMap[(int)job.PGetArm].PHasData)
-                {
-                    Aligner aligner = GetAlignerById(1);
-                    aligner.cv_Data.PPreAction = AlignerPreAction.WaitHome;
-                    robot.cv_Comm.SetHome(APIEnum.CommnadDevice.Aligner, 1);
-                    GetPutPort(job.PGetArm, job.PTargetId, job.PTargetSlot, true);
-                }
-                else
-                {
-                    if (!port.cv_Data.GlassDataMap[job.PTargetSlot].PHasSensor &&
-                        !port.cv_Data.GlassDataMap[job.PTargetSlot].PHasData &&
-                        robot.cv_Data.GlassDataMap[(int)job.PGetArm].PHasSensor &&
-                        robot.cv_Data.GlassDataMap[(int)job.PGetArm].PHasData)
-                    {
-                        cv_RobotJobPath.Dequeue();
-                        if (cv_IsCycleStop)
-                        {
-                            PSystemData.POperationModeLeft = OperationMode.Manual;
-                            cv_IsCycleStop = false;
-                        }
-                    }
-                }
-            }
-            else if (m_Type == RobotAction.Put)
-            {
-                if (!port.cv_Data.GlassDataMap[job.PTargetSlot].PHasSensor &&
-                    !port.cv_Data.GlassDataMap[job.PTargetSlot].PHasData &&
-                    robot.cv_Data.GlassDataMap[(int)job.PPutArm].PHasSensor &&
-                    robot.cv_Data.GlassDataMap[(int)job.PPutArm].PHasData)
-                {
-                    GetPutPort(job.PPutArm, job.PTargetId, job.PTargetSlot, false);
-                }
-                else
-                {
-                    if (port.cv_Data.GlassDataMap[job.PTargetSlot].PHasSensor &&
-                        port.cv_Data.GlassDataMap[job.PTargetSlot].PHasData &&
-                        !robot.cv_Data.GlassDataMap[(int)job.PPutArm].PHasSensor &&
-                        !robot.cv_Data.GlassDataMap[(int)job.PPutArm].PHasData)
-                    {
-                        cv_RobotJobPath.Dequeue();
-                        if (PSystemData.PSystemOnlineMode != OnlineMode.Control)
-                        {
-                            if (PSystemData.POperationModeLeft != OperationMode.Manual)
-                            {
-                                if (port.cv_Data.PPortMode == PortMode.Unloader)
-                                {
-                                    if (!port.cv_Data.HasOtherJobHaveToDo())
-                                    {
-                                        port.cv_Data.PWaitUnload = true;
-                                    }
-                                }
-                            }
-                        }
-                        if (cv_IsCycleStop)
-                        {
-                            PSystemData.POperationModeLeft = OperationMode.Manual;
-                            cv_IsCycleStop = false;
-                        }
-                    }
-                }
-            }
-            */
-        }
-        private void ProcessBufferGetPutJob(RobotAction m_Type)
-        {
-            /*
-            RobotJob job = cv_RobotJobPath.Peek();
-            Robot robot = GetRobotById(1);
-            Buffer buffer = GetBufferById(1);
-            if (m_Type == RobotAction.Get)
-            {
-                if (buffer.cv_Data.GlassDataMap[job.PTargetSlot].PHasSensor &&
-                    buffer.cv_Data.GlassDataMap[job.PTargetSlot].PHasData &&
-                    !robot.cv_Data.GlassDataMap[(int)job.PGetArm].PHasSensor &&
-                    !robot.cv_Data.GlassDataMap[(int)job.PGetArm].PHasData)
-                {
-
-                    GetPutBuffer(job.PGetArm, job.PTargetId, job.PTargetSlot, true);
-                }
-                else
-                {
-                    if (!buffer.cv_Data.GlassDataMap[job.PTargetSlot].PHasSensor &&
-                        !buffer.cv_Data.GlassDataMap[job.PTargetSlot].PHasData &&
-                        robot.cv_Data.GlassDataMap[(int)job.PGetArm].PHasSensor &&
-                        robot.cv_Data.GlassDataMap[(int)job.PGetArm].PHasData)
-                    {
-                        cv_RobotJobPath.Dequeue();
-                        if (cv_IsCycleStop)
-                        {
-                            PSystemData.POperationModeLeft = OperationMode.Manual;
-                            cv_IsCycleStop = false;
-                        }
-                    }
-                }
-            }
-            else if (m_Type == RobotAction.Put)
-            {
-                if (!buffer.cv_Data.GlassDataMap[job.PTargetSlot].PHasSensor &&
-                    !buffer.cv_Data.GlassDataMap[job.PTargetSlot].PHasData &&
-                    robot.cv_Data.GlassDataMap[(int)job.PPutArm].PHasSensor &&
-                    robot.cv_Data.GlassDataMap[(int)job.PPutArm].PHasData)
-                {
-                    GetPutBuffer(job.PPutArm, 1, job.PTargetSlot, false);
-                }
-                else
-                {
-                    if (buffer.cv_Data.GlassDataMap[job.PTargetSlot].PHasSensor &&
-                        buffer.cv_Data.GlassDataMap[job.PTargetSlot].PHasData &&
-                        !robot.cv_Data.GlassDataMap[(int)job.PPutArm].PHasSensor &&
-                        !robot.cv_Data.GlassDataMap[(int)job.PPutArm].PHasData)
-                    {
-                        cv_RobotJobPath.Dequeue();
-                        if (cv_IsCycleStop)
-                        {
-                            PSystemData.POperationModeLeft = OperationMode.Manual;
-                            cv_IsCycleStop = false;
-                        }
-                    }
-                }
-            }
-            */
-        }
-        private void ProcessAlignerGetPutJob(RobotAction m_Type, bool m_IsMaunal = false)
-        {
-            /*
-            RobotJob job = null;
-            if (!m_IsMaunal)
-                job = cv_RobotJobPath.Peek();
-            else
-                job = cv_RobotManaulJobPath.Peek();
-
-            Aligner aligner = GetAlignerById(job.PTargetId);
-            Robot robot = GetRobotById(1);
-            if (job.PAction == RobotAction.Get ||
-                (job.PAction == RobotAction.Exchange && job.PTarget == ActionTarget.Aligner &&
-                job.PIsWaitGet && !job.PisWaitPut))
-            {
-                if (aligner.cv_Data.GlassDataMap[job.PTargetSlot].PHasSensor &&
-                    aligner.cv_Data.GlassDataMap[job.PTargetSlot].PHasData &&
-                    !robot.cv_Data.GlassDataMap[(int)job.PGetArm].PHasSensor &&
-                    !robot.cv_Data.GlassDataMap[(int)job.PGetArm].PHasData)
-                {
-                    if (aligner.cv_Data.PPreAction == AlignerPreAction.VuccumOn)
-                    {
-                        robot.cv_Comm.SetAlignerVaccum(true);
-                        aligner.cv_Data.PPreAction = AlignerPreAction.WaitVuccumOn;
-                    }
-                    else if (aligner.cv_Data.PPreAction == AlignerPreAction.FindNotch)
-                    {
-                        robot.cv_Comm.SetAlignerFindNotch();
-                        aligner.cv_Data.PPreAction = AlignerPreAction.WaitFindNotch;
-                    }
-                    else if (aligner.cv_Data.PPreAction == AlignerPreAction.OcrConnect)
-                    {
-                        if (job.PAction != RobotAction.Exchange)
-                        {
-                            if (aligner.cv_Data.GlassDataMap[1].PProductionCategory == ProductCategory.Wafer)
-                            {
-                                robot.cv_Comm.SetOcrConnect();
-                                aligner.cv_Data.PPreAction = AlignerPreAction.WaitConnect;
-                            }
-                            else
-                            {
-                                aligner.cv_Data.GlassDataMap[1].POcrResult = OCRResult.OK;
-                                aligner.cv_Data.PPreAction = AlignerPreAction.ToAngle;
-                            }
-                        }
-                        else
-                        {
-                            aligner.cv_Data.PPreAction = AlignerPreAction.ToAngle;
-                        }
-                    }
-                    else if (aligner.cv_Data.PPreAction == AlignerPreAction.ReadOcr)
-                    {
-                        if (PSystemData.POcrMode == OCRMode.SkipRead)
-                        {
-                            aligner.cv_Data.PPreAction = AlignerPreAction.ToAngle;
-                        }
-                        else
-                        {
-                            robot.cv_Comm.SetOcrRead();
-                            aligner.cv_Data.PPreAction = AlignerPreAction.WaitReadOct;
-                        }
-                    }
-                    else if (aligner.cv_Data.PPreAction == AlignerPreAction.ToAngle)
-                    {
-                        robot.cv_Comm.SetAlignerToAngle();
-                        aligner.cv_Data.PPreAction = AlignerPreAction.WaitToAngle;
-                    }
-                    else if (aligner.cv_Data.PPreAction == AlignerPreAction.VuccumOff2)
-                    {
-                        robot.cv_Comm.SetAlignerVaccum(false);
-                        aligner.cv_Data.PPreAction = AlignerPreAction.WaitVuccomOff2;
-                    }
-                    else if (aligner.cv_Data.PPreAction == AlignerPreAction.GetAligner)
-                    {
-                        //job.PIsWaitGet = false;
-                        if (PSystemData.POperationModeLeft == OperationMode.Auto)
-                        {
-                            if (job.PAction == RobotAction.Exchange)
-                            {
-                                GetPutAligner(job.PGetArm, true);
-                                aligner.cv_Data.PPreAction = AlignerPreAction.None;
-                                return;
-                            }
-                            else if (aligner.cv_Data.GlassDataMap[1].POcrResult == OCRResult.Mismatch)
-                            {
-                                GlassData glass_tmp = aligner.cv_Data.GlassDataMap[1];
-                                if (PSystemData.POcrMode == OCRMode.ErrorReturn)
-                                {
-                                    cv_RobotJobPath.Clear();
-                                    cv_RobotJobPath.Enqueue(job);
-                                    if (GetPortById((int)glass_tmp.PSourcePort).PPortStatus == PortStaus.LDCM)
-                                    {
-                                        //if (!GetPortById((int)glass_tmp.PSourcePort).cv_Data.GlassDataMap[(int)glass_tmp.PWorkSlot].PHasData &&
-                                        //    !GetPortById((int)glass_tmp.PSourcePort).cv_Data.GlassDataMap[(int)glass_tmp.PWorkSlot].PHasSensor)
-                                        //{
-                                        Port port = GetPortById((int)glass_tmp.PSourcePort);
-                                        int slot = 0;
-                                        if (port.cv_Data.WhichSlotCanLoad(out slot))
-                                        {
-                                            RobotJob return_job = new RobotJob(1, job.PGetArm, RobotArm.rabNone, RobotAction.Put, ActionTarget.Port, (int)glass_tmp.PSourcePort, slot, false);
-                                            cv_RobotJobPath.Enqueue(return_job);
-                                            GetPutAligner(job.PGetArm, true);
-                                            aligner.cv_Data.PPreAction = AlignerPreAction.None;
-                                            WriteLog(LogLevelType.General, "Set return source port : " + port.cv_Id + " slot : " +
-                                                 slot + " at OCR Error return mode");
-                                        }
-                                        else
-                                        {
-                                            WriteLog(LogLevelType.General, "Set return source port : " + port.cv_Id + " can't find slot to put.");
-                                        }
-                                        //GetPutAligner(job.PGetArm, true);
-                                        //aligner.cv_Data.PPreAction = AlignerPreAction.None;
-                                        //}
-                                    }
-                                }
-                                else if (PSystemData.POcrMode == OCRMode.ErrorHold)
-                                {
-                                    if (glass_tmp.POcrDecide == OCRMode.ErrorReturn)
-                                    {
-                                        cv_RobotJobPath.Clear();
-                                        cv_RobotJobPath.Enqueue(job);
-                                        if (GetPortById((int)glass_tmp.PSourcePort).PPortStatus == PortStaus.LDCM)
-                                        {
-                                            //if (!GetPortById((int)glass_tmp.PSourcePort).cv_Data.GlassDataMap[(int)glass_tmp.PWorkSlot].PHasData &&
-                                            //    !GetPortById((int)glass_tmp.PSourcePort).cv_Data.GlassDataMap[(int)glass_tmp.PWorkSlot].PHasSensor)
-                                            //{
-                                            Port port = GetPortById((int)glass_tmp.PSourcePort);
-                                            int slot = 0;
-                                            if (port.cv_Data.WhichSlotCanLoad(out slot))
-                                            {
-                                                RobotJob return_job = new RobotJob(1, job.PGetArm, RobotArm.rabNone, RobotAction.Put, ActionTarget.Port, (int)glass_tmp.PSourcePort, slot, false);
-                                                cv_RobotJobPath.Enqueue(return_job);
-                                                GetPutAligner(job.PGetArm, true);
-                                                aligner.cv_Data.PPreAction = AlignerPreAction.None;
-                                                WriteLog(LogLevelType.General, "Set return source port : " + port.cv_Id + " slot : " +
-                                                     slot + " at OCR Error hold and User press retun mode button");
-                                            }
-                                            else
-                                            {
-                                                WriteLog(LogLevelType.General, "Set return source port : " + port.cv_Id + " can't find slot to put.");
-                                            }
-                                            //}
-                                        }
-                                    }
-                                    else if (glass_tmp.POcrDecide == OCRMode.ErrorSkip || glass_tmp.POcrDecide == OCRMode.SkipRead)
-                                    {
-                                        if (glass_tmp.POcrDecide == OCRMode.SkipRead)
-                                        {
-                                            CommonData.HIRATA.MDBCWorkDataUpdateReport report_bc = new MDBCWorkDataUpdateReport();
-                                            report_bc.PGlass = aligner.cv_Data.GlassDataMap[1];
-                                            LgcForm.cv_MmfController.SendMmfNotifyObject(typeof(CommonData.HIRATA.MDBCWorkDataUpdateReport).Name, report_bc, KParseObjToXmlPropertyType.Field);
-                                        }
-                                        GetPutAligner(job.PGetArm, true);
-                                        aligner.cv_Data.PPreAction = AlignerPreAction.None;
-                                    }
-                                }
-                                else
-                                {
-                                    GetPutAligner(job.PGetArm, true);
-                                    aligner.cv_Data.PPreAction = AlignerPreAction.None;
-                                }
-                            }
-                            else
-                            {
-                                GetPutAligner(job.PGetArm, true);
-                                aligner.cv_Data.PPreAction = AlignerPreAction.None;
-                            }
-                        }
-                        else
-                        {
-                            GetPutAligner(job.PGetArm, true);
-                            aligner.cv_Data.PPreAction = AlignerPreAction.None;
-                        }
-                    }
-                }
-                else
-                {
-                    if (!aligner.cv_Data.GlassDataMap[job.PTargetSlot].PHasSensor &&
-                        !aligner.cv_Data.GlassDataMap[job.PTargetSlot].PHasData &&
-                        robot.cv_Data.GlassDataMap[(int)job.PGetArm].PHasSensor &&
-                        robot.cv_Data.GlassDataMap[(int)job.PGetArm].PHasData)
-                    {
-                        if (!m_IsMaunal)
-                        {
-                            cv_RobotJobPath.Dequeue();
-                            if (cv_IsCycleStop)
-                            {
-                                PSystemData.POperationModeLeft = OperationMode.Manual;
-                                cv_IsCycleStop = false;
-                            }
-                        }
-                        else
-                            cv_RobotManaulJobPath.Dequeue();
-
-                        job.PIsWaitGet = false;
-                    }
-                }
-            }
-            else if (job.PAction == RobotAction.Put || (
-                (job.PAction == RobotAction.Exchange) &&
-                (job.PTarget == ActionTarget.Aligner) && (job.PisWaitPut) && (job.PIsWaitGet))
-                )
-            {
-                if (!aligner.cv_Data.GlassDataMap[job.PTargetSlot].PHasSensor &&
-                    !aligner.cv_Data.GlassDataMap[job.PTargetSlot].PHasData &&
-                    robot.cv_Data.GlassDataMap[(int)job.PPutArm].PHasSensor &&
-                    robot.cv_Data.GlassDataMap[(int)job.PPutArm].PHasData)
-                {
-                    GlassData glass = robot.cv_Data.GlassDataMap[(int)job.PPutArm];
-                    if (glass.POcrDecide != OCRMode.None)
-                    {
-                        glass.POcrDecide = OCRMode.None;
-                    }
-                    RecipeItem recipe = null;
-                    if (!cv_Recipes.GetCurRecipe(out recipe))
-                    {
-                        CommonData.HIRATA.AlarmItem alarm = new AlarmItem();
-                        alarm.PCode = CommonData.HIRATA.Alarmtable.NotSetCurRecipe.ToString();
-                        alarm.PLevel = AlarmLevele.Serious;
-                        alarm.PMainDescription = "Not Set Cur Recipe , please check cur recipe.";
-                        alarm.PStatus = AlarmStatus.Occur;
-                        alarm.PUnit = 0;
-                        LgcForm.EditAlarm(alarm);
-                        PSystemData.POperationModeLeft = OperationMode.Manual;
-                        return;
-                    }
-                    if (aligner.cv_Data.PPreAction == AlignerPreAction.None)
-                    {
-                        //aligner.cv_Data.PPreAction = AlignerPreAction.AlignerHome;
-                        aligner.cv_Data.PPreAction = AlignerPreAction.WaitHome;
-                        robot.cv_Comm.SetHome(APIEnum.CommnadDevice.Aligner, 1);
-                    }
-                    else if (aligner.cv_Data.PPreAction == AlignerPreAction.SetToAngle)
-                    {
-                        if (job.PAction == RobotAction.Exchange)
-                        {
-                            if (glass.PProductionCategory == ProductCategory.Wafer)
-                            {
-                                //if (glass.PPortProductionCategory == ProductCategory.Wafer)
-                                //{
-                                if(!job.PManualExchangeForAligner)
-                                    robot.cv_Comm.SetAlignerDegree(recipe.PWaferVASDegree);
-                                else
-                                    robot.cv_Comm.SetAlignerDegree((float) Convert.ToDouble(job.PManualExchangeForAlignerDeg));
-                                aligner.cv_Data.PPreAction = AlignerPreAction.VuccumOff1;
-                                //}
-                            }
-                            else if (glass.PProductionCategory == ProductCategory.Glass)
-                            {
-                                //if (glass.PPortProductionCategory == ProductCategory.Wafer)
-                                {
-                                    if (!job.PManualExchangeForAligner)
-                                        robot.cv_Comm.SetAlignerDegree(recipe.PWaferVASDegree);
-                                    else
-                                        robot.cv_Comm.SetAlignerDegree((float)Convert.ToDouble(job.PManualExchangeForAlignerDeg));
-
-                                    aligner.cv_Data.PPreAction = AlignerPreAction.VuccumOff1;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (glass.PProductionCategory == ProductCategory.Wafer)
-                            {
-                                if (glass.PPortProductionCategory == ProductCategory.Wafer)
-                                {
-                                    robot.cv_Comm.SetAlignerDegree(recipe.PWaferIJPDegree);
-                                }
-                            }
-                            else if (glass.PProductionCategory == ProductCategory.Glass)
-                            {
-                                if (glass.PPortProductionCategory == ProductCategory.Wafer)
-                                {
-                                    robot.cv_Comm.SetAlignerDegree(recipe.PWaferIJPDegree);
-                                }
-                                else if (glass.PPortProductionCategory == ProductCategory.Glass)
-                                {
-                                    robot.cv_Comm.SetAlignerDegree(recipe.PGlassVASDegree);
-                                }
-                            }
-                            aligner.cv_Data.PPreAction = AlignerPreAction.VuccumOff1;
-                        }
-                    }
-                    else if (aligner.cv_Data.PPreAction == AlignerPreAction.PutAligner)
-                    {
-                        job.PisWaitPut = false;
-                        GetPutAligner(job.PPutArm, false);
-                        aligner.cv_Data.PPreAction = AlignerPreAction.VuccumOn;
-                    }
-                }
-                else
-                {
-                    if (!robot.cv_Data.GlassDataMap[job.PTargetSlot].PHasSensor &&
-                        !robot.cv_Data.GlassDataMap[job.PTargetSlot].PHasData &&
-                        aligner.cv_Data.GlassDataMap[(int)job.PPutArm].PHasSensor &&
-                        aligner.cv_Data.GlassDataMap[(int)job.PPutArm].PHasData)
-                    {
-                        cv_RobotJobPath.Dequeue();
-                        if (cv_IsCycleStop)
-                        {
-                            PSystemData.POperationModeLeft = OperationMode.Manual;
-                            cv_IsCycleStop = false;
-                        }
-                    }
-                }
-            }
-            */
-        }
-        private void SetRobotSensorToEq()
-        {
-            /*
-            Robot robot = GetRobotById(1);
-            int time_chart_id = -1;
-            TimechartNormal time_chart_instance = null;
-
-            for (int eq_index = 1; eq_index <= (int)EqId.UV_1; eq_index++)
-            {
-                EqId eq_id = (EqId)eq_index;
-                if (eq_id == EqId.VAS)
-                {
-                    for (int slot = 1; slot <= 2; slot++)
-                    {
-                        if (slot == 1)
-                        {
-                            time_chart_id = (int)EqGifTimeChartId.TIMECHART_ID_VAS_DOWN;
-                            time_chart_instance = (TimechartNormal)cv_MmfController.cv_TimechartController.GetTimeChartInstance(time_chart_id);
-                            SetRobotSensorToEq(RobotArm.rbaUp, time_chart_instance.cv_RobotBitStart + (int)RobotSideBitAddressOffset.Work_Presence_Upper_Arm);
-                            SetRobotSensorToEq(RobotArm.rbaDown, time_chart_instance.cv_RobotBitStart + (int)RobotSideBitAddressOffset.Work_Presence_Low_Arm);
-                        }
-                        else if (slot == 2)
-                        {
-                            time_chart_id = (int)EqGifTimeChartId.TIMECHART_ID_VAS_UP;
-                            time_chart_instance = (TimechartNormal)cv_MmfController.cv_TimechartController.GetTimeChartInstance(time_chart_id);
-                            SetRobotSensorToEq(RobotArm.rbaUp, time_chart_instance.cv_RobotBitStart + (int)RobotSideBitAddressOffset.Work_Presence_Upper_Arm);
-                            SetRobotSensorToEq(RobotArm.rbaDown, time_chart_instance.cv_RobotBitStart + (int)RobotSideBitAddressOffset.Work_Presence_Low_Arm);
-                        }
-                    }
-                }
-                else
-                {
-                    time_chart_id = GetEqById((int)eq_id).cv_Comm.cv_TimeChatId;
-                    time_chart_instance = (TimechartNormal)cv_MmfController.cv_TimechartController.GetTimeChartInstance(time_chart_id);
-                    SetRobotSensorToEq(RobotArm.rbaUp, time_chart_instance.cv_RobotBitStart + (int)RobotSideBitAddressOffset.Work_Presence_Upper_Arm);
-                    SetRobotSensorToEq(RobotArm.rbaDown, time_chart_instance.cv_RobotBitStart + (int)RobotSideBitAddressOffset.Work_Presence_Low_Arm);
-                }
-            }
-            */
-        }
-        private void SetRobotSensorToEq(RobotArm m_Arm, int m_PortAddress)
-        {
-            Robot robot = GetRobotById(1);
-            bool up_sensor = robot.cv_Data.GlassDataMap[(int)RobotArm.rbaUp].PHasSensor;
-            bool down_sensor = robot.cv_Data.GlassDataMap[(int)RobotArm.rbaDown].PHasSensor;
-            if (m_Arm == RobotArm.rbaUp)
-            {
-                cv_Mio.SetPortValue(m_PortAddress, up_sensor ? 1 : 0);
-                WriteLog(LogLevelType.TimerFunction, "Set GIF sensor for Up arm" + (up_sensor ? "On" : "off"), FunInOut.None);
-            }
-            else if (m_Arm == RobotArm.rbaDown)
-            {
-                cv_Mio.SetPortValue(m_PortAddress, down_sensor ? 1 : 0);
-                WriteLog(LogLevelType.TimerFunction, "Set GIF sensor for down arm" + (down_sensor ? "On" : "off"), FunInOut.None);
-            }
-        }
-        private void ProcessEqGetPutJob(RobotAction m_Type, bool m_IsMaunal = false)
-        {
-            /*
-            RobotJob job = null;
-            Robot robot = GetRobotById(1);
-            if (!m_IsMaunal)
-            {
-                job = cv_RobotJobPath.Peek();
-                if (cv_RobotJobPath.Count >= 2)
-                {
-                    if( (cv_RobotJobPath.ElementAt(1).PTarget == ActionTarget.Aligner ) && (job.PTargetId != (int)EqId.IJP) )
-                    {
-                        Aligner aligner = GetAlignerById(1);
-                        if (aligner.cv_Data.PPreAction != AlignerPreAction.WaitHome && aligner.cv_Data.PPreAction != AlignerPreAction.SetToAngle)
-                        {
-                            aligner.cv_Data.PPreAction = AlignerPreAction.WaitHome;
-                            robot.cv_Comm.SetHome(APIEnum.CommnadDevice.Aligner, 1);
-                        }
-                    }
-                }
-            }
-            else
-                job = cv_RobotManaulJobPath.Peek();
-            EqId eq_id = (EqId)(int)job.PTargetId;
-            int slot = job.PTargetSlot;
-            int eq_time_chart_cur_step = 0;
-            EqInterFaceType gif_type = EqInterFaceType.None;
-            int time_chart_id = -1;
-            TimechartNormal time_chart_instance = null;
-
-            if (eq_id == EqId.VAS)
-            {
-                if (slot == 1)
-                {
-                    eq_time_chart_cur_step = GetEqById((int)eq_id).GetTimeChatCurStep(1);
-                    time_chart_id = (int)EqGifTimeChartId.TIMECHART_ID_VAS_DOWN;
-                    time_chart_instance = (TimechartNormal)cv_MmfController.cv_TimechartController.GetTimeChartInstance(time_chart_id);
-                }
-                else if (slot == 2)
-                {
-                    eq_time_chart_cur_step = GetEqById((int)eq_id).GetTimeChatCurStep(2);
-                    time_chart_id = (int)EqGifTimeChartId.TIMECHART_ID_VAS_UP;
-                    time_chart_instance = (TimechartNormal)cv_MmfController.cv_TimechartController.GetTimeChartInstance(time_chart_id);
-                }
-            }
-            else
-            {
-                eq_time_chart_cur_step = GetEqById((int)eq_id).GetTimeChatCurStep(1);
-                time_chart_id = GetEqById((int)eq_id).cv_Comm.cv_TimeChatId;
-                time_chart_instance = (TimechartNormal)cv_MmfController.cv_TimechartController.GetTimeChartInstance(time_chart_id);
-            }
-            if (eq_time_chart_cur_step == (int)TimechartNormal.STEP_ID_ActionReady)
-            {
-                gif_type = time_chart_instance.cv_ActionType;
-            }
-
-            if (m_Type == RobotAction.Get)// && (gif_type == EqInterFaceType.Unload || gif_type == EqInterFaceType.Exchange))
-            {
-                bool robot_get_arm_sensor = robot.cv_Data.GlassDataMap[(int)job.PGetArm].PHasSensor;
-                bool robot_get_arm_data = robot.cv_Data.GlassDataMap[(int)job.PGetArm].PHasData;
-                GlassData glass = null;
-                if (eq_time_chart_cur_step == (int)TimechartNormal.STEP_ID_ActionReady)
-                {
-                    if (cv_IsCycleStop)
-                    {
-                        PSystemData.POperationModeLeft = OperationMode.Manual;
-                        cv_IsCycleStop = false;
-                    }
-                    if (gif_type != EqInterFaceType.Unload && gif_type != EqInterFaceType.Exchange)
-                    {
-                        return;
-                    }
-                    if (!robot_get_arm_data && !robot_get_arm_sensor)
-                    {
-                        glass = new GlassData(cv_Mio, time_chart_instance.cv_ReadDataStartPort);
-                        string glass_id = glass.PId;
-                        string combination = glass.PAssamblyResult.ToString();
-                        for (int i = 1; i <= 15; i++)
-                        {
-                            int node_index = glass.cv_Nods.FindIndex(x => x.PNodeId == i);
-                            if (node_index != -1)
-                            {
-                                int history = glass.cv_Nods[node_index].cv_ProcessHistory;
-                                int recipe = glass.cv_Nods[node_index].cv_Recipe;
-                            }
-                        }
-                        //tmp mark for uv no data case.
-                        if (glass.PHasData)
-                        {
-                            if (!CheckEqSideData(glass, eq_id))
-                            {
-                                return;
-                            }
-                            time_chart_instance.SetTrigger(time_chart_id);
-                            time_chart_instance.cv_ActionType = EqInterFaceType.Unload;
-                            cv_Mio.SetPortValue(time_chart_instance.cv_RobotBitStart +
-                                (int)RobotSideBitAddressOffset.Unload_Only_Reply, 1);
-                            time_chart_instance.cv_GetData = glass;
-                            time_chart_instance.cv_GetArm = job.PGetArm;
-                            time_chart_instance.cv_Action = EqInterFaceType.Unload;
-                            if (job.PTarget == ActionTarget.Eq && job.PTargetId == (int)EqId.VAS)
-                            {
-                                if(job.PTargetSlot == 1)
-                                {
-                                    GetVasStandby();
-                                }
-                            }
-                            else
-                            {
-                                if ((job.PTarget == ActionTarget.Eq) && (job.PTargetId != (int)EqId.VAS))
-                                {
-                                    if (cv_GetPutStandbyExceptVas)
-                                    {
-                                        GetEqStandbyExceptVas(job.PTargetId, job.PTargetSlot, job.PGetArm);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                else if (eq_time_chart_cur_step == (int)TimechartNormal.STEP_ID_WaitRobotGetStart)
-                {
-                    if (!robot_get_arm_data && !robot_get_arm_sensor)
-                    {
-                        bool eq_ready = (cv_Mio.GetPortValue(time_chart_instance.cv_EqBitStart + (int)EqSideBitAddressOffset.Equipment_Ready) == 1);
-                        bool eq_start = (cv_Mio.GetPortValue(time_chart_instance.cv_EqBitStart + (int)EqSideBitAddressOffset.Transfer_Start) == 1);
-                        if (eq_ready && eq_start)
-                        {
-                            time_chart_instance.SetTrigger(time_chart_id);
-                            if (eq_id != EqId.VAS)
-                            {
-                                GetPutNormalEq(job.PGetArm, eq_id, 1, true, true);
-                            }
-                            else
-                            {
-                                if (job.PGetArm == RobotArm.rbaDown)
-                                {
-                                    GetVas(2, false);
-                                }
-                            }
-                        }
-                    }
-                }
-                else if (eq_time_chart_cur_step == (int)TimechartNormal.STEP_ID_WaitRobotGetEnd)
-                {
-                    if (robot_get_arm_sensor && !robot.IsBusy)
-                    {
-                        glass = new GlassData(cv_Mio, time_chart_instance.cv_ReadDataStartPort);
-                        robot.cv_Data.GlassDataMap[(int)job.PGetArm] = glass;
-                        robot.cv_Data.GlassDataMap[(int)job.PGetArm].PHasSensor = robot_get_arm_sensor;
-                        robot.cv_Data.GlassDataMap[(int)job.PGetArm].cv_SlotInEq = (uint)job.PGetArm;
-                        robot.SendDataViaMmf();
-                        robot.cv_Data.SaveToFile();
-                        time_chart_instance.SetTrigger(time_chart_id);
-                    }
-                }
-                else if (eq_time_chart_cur_step == (int)TimechartNormal.STEP_ID_WaitRobotGetVasStandByStart)
-                {
-                    if (!robot_get_arm_sensor)
-                    {
-                        bool eq_ready = (cv_Mio.GetPortValue(time_chart_instance.cv_EqBitStart + (int)EqSideBitAddressOffset.Equipment_Ready) == 1);
-                        if (eq_ready)
-                        {
-                            time_chart_instance.SetTrigger(time_chart_id);
-                            if (eq_id == EqId.VAS)
-                            {
-                                if (job.PGetArm == RobotArm.rbaDown)
-                                {
-                                    GetVas(1, false);
-                                }
-                            }
-                        }
-                    }
-                }
-                else if (eq_time_chart_cur_step == (int)TimechartNormal.STEP_ID_WaitRobotGetVasStandByEnd)
-                {
-                    if (cv_Mio.GetPortValue((int)EqSideBitAddressOffset.Stage_Delivery_Ready +
-                        time_chart_instance.cv_EqBitStart) == 1)
-                    {
-                        time_chart_instance.SetTrigger(time_chart_id);
-                        cv_Mio.SetPortValue((int)RobotSideBitAddressOffset.Robot_Delivery_Ready +
-                            time_chart_instance.cv_RobotBitStart, 0);
-                    }
-                }
-                else if (eq_time_chart_cur_step == (int)TimechartNormal.STEP_ID_WaitRobotCommandFinish)
-                {
-                    if (robot_get_arm_sensor && !robot.IsBusy)
-                    {
-                        time_chart_instance.SetTrigger(time_chart_id);
-                        cv_MmfController.SendBcTreansferReport(DataFlowAction.Receive, robot.cv_Data.GlassDataMap[(int)job.PGetArm]);
-                        //SendBcTreansferReport()
-                    }
-                }
-                else if (eq_time_chart_cur_step == (int)TimechartNormal.STEP_ID_WaitEqCompleteOn)
-                {
-                    if (robot_get_arm_sensor && !robot.IsBusy)
-                    {
-                        if (cv_Mio.GetPortValue((int)EqSideBitAddressOffset.Transfer_Complete +
-                            time_chart_instance.cv_EqBitStart) == 1)
-                        {
-                            time_chart_instance.SetTrigger(time_chart_id);
-                            if (!m_IsMaunal)
-                            {
-                                if (cv_IsCycleStop)
-                                {
-                                    PSystemData.POperationModeLeft = OperationMode.Manual;
-                                    cv_IsCycleStop = false;
-                                }
-                                cv_RobotJobPath.Dequeue();
-                            }
-                            else
-                                cv_RobotManaulJobPath.Dequeue();
-                        }
-                    }
-                }
-            }
-            else if (m_Type == RobotAction.Put)
-            {
-                bool robot_put_arm_sensor = robot.cv_Data.GlassDataMap[(int)job.PPutArm].PHasSensor;
-                bool robot_put_arm_data = robot.cv_Data.GlassDataMap[(int)job.PPutArm].PHasData;
-                if (eq_time_chart_cur_step == (int)TimechartNormal.STEP_ID_ActionReady)
-                {
-                    if (cv_IsCycleStop)
-                    {
-                        PSystemData.POperationModeLeft = OperationMode.Manual;
-                        cv_IsCycleStop = false;
-                    }
-                    if (gif_type != EqInterFaceType.Load)// && gif_type != EqInterFaceType.Exchange)
-                    {
-                        return;
-                    }
-                    if (robot_put_arm_data && robot_put_arm_sensor)
-                    {
-                        //
-                        int node_index = robot.cv_Data.GlassDataMap[(int)job.PPutArm].cv_Nods.FindIndex(x => x.PNodeId == 2);
-                        if (node_index != -1)
-                        {
-                            if (robot.cv_Data.GlassDataMap[(int)job.PPutArm].cv_Nods[node_index].PProcessHistory != 1)
-                            {
-                                robot.cv_Data.GlassDataMap[(int)job.PPutArm].cv_Nods[node_index].PProcessHistory = 1;
-                                CommonData.HIRATA.MDBCWorkDataUpdateReport report_bc = new MDBCWorkDataUpdateReport();
-                                report_bc.PGlass = robot.cv_Data.GlassDataMap[(int)job.PPutArm];
-                                cv_MmfController.SendMmfNotifyObject(typeof(CommonData.HIRATA.MDBCWorkDataUpdateReport).Name, report_bc, KParseObjToXmlPropertyType.Field);
-                            }
-                        }
-                        //
-                        robot.cv_Data.GlassDataMap[(int)job.PPutArm].Write(cv_Mio,
-                                time_chart_instance.cv_WriteDataStartPort);
-                        GlassData tmp_data = new GlassData(cv_Mio, time_chart_instance.cv_WriteDataStartPort);
-                        if (tmp_data.PId.Trim() == robot.cv_Data.GlassDataMap[(int)job.PPutArm].PId.Trim())
-                        {
-                            time_chart_instance.cv_PutData = tmp_data;
-                            time_chart_instance.cv_PutArm = job.PPutArm;
-                            time_chart_instance.cv_Action = EqInterFaceType.Load;
-                            cv_Mio.SetPortValue(time_chart_instance.cv_RobotBitStart +
-                                (int)RobotSideBitAddressOffset.Load_Only_Reply, 1);
-                            time_chart_instance.SetTrigger(time_chart_id);
-                            if (job.PTargetId == (int)EqId.UV_1)
-                            {
-                                cv_WaitUvRecordTime = SysUtils.Now();
-                            }
-                            if (job.PTarget == ActionTarget.Eq && job.PTargetId == (int)EqId.VAS)
-                            {
-                                if(job.PTargetSlot == 1)
-                                {
-                                    PutVasStandby(true);
-                                }
-                                else if(job.PTargetSlot == 2)
-                                {
-                                    if(cv_PutGlassStandby)
-                                    {
-                                        PutVasStandby(false);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if ((job.PTarget == ActionTarget.Eq) && (job.PTargetId != (int)EqId.VAS))
-                                {
-                                    if (cv_GetPutStandbyExceptVas)
-                                    {
-                                        PutEqStandbyExceptVas(job.PTargetId, job.PTargetSlot, job.PPutArm);
-                                    }
-                                }
-                            }
-
-                        }
-                    }
-                }
-                else if (eq_time_chart_cur_step == (int)TimechartNormal.STEP_ID_WaitRobotPutStart)
-                {
-                    if (robot_put_arm_sensor)
-                    {
-                        bool eq_ready = (cv_Mio.GetPortValue(time_chart_instance.cv_EqBitStart + (int)EqSideBitAddressOffset.Equipment_Ready) == 1);
-                        bool eq_start = (cv_Mio.GetPortValue(time_chart_instance.cv_EqBitStart + (int)EqSideBitAddressOffset.Transfer_Start) == 1);
-                        if (eq_ready && eq_start)
-                        {
-                            time_chart_instance.SetTrigger(time_chart_id);
-                            if (eq_id != EqId.VAS)
-                            {
-                                cv_Mio.SetPortValue((int)RobotSideBitAddressOffset.Interlock_2 +
-                                    time_chart_instance.cv_RobotBitStart, 0);
-
-                                GetPutNormalEq(job.PPutArm, eq_id, 1, false, true);
-                            }
-                            else
-                            {
-                                if (job.PTargetSlot == 1)
-                                {
-                                    if (job.PPutArm == RobotArm.rbaUp)
-                                    {
-                                        PutVasSlot(true, 2, true);
-                                        cv_Mio.SetPortValue((int)RobotSideBitAddressOffset.Interlock_2 +
-                                            time_chart_instance.cv_RobotBitStart, 0);
-                                    }
-                                }
-                                else if (job.PTargetSlot == 2)
-                                {
-                                    if (job.PPutArm == RobotArm.rbaDown)
-                                    {
-                                        PutVasSlot(false, 2, true);
-                                        cv_Mio.SetPortValue((int)RobotSideBitAddressOffset.Interlock_2 +
-                                            time_chart_instance.cv_RobotBitStart, 0);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                else if (eq_time_chart_cur_step == (int)TimechartNormal.STEP_ID_WaitRobotPutEnd)
-                {
-                    if (!robot_put_arm_sensor) //&& !robot.IsBusy )
-                    {
-                        if (!robot.IsBusy)
-                        {
-                            robot.cv_Data.GlassDataMap[(int)job.PPutArm] = new GlassData();
-                            robot.cv_Data.GlassDataMap[(int)job.PPutArm].PHasSensor = robot_put_arm_sensor;
-                            robot.cv_Data.GlassDataMap[(int)job.PPutArm].cv_SlotInEq = (uint)job.PPutArm;
-                            time_chart_instance.SetTrigger(time_chart_id);
-                            robot.SendDataViaMmf();
-                            robot.cv_Data.SaveToFile();
-                        }
-                        else if (LgcForm.CheckIsVasPutUpSlotJobStatus(job))
-                        {
-                            robot.cv_Data.GlassDataMap[(int)job.PPutArm] = new GlassData();
-                            robot.cv_Data.GlassDataMap[(int)job.PPutArm].PHasSensor = robot_put_arm_sensor;
-                            robot.cv_Data.GlassDataMap[(int)job.PPutArm].cv_SlotInEq = (uint)job.PPutArm;
-                            //time_chart_instance.SetTrigger(time_chart_id);
-                            time_chart_instance.JumpToStep(time_chart_id, (int)TimechartNormal.STEP_ID_WaitRobotCompleteOn);
-                            robot.SendDataViaMmf();
-                            robot.cv_Data.SaveToFile();
-                        }
-                    }
-                }
-                else if (eq_time_chart_cur_step == (int)TimechartNormal.STEP_ID_WaitRobotPutVasStandByStart)
-                {
-                    if (robot_put_arm_sensor)
-                    {
-                        bool eq_ready = (cv_Mio.GetPortValue(time_chart_instance.cv_EqBitStart + (int)EqSideBitAddressOffset.Equipment_Ready) == 1);
-                        if (eq_ready)
-                        {
-                            if (eq_id == EqId.VAS)
-                            {
-                                if (job.PTargetSlot == 1)
-                                {
-                                    if (job.PPutArm == RobotArm.rbaUp)
-                                    {
-                                        PutVasSlot(true, 1, true);
-                                        time_chart_instance.SetTrigger(time_chart_id);
-                                    }
-                                }
-                                else if (job.PTargetSlot == 2)
-                                {
-                                    if (job.PPutArm == RobotArm.rbaDown)
-                                    {
-                                        PutVasSlot(false, 1, true);
-                                        time_chart_instance.SetTrigger(time_chart_id);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                else if (eq_time_chart_cur_step == (int)TimechartNormal.STEP_ID_WaitRobotPutVasStandByEnd)
-                {
-                    if (cv_Mio.GetPortValue((int)EqSideBitAddressOffset.Stage_Delivery_Ready +
-                        time_chart_instance.cv_EqBitStart) == 1)
-                    {
-                        time_chart_instance.SetTrigger(time_chart_id);
-                        cv_Mio.SetPortValue((int)RobotSideBitAddressOffset.Robot_Delivery_Ready +
-                            time_chart_instance.cv_RobotBitStart, 0);
-                    }
-                }
-                else if (eq_time_chart_cur_step == (int)TimechartNormal.STEP_ID_WaitRobotCommandFinish)
-                {
-                    if (!robot_put_arm_sensor)// && !robot.IsBusy)
-                    {
-                        if (!robot.IsBusy)
-                        {
-                            time_chart_instance.SetTrigger(time_chart_id);
-                            cv_Mio.SetPortValue(time_chart_instance.cv_RobotBitStart + (int)RobotSideBitAddressOffset.Receipt_Complete, 1);
-                            robot.SendDataViaMmf();
-                        }
-                        else
-                        {
-                            if (CheckIsVasPutUpSlotJobStatus(job))
-                            {
-                                if (cv_Mio.GetPortValue(time_chart_instance.cv_RobotBitStart + (int)RobotSideBitAddressOffset.Receipt_Complete) == 1)
-                                {
-                                    time_chart_instance.SetTrigger(time_chart_id);
-                                    cv_Mio.SetPortValue(time_chart_instance.cv_RobotBitStart + (int)RobotSideBitAddressOffset.Receipt_Complete, 1);
-                                    robot.SendDataViaMmf();
-                                }
-                            }
-                        }
-                    }
-                }
-                else if (eq_time_chart_cur_step == (int)TimechartNormal.STEP_ID_WaitEqCompleteOn)
-                {
-                    if (!robot_put_arm_sensor)// && !robot.IsBusy)
-                    {
-                        if (!robot.IsBusy)
-                        {
-                            if (cv_Mio.GetPortValue((int)EqSideBitAddressOffset.Transfer_Complete +
-                                time_chart_instance.cv_EqBitStart) == 1)
-                            {
-                                time_chart_instance.SetTrigger(time_chart_id);
-                                if (!m_IsMaunal)
-                                {
-                                    cv_RobotJobPath.Dequeue();
-                                    if (cv_IsCycleStop)
-                                    {
-                                        PSystemData.POperationModeLeft = OperationMode.Manual;
-                                        cv_IsCycleStop = false;
-                                    }
-                                }
-                                else
-                                    cv_RobotManaulJobPath.Dequeue();
-                            }
-                            else if (CheckIsVasPutUpSlotJobStatus(job))
-                            {
-                                time_chart_instance.SetTrigger(time_chart_id);
-                                if (!m_IsMaunal)
-                                {
-                                    cv_RobotJobPath.Dequeue();
-                                    if (cv_IsCycleStop)
-                                    {
-                                        PSystemData.POperationModeLeft = OperationMode.Manual;
-                                        cv_IsCycleStop = false;
-                                    }
-                                }
-                                else
-                                    cv_RobotManaulJobPath.Dequeue();
-                            }
-                        }
-                        else
-                        {
-                            if (CheckIsVasPutUpSlotJobStatus(job))
-                            {
-                                if (cv_Mio.GetPortValue(time_chart_instance.cv_EqBitStart + (int)EqSideBitAddressOffset.Transfer_Complete) == 1)
-                                {
-                                    cv_Mio.SetPortValue(time_chart_instance.cv_RobotBitStart + (int)RobotSideBitAddressOffset.Receipt_Complete, 0);
-                                    cv_Mio.SetPortValue(time_chart_instance.cv_RobotBitStart + (int)RobotSideBitAddressOffset.Load_Only_Reply, 0);
-                                    cv_Mio.SetPortValue(time_chart_instance.cv_RobotBitStart + (int)RobotSideBitAddressOffset.Interlock_2, 1);
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                }
-            }
-            else if (job.PAction == RobotAction.Exchange)
-            {
-                bool robot_get_arm_sensor = robot.cv_Data.GlassDataMap[(int)job.PGetArm].PHasSensor;
-                bool robot_get_arm_data = robot.cv_Data.GlassDataMap[(int)job.PGetArm].PHasData;
-                bool robot_put_arm_sensor = robot.cv_Data.GlassDataMap[(int)job.PPutArm].PHasSensor;
-                bool robot_put_arm_data = robot.cv_Data.GlassDataMap[(int)job.PPutArm].PHasData;
-                if (eq_id != EqId.VAS)
-                {
-                    GlassData glass = null;
-                    if (eq_time_chart_cur_step == (int)TimechartNormal.STEP_ID_ActionReady)
-                    {
-                        if (cv_IsCycleStop)
-                        {
-                            PSystemData.POperationModeLeft = OperationMode.Manual;
-                            cv_IsCycleStop = false;
-                        }
-                        if (gif_type != EqInterFaceType.Exchange)
-                        {
-                            return;
-                        }
-
-                        if (!robot_get_arm_data && !robot_get_arm_sensor &&
-                            robot_put_arm_data && robot_put_arm_sensor)
-                        {
-                            robot.cv_Data.GlassDataMap[(int)job.PPutArm].Write(cv_Mio,
-                                time_chart_instance.cv_WriteDataStartPort);
-
-                            GlassData tmp_data = new GlassData(cv_Mio, time_chart_instance.cv_WriteDataStartPort);
-                            if (tmp_data.PId.Trim() == robot.cv_Data.GlassDataMap[(int)job.PPutArm].PId.Trim())
-                            {
-
-                                glass = new GlassData(cv_Mio, time_chart_instance.cv_ReadDataStartPort);
-                                //
-                                string glass_id = glass.PId;
-                                string combination = glass.PAssamblyResult.ToString();
-                                for (int i = 1; i <= 15; i++)
-                                {
-                                    int node_index = glass.cv_Nods.FindIndex(x => x.PNodeId == i);
-                                    if (node_index != -1)
-                                    {
-                                        int history = glass.cv_Nods[node_index].cv_ProcessHistory;
-                                        int recipe = glass.cv_Nods[node_index].cv_Recipe;
-                                    }
-                                }
-                                if (glass.PHasData)
-                                {
-                                    if (!CheckEqSideData(glass, eq_id))
-                                    {
-                                        return;
-                                    }
-                                    cv_Mio.SetPortValue(time_chart_instance.cv_RobotBitStart +
-                                        (int)RobotSideBitAddressOffset.Exchange_Reply, 1);
-                                    time_chart_instance.cv_Action = EqInterFaceType.Exchange;
-                                    time_chart_instance.cv_GetData = glass;
-                                    time_chart_instance.cv_GetArm = job.PGetArm;
-                                    time_chart_instance.cv_PutData = tmp_data;
-                                    time_chart_instance.cv_PutArm = job.PPutArm;
-                                    time_chart_instance.SetTrigger(time_chart_id);
-
-                                    if(cv_GetPutStandbyExceptVas)
-                                    {
-                                        GetEqStandbyExceptVas(job.cv_TargetId, job.cv_TargetSlot, job.PGetArm);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else if (eq_time_chart_cur_step == (int)TimechartNormal.STEP_ID_WaitRobotGetStart)
-                    {
-                        if (!robot_get_arm_sensor && robot_put_arm_sensor)
-                        {
-                            bool eq_ready = (cv_Mio.GetPortValue(time_chart_instance.cv_EqBitStart + (int)EqSideBitAddressOffset.Equipment_Ready) == 1);
-                            bool eq_tr_start = (cv_Mio.GetPortValue(time_chart_instance.cv_EqBitStart + (int)EqSideBitAddressOffset.Transfer_Start) == 1);
-                            if (eq_ready && eq_tr_start)
-                            {
-                                time_chart_instance.SetTrigger(time_chart_id);
-                                GetPutNormalEq(job.PGetArm, eq_id, 1, true, true);
-                            }
-                        }
-                    }
-                    else if (eq_time_chart_cur_step == (int)TimechartNormal.STEP_ID_WaitRobotGetEnd)
-                    {
-                        if (robot_put_arm_sensor && robot_get_arm_sensor)
-                        {
-                            glass = new GlassData(cv_Mio, time_chart_instance.cv_ReadDataStartPort);
-                            robot.cv_Data.GlassDataMap[(int)job.PGetArm] = glass;
-                            robot.cv_Data.GlassDataMap[(int)job.PGetArm].PHasSensor = robot_get_arm_sensor;
-                            robot.cv_Data.GlassDataMap[(int)job.PGetArm].cv_SlotInEq = (uint)job.PGetArm;
-                            time_chart_instance.JumpToStep(time_chart_id,
-                                (int)TimechartNormal.STEP_ID_WaitRobotPutStart);
-                            cv_MmfController.SendBcTreansferReport(DataFlowAction.Receive, robot.cv_Data.GlassDataMap[(int)job.PGetArm]);
-
-                        }
-                    }
-                    else if (eq_time_chart_cur_step == (int)TimechartNormal.STEP_ID_WaitRobotPutStart)
-                    {
-                        if (robot_put_arm_sensor && robot_get_arm_sensor)
-                        {
-                            bool eq_ready = (cv_Mio.GetPortValue(time_chart_instance.cv_EqBitStart + (int)EqSideBitAddressOffset.Equipment_Ready) == 1);
-                            if (eq_ready)
-                            {
-                                time_chart_instance.SetTrigger(time_chart_id);
-                                GetPutNormalEq(job.PPutArm, eq_id, 1, false, true);
-                                int node_index = robot.cv_Data.GlassDataMap[(int)job.PPutArm].cv_Nods.FindIndex(x => x.PNodeId == 2);
-                                if (robot.cv_Data.GlassDataMap[(int)job.PPutArm].cv_Nods[node_index].PProcessHistory != 1)
-                                {
-                                    robot.cv_Data.GlassDataMap[(int)job.PPutArm].cv_Nods[node_index].PProcessHistory = 1;
-                                    CommonData.HIRATA.MDBCWorkDataUpdateReport report_bc = new MDBCWorkDataUpdateReport();
-                                    report_bc.PGlass = robot.cv_Data.GlassDataMap[(int)job.PPutArm];
-                                    cv_MmfController.SendMmfNotifyObject(typeof(CommonData.HIRATA.MDBCWorkDataUpdateReport).Name, report_bc, KParseObjToXmlPropertyType.Field);
-                                }
-                            }
-                        }
-                    }
-                    else if (eq_time_chart_cur_step == (int)TimechartNormal.STEP_ID_WaitRobotPutEnd)
-                    {
-                        if (!robot_put_arm_sensor && robot_get_arm_sensor)
-                        {
-                            robot.cv_Data.GlassDataMap[(int)job.PPutArm] = new GlassData();
-                            robot.cv_Data.GlassDataMap[(int)job.PPutArm].PHasSensor = robot_put_arm_sensor;
-                            robot.cv_Data.GlassDataMap[(int)job.PPutArm].cv_SlotInEq = (uint)job.PPutArm;
-                            time_chart_instance.SetTrigger(time_chart_id);
-                        }
-                    }
-                    else if (eq_time_chart_cur_step == (int)TimechartNormal.STEP_ID_WaitRobotCommandFinish)
-                    {
-                        if (!robot_put_arm_sensor && robot_get_arm_sensor && !robot.IsBusy)
-                        {
-                            time_chart_instance.SetTrigger(time_chart_id);
-                        }
-                    }
-                    else if (eq_time_chart_cur_step == (int)TimechartNormal.STEP_ID_WaitEqCompleteOn)
-                    {
-                        if (!robot_put_arm_sensor && robot_get_arm_sensor && !robot.IsBusy)
-                        {
-                            if (cv_Mio.GetPortValue((int)EqSideBitAddressOffset.Transfer_Complete +
-                                    time_chart_instance.cv_EqBitStart) == 1)
-                            {
-                                time_chart_instance.SetTrigger(time_chart_id);
-                                if (!m_IsMaunal)
-                                {
-                                    cv_RobotJobPath.Dequeue();
-                                    if (cv_IsCycleStop)
-                                    {
-                                        PSystemData.POperationModeLeft = OperationMode.Manual;
-                                        cv_IsCycleStop = false;
-                                    }
-                                }
-                                else
-                                    cv_RobotManaulJobPath.Dequeue();
-                            }
-                        }
-                    }
-                }
-            }
-            */
-        }
-        private void DoRobotJobPath(bool m_IsManualCommand = false)
-        {
-            /*
-            RobotJob job = null;
-            if (m_IsManualCommand)
-                job = cv_RobotManaulJobPath.Peek();
-            else
-                job = cv_RobotJobPath.Peek();
-            Robot robot = GetRobotById(1);
-            if (!m_IsManualCommand)
-            {
-                if (cv_RobotJobPath.Count == 0) return;
-            }
-            else
-            {
-                if (cv_RobotManaulJobPath.Count == 0) return;
-            }
-            if (robot.IsBusy && !CheckIsVasPutUpSlotJobStatus(job)) return;
-            if (job.PAction == RobotAction.Get)// ||
-            // (job.PAction == RobotAction.Exchange && job.PTarget == ActionTarget.Aligner &&
-            //job.PIsWaitGet && !job.PisWaitPut))
-            {
-                if (job.PTarget == ActionTarget.Port)
-                {
-                    ProcessPortGetPutJob(job.PAction);
-                }
-                else if (job.PTarget == ActionTarget.Buffer)
-                {
-                    ProcessBufferGetPutJob(job.PAction);
-                }
-                else if (job.PTarget == ActionTarget.Aligner)
-                {
-                    ProcessAlignerGetPutJob(job.PAction);
-                }
-                else if (job.PTarget == ActionTarget.Eq)
-                {
-                    ProcessEqGetPutJob(job.PAction, m_IsManualCommand);
-                }
-            }
-            else if (job.PAction == RobotAction.Put)//|| (
-            //(job.PAction == RobotAction.Exchange) &&
-            //(job.PTarget == ActionTarget.Aligner) && (job.PisWaitPut) && (job.PIsWaitGet))
-            //)
-            {
-                if (job.PTarget == ActionTarget.Aligner)
-                {
-                    ProcessAlignerGetPutJob(job.PAction);
-                }
-                else if (job.PTarget == ActionTarget.Buffer)
-                {
-                    ProcessBufferGetPutJob(RobotAction.Put);
-                }
-                else if (job.PTarget == ActionTarget.Port)
-                {
-                    ProcessPortGetPutJob(RobotAction.Put);
-                }
-                else if (job.PTarget == ActionTarget.Eq)
-                {
-                    ProcessEqGetPutJob(job.PAction, m_IsManualCommand);
-                }
-            }
-            else if (job.PAction == RobotAction.Exchange)
-            {
-                if (job.PTarget == ActionTarget.Eq)
-                {
-                    ProcessEqGetPutJob(job.PAction, m_IsManualCommand);
-                }
-                else if (job.PTarget == ActionTarget.Aligner)
-                {
-                    // for putgetAligner use only.
-                    ProcessAlignerGetPutJob(job.PAction, m_IsManualCommand);
-                }
-            }
-            */
-        }
-        private void ProcessAfterUvPutWait()
-        {
-
-        }
-        #endregion
-
-        #region Find start step ( not use )
-        /*
-        private bool FindStartStep(int m_CurStep, ref int m_StartPos, ref Dictionary<int, RobotJob> m_JobMap)
-        {
-            bool rtn = false;
-            int next_step = m_CurStep;
-            int now_step = m_CurStep - 1;
-            int StartPos = now_step;
-            if (cv_CurRecipeFlowStepSetting.ContainsKey(now_step))
-            {
-                List<AllDevice> cv_stepDevice = cv_CurRecipeFlowStepSetting[now_step];
-                foreach (AllDevice device in cv_stepDevice)
-                {
-                    if (device == AllDevice.Aligner)
-                    {
-                        if (GetAlignerById(1).cv_Data.GlassDataMap[1].PHasData && GetAlignerById(1).cv_Data.GlassDataMap[1].PHasSensor)
-                        {
-                            m_JobMap[now_step] = new RobotJob(1, RobotArm.rabNone, m_JobMap[next_step].PPutArm, RobotAction.Get,
-                                ActionTarget.Aligner, 1, 1, false);
-                            rtn = FindStartStep(now_step, ref m_StartPos, ref m_JobMap);
-                        }
-                    }
-                    else if (device == AllDevice.LP)
-                    {
-                        int port = 0;
-                        int slot = 0;
-                        if (FindUnloadPPortToPutSubstrate(out port, out slot))
-                        {
-                            m_JobMap[now_step] = new RobotJob(1, RobotArm.rabNone, m_JobMap[next_step].PPutArm, RobotAction.Get,
-                                ActionTarget.Port, port, slot, false);
-                            rtn = true;
-                            StartPos = now_step;
-                            break;
-                        }
-                    }
-                    else if (device == AllDevice.Buffer)
-                    {
-                        int port = 0;
-                        int slot = 0;
-                        if (GetBufferById(1).cv_Data.GetUnloadSlot(BufferSlotType.Wafer, out slot))
-                        {
-                            m_JobMap[now_step] = new RobotJob(1, RobotArm.rabNone, m_JobMap[next_step].PPutArm, RobotAction.Get,
-                                ActionTarget.Buffer, 1, slot, false);
-                            rtn = true;
-                            StartPos = now_step;
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        EqId eq_id = EqId.None;
-                        int time_chart_instance = 0;
-                        int eq_time_chart_cur_step = 0;
-                        if (Enum.TryParse<EqId>(device.ToString(), out eq_id))
-                        {
-                            if (eq_id == EqId.VAS)
-                            {
-                                eq_time_chart_cur_step = GetEqById((int)eq_id).GetTimeChatCurStep(1);
-                                time_chart_instance = (int)EqGifTimeChartId.TIMECHART_ID_VAS_DOWN;
-                            }
-                            else
-                            {
-                                eq_time_chart_cur_step = GetEqById((int)eq_id).GetTimeChatCurStep(1);
-                                time_chart_instance = GetEqById((int)eq_id).cv_Comm.cv_TimeChatId;
-                            }
-                        }
-                        if (eq_time_chart_cur_step == (int)TimechartNormal.STEP_ID_ActionReady)
-                        {
-                            EqInterFaceType gif_type = cv_MmfController.cv_TimechartController.GetTimeChartInstance(time_chart_instance).cv_ActionType;
-                            Eq eq = GetEqById((int)eq_id);
-                            if (gif_type == EqInterFaceType.Unload)
-                            {
-                                if (m_JobMap[next_step].PTarget == ActionTarget.Aligner)
-                                {
-                                    m_JobMap[next_step].PPutArm = eq.PGetArm; // = new RobotJob(1, eq.PPutArm, RobotArm.rabNone, RobotAction.Put, ActionTarget.Eq, (int)eq_id, 1, true);
-                                    m_JobMap[now_step] = new RobotJob(1, RobotArm.rabNone, eq.PGetArm, RobotAction.Get, ActionTarget.Eq, (int)eq_id, 1, true);
-                                    rtn = true;
-                                    StartPos = now_step;
-                                    break;
-                                }
-                                else
-                                {
-                                    if (m_JobMap[next_step].PPutArm == eq.PGetArm)
-                                    {
-                                        m_JobMap[now_step] = new RobotJob(1, RobotArm.rabNone, eq.PGetArm, RobotAction.Get, ActionTarget.Eq, (int)eq_id, 1, true);
-                                        rtn = true;
-                                        StartPos = now_step;
-                                        break;
-                                    }
-                                }
-                            }
-                            if (gif_type == EqInterFaceType.Exchange)
-                            {
-                                if (m_JobMap[next_step].PTarget == ActionTarget.Aligner)
-                                {
-                                    m_JobMap[next_step].PPutArm = eq.PGetArm;
-                                    m_JobMap[now_step] = new RobotJob(1, eq.PPutArm, eq.PGetArm, RobotAction.Exchange, ActionTarget.Eq, (int)eq_id, 1, true);
-                                }
-                                else
-                                {
-                                    m_JobMap[now_step] = new RobotJob(1, eq.PPutArm, eq.PGetArm, RobotAction.Exchange, ActionTarget.Eq, (int)eq_id, 1, true);
-                                }
-
-                                if (!FindStartStep(now_step, ref m_StartPos, ref m_JobMap))
-                                {
-                                    m_JobMap[now_step].PAction = RobotAction.Get;
-                                    m_StartPos = now_step;
-                                    rtn = true;
-                                }
-                                else
-                                {
-                                    rtn = true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            m_StartPos = StartPos;
-            return rtn;
-        }
-        */
-        #endregion
 
         private bool FindUnloadPortToPutSubstrate(out int m_Port, out int m_Slot , RobotJob m_Job)
         {
@@ -1810,29 +438,12 @@ namespace LGC
         }
         protected override void ModuleInit()
         {
-            BaseForm.cv_Recipes.SetFilePath(CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_FDModuleName + "\\PPID.xml");
-            BaseForm.cv_Recipes.PIsAutoSave = true;
-            BaseForm.cv_Recipes.LoadFromFile();
-            BaseForm.cv_Recipes.SaveToFile();
+            InitRecipe();
+            InitAlarmData();
+            InitTimeoutData();
+            InitSystemData();
+            InitGlassCount();
 
-            BaseForm.cv_Alarms.PIsAutoSave = false;
-            BaseForm.cv_AccountData.PIsAutoSave = false;
-
-            BaseForm.cv_TimeoutData.SetFilePath(CommonStaticData.g_TimeOutPath);
-            BaseForm.cv_TimeoutData.PIsAutoSave = true;
-            BaseForm.cv_TimeoutData.LoadFromFile();
-            BaseForm.cv_TimeoutData.SaveToFile();
-
-            BaseForm.cv_GlassCountData.SetFilePath(CommonStaticData.g_GlassCountDataPath);
-            BaseForm.cv_GlassCountData.PIsAutoSave = false;
-            int history = cv_Mio.GetPortValue(0x344A);
-            history += (cv_Mio.GetPortValue(0x344B) << 16);
-            BaseForm.cv_GlassCountData.PHistoryCount = history;
-
-            BaseForm.PSystemData.SetFilePath(CommonStaticData.g_StatsRecordPath);
-            BaseForm.PSystemData.PIsAutoSave = true;
-            BaseForm.PSystemData.LoadFromFile();
-            BaseForm.PSystemData.SaveToFile();
 
             KIniFile ini = new KIniFile(CommonData.HIRATA.CommonStaticData.g_ModuleSystemIniFile);
             //check eq data at local mode.
@@ -1930,15 +541,15 @@ namespace LGC
             }
 
             bool is_change = false;
-            if (BaseForm.cv_GlassCountData.PProductCount != production)
+            if (lgcBase.cv_GlassCountData.PProductCount != production)
             {
                 is_change = true;
-                BaseForm.cv_GlassCountData.PProductCount = production;
+                lgcBase.cv_GlassCountData.PProductCount = production;
             }
-            if (BaseForm.cv_GlassCountData.PDummyCount != dummy)
+            if (lgcBase.cv_GlassCountData.PDummyCount != dummy)
             {
                 is_change = true;
-                BaseForm.cv_GlassCountData.PDummyCount = dummy;
+                lgcBase.cv_GlassCountData.PDummyCount = dummy;
             }
             /*
             if (is_change)
@@ -1988,7 +599,7 @@ namespace LGC
         void SendTowerCommand()
         {
             Robot robot = GetRobotById(1);
-            if (BaseForm.PSystemData.PapiInlineMode != EquipmentInlineMode.Remote) return;
+            if (lgcBase.PSystemData.PapiInlineMode != EquipmentInlineMode.Remote) return;
             if (robot.cv_TowerJobQ.Count != 0)
             {
                 TowerCommand tmp = GetRobotById(1).cv_TowerJobQ.Peek();
@@ -2002,7 +613,7 @@ namespace LGC
         void SendBuzzerCommand()
         {
             Robot robot = GetRobotById(1);
-            if (BaseForm.PSystemData.PapiInlineMode != EquipmentInlineMode.Remote) return;
+            if (lgcBase.PSystemData.PapiInlineMode != EquipmentInlineMode.Remote) return;
             if (robot.cv_BuzzerQ.Count != 0)
             {
                 //bool tmp = GetRobotById(1).cv_BuzzerQ.Peek();
@@ -2022,41 +633,41 @@ namespace LGC
                 }
             }
 
-            if (BaseForm.PSystemData.PSystemStatus == EquipmentStatus.WaitIdle)
+            if (lgcBase.PSystemData.PSystemStatus == EquipmentStatus.WaitIdle)
             {
-                long diff = SysUtils.MilliSecondsBetween(SysUtils.Now(), BaseForm.PSystemData.PIdleTime);
-                if (diff > BaseForm.cv_TimeoutData.PIdleDelayTime)
+                long diff = SysUtils.MilliSecondsBetween(SysUtils.Now(), lgcBase.PSystemData.PIdleTime);
+                if (diff > lgcBase.cv_TimeoutData.PIdleDelayTime)
                 {
-                    BaseForm.PSystemData.PSystemStatus = EquipmentStatus.Idle;
+                    lgcBase.PSystemData.PSystemStatus = EquipmentStatus.Idle;
                     AddTowerCommand(SignalTowerColor.All, SignalTowerControl.Off);
                     AddTowerCommand(SignalTowerColor.Yellow, SignalTowerControl.On);
 
                 }
                 else if (diff < 0)
                 {
-                    BaseForm.PSystemData.PIdleTime = SysUtils.Now();
+                    lgcBase.PSystemData.PIdleTime = SysUtils.Now();
                 }
             }
 
             if (has_foup)
             {
-                if (!BaseForm.cv_Alarms.IsHasAlarm())
+                if (!lgcBase.cv_Alarms.IsHasAlarm())
                 {
-                    if (BaseForm.PSystemData.PSystemStatus != EquipmentStatus.Run)
+                    if (lgcBase.PSystemData.PSystemStatus != EquipmentStatus.Run)
                     {
-                        BaseForm.PSystemData.PSystemStatus = EquipmentStatus.Run;
+                        lgcBase.PSystemData.PSystemStatus = EquipmentStatus.Run;
                         AddTowerCommand(SignalTowerColor.All, SignalTowerControl.Off);
                         AddTowerCommand(SignalTowerColor.Green, SignalTowerControl.On);
                     }
                 }
-                else if (BaseForm.PSystemData.PSystemStatus != EquipmentStatus.Down)
+                else if (lgcBase.PSystemData.PSystemStatus != EquipmentStatus.Down)
                 {
-                    BaseForm.PSystemData.PSystemStatus = EquipmentStatus.Down;
+                    lgcBase.PSystemData.PSystemStatus = EquipmentStatus.Down;
                     AddTowerCommand(SignalTowerColor.All, SignalTowerControl.Off);
                     AddTowerCommand(SignalTowerColor.Red, SignalTowerControl.On);
-                    if (BaseForm.PSystemData.POperationModeLeft == OperationMode.Auto)
+                    if (lgcBase.PSystemData.POperationModeLeft == OperationMode.Auto)
                     {
-                        BaseForm.PSystemData.POperationModeLeft = OperationMode.Manual;
+                        lgcBase.PSystemData.POperationModeLeft = OperationMode.Manual;
                     }
                 }
             }
@@ -2116,7 +727,7 @@ namespace LGC
         private void DoCstUnload()
         {
             Port job_port = null;
-            if (BaseForm.PSystemData.POperationModeLeft != OperationMode.Auto)
+            if (lgcBase.PSystemData.POperationModeLeft != OperationMode.Auto)
             {
                 return;
             }
@@ -2151,12 +762,12 @@ namespace LGC
                         {
                             if (CheckThePortCanUnload(port_id))
                             {
-                                if (BaseForm.PSystemData.PSystemOnlineMode == OnlineMode.Offline)
+                                if (lgcBase.PSystemData.PSystemOnlineMode == OnlineMode.Offline)
                                 {
                                     job_port.PLotStatus = LotStatus.ProcessEnd;
                                     job_port.cv_Data.PWaitUnload = true;
                                 }
-                                else if (BaseForm.PSystemData.PSystemOnlineMode == OnlineMode.Control)
+                                else if (lgcBase.PSystemData.PSystemOnlineMode == OnlineMode.Control)
                                 {
                                     job_port.PLotStatus = LotStatus.ProcessEnd;
                                 }
@@ -3023,114 +1634,7 @@ namespace LGC
             LGCController.triggerLgcEvent(typeof(CommonData.HIRATA.MDShowMsg).Name, msg_obj);
             WriteLog(LogLevelType.NormalFunctionInOut, CommonData.HIRATA.CommonStaticData.__FUN(), FunInOut.Leave);
         }
-        public static void EditAlarm(CommonData.HIRATA.AlarmItem m_Alarm , bool m_IsApi = false)
-        {
-            WriteLog(LogLevelType.NormalFunctionInOut, CommonData.HIRATA.CommonStaticData.__FUN(), FunInOut.Enter);
-            if (m_Alarm.PStatus == AlarmStatus.Occur)
-            {
-                if (!BaseForm.cv_Alarms.cv_AlarmList.Exists(x => x.PCode == m_Alarm.PCode))
-                {
-                    m_Alarm.PTime = DateTime.Now.ToString("yyyyMMddHHmmss");
-                    BaseForm.cv_Alarms.AddAlarm(m_Alarm);
-                    WriteAlarmLog(m_Alarm);
-                    if (m_Alarm.PLevel == AlarmLevele.Serious)
-                    {
-                        AddBuzzerCommand(true);
-                    }
-                }
-            }
-            else if (m_Alarm.PStatus == AlarmStatus.Clean)
-            {
-                if (BaseForm.cv_Alarms.cv_AlarmList.Exists(x => x.PCode == m_Alarm.PCode))
-                {
-                    BaseForm.cv_Alarms.DelAlarm(m_Alarm);
-                }
-            }
-            WriteLog(LogLevelType.NormalFunctionInOut, CommonData.HIRATA.CommonStaticData.__FUN(), FunInOut.Leave);
-        }
-        public static void EditAlarm(List<CommonData.HIRATA.AlarmItem> m_Alarms)
-        {
-            WriteLog(LogLevelType.NormalFunctionInOut, CommonData.HIRATA.CommonStaticData.__FUN(), FunInOut.Enter);
-            foreach (CommonData.HIRATA.AlarmItem m_Alarm in m_Alarms)
-            {
-                if (m_Alarm.PStatus == AlarmStatus.Occur)
-                {
-                    if (!BaseForm.cv_Alarms.cv_AlarmList.Exists(x => x.PCode == m_Alarm.PCode))
-                    {
-                        m_Alarm.PTime = DateTime.Now.ToString("yyyyMMddHHmmss");
-                        BaseForm.cv_Alarms.AddAlarm(m_Alarm);
-                        WriteAlarmLog(m_Alarm);
-                    }
-                }
-                else if (m_Alarm.PStatus == AlarmStatus.Clean)
-                {
-                    int index = BaseForm.cv_Alarms.cv_AlarmList.FindIndex(x => x.PCode == m_Alarm.PCode);
-                    if (index != -1)
-                    {
-                        BaseForm.cv_Alarms.DelAlarm(m_Alarm);
-                    }
-                }
-            }
-            CheckSystemStatus();
-            WriteLog(LogLevelType.NormalFunctionInOut, CommonData.HIRATA.CommonStaticData.__FUN(), FunInOut.Leave);
-        }
-        public static void LoadAlarmTable()
-        {
-            if (cv_ApiAlarm == null)
-            {
-                cv_ApiAlarm = new Dictionary<string,List<AlarmItem>>();
-            }
-            cv_ApiAlarm.Clear();
-            for(int i=1 ; i<=10 ; i++)
-            {
-                if(i<10)
-                cv_ApiAlarm[i.ToString().PadLeft(2,'0')] = new List<AlarmItem>();
-                else
-                cv_ApiAlarm[i.ToString()] = new List<AlarmItem>();
-            }
-            KXmlItem file = new KXmlItem();
 
-            string file_path = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + "\\" +
-            CommonData.HIRATA.CommonStaticData.g_FDModuleName + "\\Alarm.xml";
-            file.LoadFromFile(file_path);
-            int index = 0;
-            int alarm_count = file.ItemsByName["Data"].ItemNumber;
-            Match match = Match.Empty;
-            while(index < alarm_count )
-            {
-                KXmlItem xml = file.ItemsByName["Data"].Items[index];
-                AlarmItem tmp = new AlarmItem();
-                tmp.cv_ApiTypeCode = xml.Attributes["Type"].Trim();
-                tmp.PCode = xml.Attributes["RepCode"].Trim();
-                string level = xml.Attributes["Level"].Trim();
-                if(level == "L")
-                tmp.PLevel =AlarmLevele.Light;
-                else if(level == "S")
-                tmp.PLevel =AlarmLevele.Serious;
-                match = Match.Empty;
-                match = Regex.Match(xml.Attributes["Device"].Trim(), @"\D*", RegexOptions.IgnoreCase);
-                if (match.Success)
-                {
-                    if (Enum.IsDefined(typeof(APIEnum.CommnadDevice), match.Value))
-                    {
-                        tmp.PCommandDevice = (APIEnum.CommnadDevice)Enum.Parse(typeof(APIEnum.CommnadDevice), match.Value);
-                    }
-                    else
-                    {
-                        int a = 19;
-                    }
-                }
-                else
-                {
-                    int a = 9;
-                }
-                tmp.PMainDescription = xml.Attributes["Msg"].Trim();
-                tmp.cv_ResCode = xml.Attributes["DeviceCode"].Trim();
-                tmp.PUnit = Convert.ToInt16(xml.Attributes["Unit"].Trim());
-                cv_ApiAlarm[tmp.cv_ApiTypeCode].Add(tmp);
-                index++;
-            }
-        }
         public static void CheckSystemStatus()
         {
         }
@@ -3183,20 +1687,20 @@ namespace LGC
         {
             if(m_Side == enSideGroup.Both)
             {
-                BaseForm.PSystemData.PInitaiizeOkLeft = true;
-                BaseForm.PSystemData.PInitaiizingRight = false;
+                lgcBase.PSystemData.PInitaiizeOkLeft = true;
+                lgcBase.PSystemData.PInitaiizingRight = false;
             }
             else if(m_Side == enSideGroup.Right)
             {
-                BaseForm.PSystemData.PInitaiizeOkRight = true;
-                BaseForm.PSystemData.PInitaiizingRight = false;
+                lgcBase.PSystemData.PInitaiizeOkRight = true;
+                lgcBase.PSystemData.PInitaiizingRight = false;
             }
             else if(m_Side == enSideGroup.Left)
             {
-                BaseForm.PSystemData.PInitaiizeOkRight = true;
-                BaseForm.PSystemData.PInitaiizingRight = false;
-                BaseForm.PSystemData.PInitaiizeOkLeft = true;
-                BaseForm.PSystemData.PInitaiizingRight = false;
+                lgcBase.PSystemData.PInitaiizeOkRight = true;
+                lgcBase.PSystemData.PInitaiizingRight = false;
+                lgcBase.PSystemData.PInitaiizeOkLeft = true;
+                lgcBase.PSystemData.PInitaiizingRight = false;
             }
             //cv_MmfController.SendInitialize(InitialAction.Complete, MmfEventClientEventType.etNotify, false);
             for (int i = 1; i <= CommonData.HIRATA.CommonStaticData.g_PortNumber; i++)
@@ -3232,10 +1736,10 @@ namespace LGC
         {
             if (m_Side == enSideGroup.Both)
             {
-                BaseForm.PSystemData.PInitaiizeOkRight = false;
-                BaseForm.PSystemData.PInitaiizingRight = false;
-                BaseForm.PSystemData.PInitaiizeOkLeft = false;
-                BaseForm.PSystemData.PInitaiizingLeft = false;
+                lgcBase.PSystemData.PInitaiizeOkRight = false;
+                lgcBase.PSystemData.PInitaiizingRight = false;
+                lgcBase.PSystemData.PInitaiizeOkLeft = false;
+                lgcBase.PSystemData.PInitaiizingLeft = false;
                 Robot rb_left = GetRobotBySide(enSideGroup.Left);
                 Robot rb_right = GetRobotBySide(enSideGroup.Right);
                 Aligner al_left = GetAlignerBySide(enSideGroup.Left);
@@ -3263,8 +1767,8 @@ namespace LGC
             }
             else if (m_Side == enSideGroup.Right)
             {
-                BaseForm.PSystemData.PInitaiizeOkRight = false;
-                BaseForm.PSystemData.PInitaiizingRight = false;
+                lgcBase.PSystemData.PInitaiizeOkRight = false;
+                lgcBase.PSystemData.PInitaiizingRight = false;
                 Robot rb_right = GetRobotBySide(enSideGroup.Right);
                 Aligner al_right = GetAlignerBySide(enSideGroup.Right);
                 //Buffer bf_right = GetBufferBySide(enSideGroup.Both);
@@ -3279,8 +1783,8 @@ namespace LGC
             }
             else if (m_Side == enSideGroup.Left)
             {
-                BaseForm.PSystemData.PInitaiizeOkLeft = false;
-                BaseForm.PSystemData.PInitaiizingLeft = false;
+                lgcBase.PSystemData.PInitaiizeOkLeft = false;
+                lgcBase.PSystemData.PInitaiizingLeft = false;
                 Robot rb_left = GetRobotBySide(enSideGroup.Left);
                 Aligner al_left = GetAlignerBySide(enSideGroup.Left);
                 //Buffer bf_both = GetBufferBySide(enSideGroup.Both);
@@ -3433,11 +1937,11 @@ namespace LGC
         private bool CheckEqSideData(GlassData data , EqId m_Eq)
         {
             bool rtn = true;
-            if (BaseForm.PSystemData.IsCheckRecipe)
+            if (lgcBase.PSystemData.IsCheckRecipe)
             {
                 int index = data.cv_Nods.FindIndex(x => x.cv_NodeId == 2);
                 GlassDataNodeItem node = data.cv_Nods[index];
-                if (node.cv_Recipe != Convert.ToInt32(BaseForm.cv_Recipes.PCurRecipeId))
+                if (node.cv_Recipe != Convert.ToInt32(lgcBase.cv_Recipes.PCurRecipeId))
                 {
                     CommonData.HIRATA.AlarmItem alarm = new AlarmItem();
                     alarm.PStatus = AlarmStatus.Occur;
@@ -3451,7 +1955,7 @@ namespace LGC
                     rtn = false;
                 }
             }
-            if (BaseForm.PSystemData.IsCheckSeq)
+            if (lgcBase.PSystemData.IsCheckSeq)
             {
                 if (data.PFoupSeq == 0)
                 {
@@ -3467,7 +1971,7 @@ namespace LGC
                     rtn = false;
                 }
             }
-            if (BaseForm.PSystemData.IsCheckSlot)
+            if (lgcBase.PSystemData.IsCheckSlot)
             {
                 if (data.PWorkSlot == 0)
                 {
@@ -3483,7 +1987,7 @@ namespace LGC
                     rtn = false;
                 }
             }
-            if (BaseForm.PSystemData.IsCheckId)
+            if (lgcBase.PSystemData.IsCheckId)
             {
                 if (string.IsNullOrEmpty(data.PId.Trim().Trim('\0')))
                 {
@@ -3499,15 +2003,15 @@ namespace LGC
                     rtn = false;
                 }
             }
-            if ((BaseForm.PSystemData.PSystemOnlineMode == OnlineMode.Control) ||
-                ((BaseForm.PSystemData.PSystemOnlineMode == OnlineMode.Offline) && cv_CheckEqDataLocalMode)
+            if ((lgcBase.PSystemData.PSystemOnlineMode == OnlineMode.Control) ||
+                ((lgcBase.PSystemData.PSystemOnlineMode == OnlineMode.Offline) && cv_CheckEqDataLocalMode)
                 )
             {
                 int node_index = data.cv_Nods.FindIndex(x => x.PNodeId == 2);
                 if (node_index != -1)
                 {
                     int recipe = data.cv_Nods[node_index].cv_Recipe;
-                    if (recipe != Convert.ToInt32(BaseForm.cv_Recipes.PCurRecipeId.Trim()))
+                    if (recipe != Convert.ToInt32(lgcBase.cv_Recipes.PCurRecipeId.Trim()))
                     {
                         AlarmItem alarm = new AlarmItem();
                         alarm.PCode = Alarmtable.InterfaceErrorGlassDataRecipeUnmatch.ToString();
@@ -3517,7 +2021,7 @@ namespace LGC
                         alarm.PStatus = AlarmStatus.Occur;
                         EditAlarm(alarm);
                         //ShowMsg(alarm.PMainDescription + "\nRecipe from EQ : " + recipe + "EFEM Cur. recipe : " + cv_Recipes.PCurRecipeId.Trim(), false, false);
-                        WriteLog(LogLevelType.Warning, alarm.PMainDescription + "\nRecipe from EQ : " + recipe + " EFEM Cur. recipe : " + BaseForm.cv_Recipes.PCurRecipeId.Trim());
+                        WriteLog(LogLevelType.Warning, alarm.PMainDescription + "\nRecipe from EQ : " + recipe + " EFEM Cur. recipe : " + lgcBase.cv_Recipes.PCurRecipeId.Trim());
                         rtn = false;
                     }
                 }

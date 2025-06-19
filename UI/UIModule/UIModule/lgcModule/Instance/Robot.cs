@@ -84,11 +84,11 @@ namespace LGC
         public bool SetRobotTransferAction(CommandData m_Command, RobotJob m_Job)
         {
             bool rtn = false;
-            if (BaseForm.PSystemData.PSystemStatus != EquipmentStatus.Down)
+            if (lgcBase.PSystemData.PSystemStatus != EquipmentStatus.Down)
             {
                 if (LgcModule.SetRobotTransferAction(m_Command))
                 {
-                    BaseForm.PSystemData.PRobot1Status = EquipmentStatus.Run;
+                    lgcBase.PSystemData.PRobot1Status = EquipmentStatus.Run;
                     AddRobotJob(m_Job);
                     rtn = true;
                 }
@@ -102,7 +102,7 @@ namespace LGC
         public bool SetRobotCommonAction(CommandData m_Command)
         {
             bool rtn = false;
-            if (BaseForm.PSystemData.PSystemStatus != EquipmentStatus.Down)
+            if (lgcBase.PSystemData.PSystemStatus != EquipmentStatus.Down)
             {
                 if (LgcModule.cv_ApiController.Connected)
                 {
@@ -279,11 +279,11 @@ namespace LGC
         }
         public void SetInitilize(enSideGroup m_Side , bool m_IsForce=false )
         {
-            BaseForm.PSystemData.PIsForceInitial = m_IsForce;
+            lgcBase.PSystemData.PIsForceInitial = m_IsForce;
             if(m_Side == enSideGroup.Left)
             {
-                BaseForm.PSystemData.PInitaiizeOkLeft = false;
-                BaseForm.PSystemData.PInitaiizingLeft = true;
+                lgcBase.PSystemData.PInitaiizeOkLeft = false;
+                lgcBase.PSystemData.PInitaiizingLeft = true;
 
                 LgcModule.GetRobotBySide(enSideGroup.Left).PIsStatus = false;
                 LgcModule.GetRobotBySide(enSideGroup.Left).PIsHome = false;
@@ -295,8 +295,8 @@ namespace LGC
             }
             else if(m_Side == enSideGroup.Right)
             {
-                BaseForm.PSystemData.PInitaiizeOkRight = false;
-                BaseForm.PSystemData.PInitaiizingRight = true;
+                lgcBase.PSystemData.PInitaiizeOkRight = false;
+                lgcBase.PSystemData.PInitaiizingRight = true;
                 LgcModule.GetRobotBySide(enSideGroup.Right).PIsStatus = false;
                 LgcModule.GetRobotBySide(enSideGroup.Right).PIsHome = false;
                 LgcModule.GetRobotBySide(enSideGroup.Right).PIsResetError = false;
@@ -307,10 +307,10 @@ namespace LGC
             }
             else if(m_Side == enSideGroup.Both)
             {
-                BaseForm.PSystemData.PInitaiizeOkRight = false;
-                BaseForm.PSystemData.PInitaiizingRight = true;
-                BaseForm.PSystemData.PInitaiizeOkLeft = false;
-                BaseForm.PSystemData.PInitaiizingLeft = true;
+                lgcBase.PSystemData.PInitaiizeOkRight = false;
+                lgcBase.PSystemData.PInitaiizingRight = true;
+                lgcBase.PSystemData.PInitaiizeOkLeft = false;
+                lgcBase.PSystemData.PInitaiizingLeft = true;
 
                 LgcModule.GetRobotBySide(enSideGroup.Left).PIsStatus = false;
                 LgcModule.GetRobotBySide(enSideGroup.Left).PIsHome = false;
@@ -341,11 +341,11 @@ namespace LGC
                     port.PIsRemapping = false;
                 }
             }
-            if (BaseForm.PSystemData.PapiInlineMode == EquipmentInlineMode.Local)
+            if (lgcBase.PSystemData.PapiInlineMode == EquipmentInlineMode.Local)
             {
                 LgcModule.SetApiCommonCommand(APIEnum.APICommand.Remote);
             }
-            else if (BaseForm.PSystemData.PapiInlineMode == EquipmentInlineMode.Remote)
+            else if (lgcBase.PSystemData.PapiInlineMode == EquipmentInlineMode.Remote)
             {
                 foreach(Robot rb in LgcModule.cv_RobotContainer.Values)
                 {
@@ -495,9 +495,9 @@ namespace LGC
                         cv_Data.SaveToFile();
                     }
                     CurJob = null;
-                    if(BaseForm.PSystemData.PRobot1Status == EquipmentStatus.Run)
+                    if(lgcBase.PSystemData.PRobot1Status == EquipmentStatus.Run)
                     {
-                        BaseForm.PSystemData.PRobot1Status = EquipmentStatus.Idle;
+                        lgcBase.PSystemData.PRobot1Status = EquipmentStatus.Idle;
                     }
                 }
             }
@@ -581,7 +581,7 @@ namespace LGC
                         LgcModule.cv_eventController.SendBcTreansferReport(DataFlowAction.Store, port.cv_Data.GlassDataMap[job.PTargetSlot], (int)port.cv_Data.cv_Id,
                             (int)port.cv_Data.GlassDataMap[job.PTargetSlot].cv_SlotInEq);
                            
-                        if(BaseForm.PSystemData.PONT)
+                        if(lgcBase.PSystemData.PONT)
                         {
                             bool is_unlod = true;
                             for(int i=1 ; i<= port.cv_SlotCount ; i++)
@@ -649,9 +649,9 @@ namespace LGC
                     else
                     {
                         CurJob = null;
-                        if (BaseForm.PSystemData.PRobot1Status == EquipmentStatus.Run)
+                        if (lgcBase.PSystemData.PRobot1Status == EquipmentStatus.Run)
                         {
-                            BaseForm.PSystemData.PRobot1Status = EquipmentStatus.Idle;
+                            lgcBase.PSystemData.PRobot1Status = EquipmentStatus.Idle;
                         }
                         LgcModule.WriteLog(LogLevelType.General, "Set robot job null.");
                     }
@@ -726,9 +726,9 @@ namespace LGC
                         robot.cv_Data.SaveToFile();
                     }
                     CurJob = null;
-                    if (BaseForm.PSystemData.PRobot1Status == EquipmentStatus.Run)
+                    if (lgcBase.PSystemData.PRobot1Status == EquipmentStatus.Run)
                     {
-                        BaseForm.PSystemData.PRobot1Status = EquipmentStatus.Idle;
+                        lgcBase.PSystemData.PRobot1Status = EquipmentStatus.Idle;
                     }
                     LgcModule.WriteLog(LogLevelType.General , "Set robot job null.");
                 }
@@ -739,7 +739,7 @@ namespace LGC
             Robot robot = LgcModule.GetRobotById(1);
             if (m_Command.PRobotCommand == APIEnum.RobotCommand.Stop)
             {
-                BaseForm.PSystemData.PRobot1Status = EquipmentStatus.Stop;
+                lgcBase.PSystemData.PRobot1Status = EquipmentStatus.Stop;
             }
         }
         #endregion

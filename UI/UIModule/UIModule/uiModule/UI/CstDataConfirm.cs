@@ -45,12 +45,12 @@ namespace UI
             }
             cb_Recipe.Items.Clear();
             //cb_Recipe.Items.AddRange(Form1.cv_Recipes.cv_RecipeList);
-            foreach (CommonData.HIRATA.RecipeItem item in UiForm.cv_Recipes.cv_RecipeList)
+            foreach (CommonData.HIRATA.RecipeItem item in lgcBase.cv_Recipes.cv_RecipeList)
             {
                 cb_Recipe.Items.Add(item.cv_Id);
             }
             RecipeItem recipe = null;
-            if (UiForm.cv_Recipes.GetCurRecipe(out recipe))
+            if (lgcBase.cv_Recipes.GetCurRecipe(out recipe))
             {
                 if (cb_Recipe.Items.Contains(recipe.PId))
                 {
@@ -276,7 +276,7 @@ namespace UI
 
             node_index = m_GlassData.cv_Nods.FindIndex(x => x.PNodeId == 2);
             //m_GlassData.cv_Nods[node_index].PRecipe = Convert.ToInt32(txt_AOIRecipe.Text.Trim());
-            m_GlassData.cv_Nods[node_index].PRecipe = Convert.ToInt32(UiForm.cv_Recipes.PCurRecipeId);
+            m_GlassData.cv_Nods[node_index].PRecipe = Convert.ToInt32(lgcBase.cv_Recipes.PCurRecipeId);
 
             m_GlassData.cv_Nods[2].PProcessHistory = 1;
         }

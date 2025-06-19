@@ -61,6 +61,7 @@
             // 
             // dataGridView1
             // 
+            this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
@@ -86,12 +87,12 @@
             this.cv_menuDataEdit.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.dELETEToolStripMenuItem});
             this.cv_menuDataEdit.Name = "cv_menuDataEdit";
-            this.cv_menuDataEdit.Size = new System.Drawing.Size(153, 48);
+            this.cv_menuDataEdit.Size = new System.Drawing.Size(138, 26);
             // 
             // dELETEToolStripMenuItem
             // 
             this.dELETEToolStripMenuItem.Name = "dELETEToolStripMenuItem";
-            this.dELETEToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.dELETEToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
             this.dELETEToolStripMenuItem.Text = "DataAction";
             // 
             // Column2
