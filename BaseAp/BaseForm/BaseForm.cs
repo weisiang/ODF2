@@ -18,18 +18,7 @@ namespace BaseAp
     public partial class BaseForm : Form
     {
         protected KDateTime cv_MemDateTime = SysUtils.Now();
-        public static CommonData.HIRATA.SystemData cv_SystemData = new SystemData();
-        public static SystemData PSystemData
-        {
-            get { return cv_SystemData; }
-            set { cv_SystemData = value; }
-        }
-
-        public static AlarmData cv_Alarms = new AlarmData();
         public static AccountData cv_AccountData = new AccountData();
-        public static RecipeData cv_Recipes = new RecipeData();
-        public static TimeOutData cv_TimeoutData = new TimeOutData();
-        public static GlassCountData cv_GlassCountData = new GlassCountData();
 
         protected FdModule cv_Module = FdModule.None;
         protected System.Timers.Timer cv_Timer;

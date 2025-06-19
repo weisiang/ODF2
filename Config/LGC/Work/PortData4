@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Data>
     <PortData>
-        <cv_LotId>WFP0115</cv_LotId>
-        <cv_CurPPID>CIMOF</cv_CurPPID>
-        <cv_FoupSeq>15</cv_FoupSeq>
+        <cv_LotId>WFP0108</cv_LotId>
+        <cv_CurPPID>BD10300011_ODF1</cv_CurPPID>
+        <cv_FoupSeq>2</cv_FoupSeq>
         <cv_HasCst>1</cv_HasCst>
         <cv_PortClamp>0</cv_PortClamp>
         <cv_PortAgvMode>2</cv_PortAgvMode>
@@ -12,7 +12,7 @@
         <cv_PortMode>2</cv_PortMode>
         <cv_LotStatus>8</cv_LotStatus>
         <cv_PortStatus>3</cv_PortStatus>
-        <cv_WorkCount>9</cv_WorkCount>
+        <cv_WorkCount>15</cv_WorkCount>
         <cv_WaitUnload>False</cv_WaitUnload>
         <cv_ProductionType>2</cv_ProductionType>
         <cv_EfemPortType>0</cv_EfemPortType>
@@ -41,7 +41,7 @@
                 <cv_Ppid/>
                 <cv_Priority>0</cv_Priority>
                 <cv_OcrRead>0</cv_OcrRead>
-                <cv_OcrResult>-1</cv_OcrResult>
+                <cv_OcrResult>0</cv_OcrResult>
                 <cv_AssamblyFlag>0</cv_AssamblyFlag>
                 <cv_AssamblyResult>0</cv_AssamblyResult>
                 <cv_HasSensor>0</cv_HasSensor>
@@ -162,7 +162,7 @@
                 <cv_Ppid/>
                 <cv_Priority>0</cv_Priority>
                 <cv_OcrRead>0</cv_OcrRead>
-                <cv_OcrResult>-1</cv_OcrResult>
+                <cv_OcrResult>0</cv_OcrResult>
                 <cv_AssamblyFlag>0</cv_AssamblyFlag>
                 <cv_AssamblyResult>0</cv_AssamblyResult>
                 <cv_HasSensor>0</cv_HasSensor>
@@ -283,7 +283,7 @@
                 <cv_Ppid/>
                 <cv_Priority>0</cv_Priority>
                 <cv_OcrRead>0</cv_OcrRead>
-                <cv_OcrResult>-1</cv_OcrResult>
+                <cv_OcrResult>0</cv_OcrResult>
                 <cv_AssamblyFlag>0</cv_AssamblyFlag>
                 <cv_AssamblyResult>0</cv_AssamblyResult>
                 <cv_HasSensor>0</cv_HasSensor>
@@ -404,7 +404,7 @@
                 <cv_Ppid/>
                 <cv_Priority>0</cv_Priority>
                 <cv_OcrRead>0</cv_OcrRead>
-                <cv_OcrResult>-1</cv_OcrResult>
+                <cv_OcrResult>0</cv_OcrResult>
                 <cv_AssamblyFlag>0</cv_AssamblyFlag>
                 <cv_AssamblyResult>0</cv_AssamblyResult>
                 <cv_HasSensor>0</cv_HasSensor>
@@ -525,7 +525,7 @@
                 <cv_Ppid/>
                 <cv_Priority>0</cv_Priority>
                 <cv_OcrRead>0</cv_OcrRead>
-                <cv_OcrResult>-1</cv_OcrResult>
+                <cv_OcrResult>0</cv_OcrResult>
                 <cv_AssamblyFlag>0</cv_AssamblyFlag>
                 <cv_AssamblyResult>0</cv_AssamblyResult>
                 <cv_HasSensor>0</cv_HasSensor>
@@ -646,7 +646,7 @@
                 <cv_Ppid/>
                 <cv_Priority>0</cv_Priority>
                 <cv_OcrRead>0</cv_OcrRead>
-                <cv_OcrResult>-1</cv_OcrResult>
+                <cv_OcrResult>0</cv_OcrResult>
                 <cv_AssamblyFlag>0</cv_AssamblyFlag>
                 <cv_AssamblyResult>0</cv_AssamblyResult>
                 <cv_HasSensor>0</cv_HasSensor>
@@ -767,7 +767,7 @@
                 <cv_Ppid/>
                 <cv_Priority>0</cv_Priority>
                 <cv_OcrRead>0</cv_OcrRead>
-                <cv_OcrResult>-1</cv_OcrResult>
+                <cv_OcrResult>0</cv_OcrResult>
                 <cv_AssamblyFlag>0</cv_AssamblyFlag>
                 <cv_AssamblyResult>0</cv_AssamblyResult>
                 <cv_HasSensor>0</cv_HasSensor>
@@ -888,7 +888,7 @@
                 <cv_Ppid/>
                 <cv_Priority>0</cv_Priority>
                 <cv_OcrRead>0</cv_OcrRead>
-                <cv_OcrResult>-1</cv_OcrResult>
+                <cv_OcrResult>0</cv_OcrResult>
                 <cv_AssamblyFlag>0</cv_AssamblyFlag>
                 <cv_AssamblyResult>0</cv_AssamblyResult>
                 <cv_HasSensor>0</cv_HasSensor>
@@ -1009,7 +1009,7 @@
                 <cv_Ppid/>
                 <cv_Priority>0</cv_Priority>
                 <cv_OcrRead>0</cv_OcrRead>
-                <cv_OcrResult>-1</cv_OcrResult>
+                <cv_OcrResult>0</cv_OcrResult>
                 <cv_AssamblyFlag>0</cv_AssamblyFlag>
                 <cv_AssamblyResult>0</cv_AssamblyResult>
                 <cv_HasSensor>0</cv_HasSensor>
@@ -1235,27 +1235,27 @@
             <GlassData>
                 <cv_EnterBufferTime/>
                 <cv_LastDevice>0</cv_LastDevice>
-                <cv_CimMode>0</cv_CimMode>
-                <cv_FoupSeq>0</cv_FoupSeq>
-                <cv_WorkSlot>0</cv_WorkSlot>
-                <cv_WorkOrderNo>0</cv_WorkOrderNo>
-                <cv_Id/>
+                <cv_CimMode>1</cv_CimMode>
+                <cv_FoupSeq>2</cv_FoupSeq>
+                <cv_WorkSlot>11</cv_WorkSlot>
+                <cv_WorkOrderNo>2</cv_WorkOrderNo>
+                <cv_Id>glass11</cv_Id>
                 <cv_SlotInEq>11</cv_SlotInEq>
-                <cv_SourcePort>0</cv_SourcePort>
+                <cv_SourcePort>4</cv_SourcePort>
                 <cv_WorkType>0</cv_WorkType>
-                <cv_ProductionCategory>0</cv_ProductionCategory>
-                <cv_PortProductionCategory>0</cv_PortProductionCategory>
+                <cv_ProductionCategory>2</cv_ProductionCategory>
+                <cv_PortProductionCategory>2</cv_PortProductionCategory>
                 <cv_GlassJudge>0</cv_GlassJudge>
                 <cv_ProcessFlag>0</cv_ProcessFlag>
                 <cv_OcrDecide>-1</cv_OcrDecide>
-                <cv_Ppid/>
-                <cv_Priority>0</cv_Priority>
+                <cv_Ppid>BD10300011_ODF1</cv_Ppid>
+                <cv_Priority>1</cv_Priority>
                 <cv_OcrRead>0</cv_OcrRead>
                 <cv_OcrResult>-1</cv_OcrResult>
-                <cv_AssamblyFlag>0</cv_AssamblyFlag>
+                <cv_AssamblyFlag>1</cv_AssamblyFlag>
                 <cv_AssamblyResult>0</cv_AssamblyResult>
-                <cv_HasSensor>0</cv_HasSensor>
-                <cv_HasData>0</cv_HasData>
+                <cv_HasSensor>1</cv_HasSensor>
+                <cv_HasData>1</cv_HasData>
                 <cv_IsWaitAlignerRotation>False</cv_IsWaitAlignerRotation>
                 <cv_IsWaitAlignerVaccumOn>False</cv_IsWaitAlignerVaccumOn>
                 <cv_IsWaitAlignerVaccumOff>False</cv_IsWaitAlignerVaccumOff>
@@ -1271,37 +1271,37 @@
                         <cv_NodeId>2</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>3</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>4</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>5</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>22</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>6</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>7</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>8</cv_NodeId>
@@ -1356,27 +1356,27 @@
             <GlassData>
                 <cv_EnterBufferTime/>
                 <cv_LastDevice>0</cv_LastDevice>
-                <cv_CimMode>0</cv_CimMode>
-                <cv_FoupSeq>0</cv_FoupSeq>
-                <cv_WorkSlot>0</cv_WorkSlot>
-                <cv_WorkOrderNo>0</cv_WorkOrderNo>
-                <cv_Id/>
+                <cv_CimMode>1</cv_CimMode>
+                <cv_FoupSeq>2</cv_FoupSeq>
+                <cv_WorkSlot>12</cv_WorkSlot>
+                <cv_WorkOrderNo>2</cv_WorkOrderNo>
+                <cv_Id>glass12</cv_Id>
                 <cv_SlotInEq>12</cv_SlotInEq>
-                <cv_SourcePort>0</cv_SourcePort>
+                <cv_SourcePort>4</cv_SourcePort>
                 <cv_WorkType>0</cv_WorkType>
-                <cv_ProductionCategory>0</cv_ProductionCategory>
-                <cv_PortProductionCategory>0</cv_PortProductionCategory>
+                <cv_ProductionCategory>2</cv_ProductionCategory>
+                <cv_PortProductionCategory>2</cv_PortProductionCategory>
                 <cv_GlassJudge>0</cv_GlassJudge>
                 <cv_ProcessFlag>0</cv_ProcessFlag>
                 <cv_OcrDecide>-1</cv_OcrDecide>
-                <cv_Ppid/>
-                <cv_Priority>0</cv_Priority>
+                <cv_Ppid>BD10300011_ODF1</cv_Ppid>
+                <cv_Priority>1</cv_Priority>
                 <cv_OcrRead>0</cv_OcrRead>
                 <cv_OcrResult>-1</cv_OcrResult>
-                <cv_AssamblyFlag>0</cv_AssamblyFlag>
+                <cv_AssamblyFlag>1</cv_AssamblyFlag>
                 <cv_AssamblyResult>0</cv_AssamblyResult>
-                <cv_HasSensor>0</cv_HasSensor>
-                <cv_HasData>0</cv_HasData>
+                <cv_HasSensor>1</cv_HasSensor>
+                <cv_HasData>1</cv_HasData>
                 <cv_IsWaitAlignerRotation>False</cv_IsWaitAlignerRotation>
                 <cv_IsWaitAlignerVaccumOn>False</cv_IsWaitAlignerVaccumOn>
                 <cv_IsWaitAlignerVaccumOff>False</cv_IsWaitAlignerVaccumOff>
@@ -1392,37 +1392,37 @@
                         <cv_NodeId>2</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>3</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>4</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>5</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>22</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>6</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>7</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>8</cv_NodeId>
@@ -1477,27 +1477,27 @@
             <GlassData>
                 <cv_EnterBufferTime/>
                 <cv_LastDevice>0</cv_LastDevice>
-                <cv_CimMode>0</cv_CimMode>
-                <cv_FoupSeq>0</cv_FoupSeq>
-                <cv_WorkSlot>0</cv_WorkSlot>
-                <cv_WorkOrderNo>0</cv_WorkOrderNo>
-                <cv_Id/>
+                <cv_CimMode>1</cv_CimMode>
+                <cv_FoupSeq>2</cv_FoupSeq>
+                <cv_WorkSlot>13</cv_WorkSlot>
+                <cv_WorkOrderNo>2</cv_WorkOrderNo>
+                <cv_Id>glass13</cv_Id>
                 <cv_SlotInEq>13</cv_SlotInEq>
-                <cv_SourcePort>0</cv_SourcePort>
+                <cv_SourcePort>4</cv_SourcePort>
                 <cv_WorkType>0</cv_WorkType>
-                <cv_ProductionCategory>0</cv_ProductionCategory>
-                <cv_PortProductionCategory>0</cv_PortProductionCategory>
+                <cv_ProductionCategory>2</cv_ProductionCategory>
+                <cv_PortProductionCategory>2</cv_PortProductionCategory>
                 <cv_GlassJudge>0</cv_GlassJudge>
                 <cv_ProcessFlag>0</cv_ProcessFlag>
                 <cv_OcrDecide>-1</cv_OcrDecide>
-                <cv_Ppid/>
-                <cv_Priority>0</cv_Priority>
+                <cv_Ppid>BD10300011_ODF1</cv_Ppid>
+                <cv_Priority>1</cv_Priority>
                 <cv_OcrRead>0</cv_OcrRead>
                 <cv_OcrResult>-1</cv_OcrResult>
-                <cv_AssamblyFlag>0</cv_AssamblyFlag>
+                <cv_AssamblyFlag>1</cv_AssamblyFlag>
                 <cv_AssamblyResult>0</cv_AssamblyResult>
-                <cv_HasSensor>0</cv_HasSensor>
-                <cv_HasData>0</cv_HasData>
+                <cv_HasSensor>1</cv_HasSensor>
+                <cv_HasData>1</cv_HasData>
                 <cv_IsWaitAlignerRotation>False</cv_IsWaitAlignerRotation>
                 <cv_IsWaitAlignerVaccumOn>False</cv_IsWaitAlignerVaccumOn>
                 <cv_IsWaitAlignerVaccumOff>False</cv_IsWaitAlignerVaccumOff>
@@ -1513,37 +1513,37 @@
                         <cv_NodeId>2</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>3</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>4</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>5</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>22</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>6</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>7</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>8</cv_NodeId>
@@ -1598,27 +1598,27 @@
             <GlassData>
                 <cv_EnterBufferTime/>
                 <cv_LastDevice>0</cv_LastDevice>
-                <cv_CimMode>0</cv_CimMode>
-                <cv_FoupSeq>0</cv_FoupSeq>
-                <cv_WorkSlot>0</cv_WorkSlot>
-                <cv_WorkOrderNo>0</cv_WorkOrderNo>
-                <cv_Id/>
+                <cv_CimMode>1</cv_CimMode>
+                <cv_FoupSeq>2</cv_FoupSeq>
+                <cv_WorkSlot>14</cv_WorkSlot>
+                <cv_WorkOrderNo>2</cv_WorkOrderNo>
+                <cv_Id>glass14</cv_Id>
                 <cv_SlotInEq>14</cv_SlotInEq>
-                <cv_SourcePort>0</cv_SourcePort>
+                <cv_SourcePort>4</cv_SourcePort>
                 <cv_WorkType>0</cv_WorkType>
-                <cv_ProductionCategory>0</cv_ProductionCategory>
-                <cv_PortProductionCategory>0</cv_PortProductionCategory>
+                <cv_ProductionCategory>2</cv_ProductionCategory>
+                <cv_PortProductionCategory>2</cv_PortProductionCategory>
                 <cv_GlassJudge>0</cv_GlassJudge>
                 <cv_ProcessFlag>0</cv_ProcessFlag>
                 <cv_OcrDecide>-1</cv_OcrDecide>
-                <cv_Ppid/>
-                <cv_Priority>0</cv_Priority>
+                <cv_Ppid>BD10300011_ODF1</cv_Ppid>
+                <cv_Priority>1</cv_Priority>
                 <cv_OcrRead>0</cv_OcrRead>
                 <cv_OcrResult>-1</cv_OcrResult>
-                <cv_AssamblyFlag>0</cv_AssamblyFlag>
+                <cv_AssamblyFlag>1</cv_AssamblyFlag>
                 <cv_AssamblyResult>0</cv_AssamblyResult>
-                <cv_HasSensor>0</cv_HasSensor>
-                <cv_HasData>0</cv_HasData>
+                <cv_HasSensor>1</cv_HasSensor>
+                <cv_HasData>1</cv_HasData>
                 <cv_IsWaitAlignerRotation>False</cv_IsWaitAlignerRotation>
                 <cv_IsWaitAlignerVaccumOn>False</cv_IsWaitAlignerVaccumOn>
                 <cv_IsWaitAlignerVaccumOff>False</cv_IsWaitAlignerVaccumOff>
@@ -1634,37 +1634,37 @@
                         <cv_NodeId>2</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>3</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>4</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>5</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>22</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>6</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>7</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>8</cv_NodeId>
@@ -1719,27 +1719,27 @@
             <GlassData>
                 <cv_EnterBufferTime/>
                 <cv_LastDevice>0</cv_LastDevice>
-                <cv_CimMode>0</cv_CimMode>
-                <cv_FoupSeq>0</cv_FoupSeq>
-                <cv_WorkSlot>0</cv_WorkSlot>
-                <cv_WorkOrderNo>0</cv_WorkOrderNo>
-                <cv_Id/>
+                <cv_CimMode>1</cv_CimMode>
+                <cv_FoupSeq>2</cv_FoupSeq>
+                <cv_WorkSlot>15</cv_WorkSlot>
+                <cv_WorkOrderNo>2</cv_WorkOrderNo>
+                <cv_Id>glass15</cv_Id>
                 <cv_SlotInEq>15</cv_SlotInEq>
-                <cv_SourcePort>0</cv_SourcePort>
+                <cv_SourcePort>4</cv_SourcePort>
                 <cv_WorkType>0</cv_WorkType>
-                <cv_ProductionCategory>0</cv_ProductionCategory>
-                <cv_PortProductionCategory>0</cv_PortProductionCategory>
+                <cv_ProductionCategory>2</cv_ProductionCategory>
+                <cv_PortProductionCategory>2</cv_PortProductionCategory>
                 <cv_GlassJudge>0</cv_GlassJudge>
                 <cv_ProcessFlag>0</cv_ProcessFlag>
                 <cv_OcrDecide>-1</cv_OcrDecide>
-                <cv_Ppid/>
-                <cv_Priority>0</cv_Priority>
+                <cv_Ppid>BD10300011_ODF1</cv_Ppid>
+                <cv_Priority>1</cv_Priority>
                 <cv_OcrRead>0</cv_OcrRead>
                 <cv_OcrResult>-1</cv_OcrResult>
-                <cv_AssamblyFlag>0</cv_AssamblyFlag>
+                <cv_AssamblyFlag>1</cv_AssamblyFlag>
                 <cv_AssamblyResult>0</cv_AssamblyResult>
-                <cv_HasSensor>0</cv_HasSensor>
-                <cv_HasData>0</cv_HasData>
+                <cv_HasSensor>1</cv_HasSensor>
+                <cv_HasData>1</cv_HasData>
                 <cv_IsWaitAlignerRotation>False</cv_IsWaitAlignerRotation>
                 <cv_IsWaitAlignerVaccumOn>False</cv_IsWaitAlignerVaccumOn>
                 <cv_IsWaitAlignerVaccumOff>False</cv_IsWaitAlignerVaccumOff>
@@ -1755,37 +1755,37 @@
                         <cv_NodeId>2</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>3</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>4</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>5</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>22</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>6</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>7</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>8</cv_NodeId>
@@ -1840,27 +1840,27 @@
             <GlassData>
                 <cv_EnterBufferTime/>
                 <cv_LastDevice>0</cv_LastDevice>
-                <cv_CimMode>0</cv_CimMode>
-                <cv_FoupSeq>0</cv_FoupSeq>
-                <cv_WorkSlot>0</cv_WorkSlot>
-                <cv_WorkOrderNo>0</cv_WorkOrderNo>
-                <cv_Id/>
+                <cv_CimMode>1</cv_CimMode>
+                <cv_FoupSeq>2</cv_FoupSeq>
+                <cv_WorkSlot>16</cv_WorkSlot>
+                <cv_WorkOrderNo>2</cv_WorkOrderNo>
+                <cv_Id>glass16</cv_Id>
                 <cv_SlotInEq>16</cv_SlotInEq>
-                <cv_SourcePort>0</cv_SourcePort>
+                <cv_SourcePort>4</cv_SourcePort>
                 <cv_WorkType>0</cv_WorkType>
-                <cv_ProductionCategory>0</cv_ProductionCategory>
-                <cv_PortProductionCategory>0</cv_PortProductionCategory>
+                <cv_ProductionCategory>2</cv_ProductionCategory>
+                <cv_PortProductionCategory>2</cv_PortProductionCategory>
                 <cv_GlassJudge>0</cv_GlassJudge>
                 <cv_ProcessFlag>0</cv_ProcessFlag>
                 <cv_OcrDecide>-1</cv_OcrDecide>
-                <cv_Ppid/>
-                <cv_Priority>0</cv_Priority>
+                <cv_Ppid>BD10300011_ODF1</cv_Ppid>
+                <cv_Priority>1</cv_Priority>
                 <cv_OcrRead>0</cv_OcrRead>
                 <cv_OcrResult>-1</cv_OcrResult>
-                <cv_AssamblyFlag>0</cv_AssamblyFlag>
+                <cv_AssamblyFlag>1</cv_AssamblyFlag>
                 <cv_AssamblyResult>0</cv_AssamblyResult>
-                <cv_HasSensor>0</cv_HasSensor>
-                <cv_HasData>0</cv_HasData>
+                <cv_HasSensor>1</cv_HasSensor>
+                <cv_HasData>1</cv_HasData>
                 <cv_IsWaitAlignerRotation>False</cv_IsWaitAlignerRotation>
                 <cv_IsWaitAlignerVaccumOn>False</cv_IsWaitAlignerVaccumOn>
                 <cv_IsWaitAlignerVaccumOff>False</cv_IsWaitAlignerVaccumOff>
@@ -1876,37 +1876,37 @@
                         <cv_NodeId>2</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>3</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>4</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>5</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>22</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>6</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>7</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>8</cv_NodeId>
@@ -1961,27 +1961,27 @@
             <GlassData>
                 <cv_EnterBufferTime/>
                 <cv_LastDevice>0</cv_LastDevice>
-                <cv_CimMode>0</cv_CimMode>
-                <cv_FoupSeq>0</cv_FoupSeq>
-                <cv_WorkSlot>0</cv_WorkSlot>
-                <cv_WorkOrderNo>0</cv_WorkOrderNo>
-                <cv_Id/>
+                <cv_CimMode>1</cv_CimMode>
+                <cv_FoupSeq>2</cv_FoupSeq>
+                <cv_WorkSlot>17</cv_WorkSlot>
+                <cv_WorkOrderNo>2</cv_WorkOrderNo>
+                <cv_Id>glass17</cv_Id>
                 <cv_SlotInEq>17</cv_SlotInEq>
-                <cv_SourcePort>0</cv_SourcePort>
+                <cv_SourcePort>4</cv_SourcePort>
                 <cv_WorkType>0</cv_WorkType>
-                <cv_ProductionCategory>0</cv_ProductionCategory>
-                <cv_PortProductionCategory>0</cv_PortProductionCategory>
+                <cv_ProductionCategory>2</cv_ProductionCategory>
+                <cv_PortProductionCategory>2</cv_PortProductionCategory>
                 <cv_GlassJudge>0</cv_GlassJudge>
                 <cv_ProcessFlag>0</cv_ProcessFlag>
                 <cv_OcrDecide>-1</cv_OcrDecide>
-                <cv_Ppid/>
-                <cv_Priority>0</cv_Priority>
+                <cv_Ppid>BD10300011_ODF1</cv_Ppid>
+                <cv_Priority>1</cv_Priority>
                 <cv_OcrRead>0</cv_OcrRead>
                 <cv_OcrResult>-1</cv_OcrResult>
-                <cv_AssamblyFlag>0</cv_AssamblyFlag>
+                <cv_AssamblyFlag>1</cv_AssamblyFlag>
                 <cv_AssamblyResult>0</cv_AssamblyResult>
-                <cv_HasSensor>0</cv_HasSensor>
-                <cv_HasData>0</cv_HasData>
+                <cv_HasSensor>1</cv_HasSensor>
+                <cv_HasData>1</cv_HasData>
                 <cv_IsWaitAlignerRotation>False</cv_IsWaitAlignerRotation>
                 <cv_IsWaitAlignerVaccumOn>False</cv_IsWaitAlignerVaccumOn>
                 <cv_IsWaitAlignerVaccumOff>False</cv_IsWaitAlignerVaccumOff>
@@ -1997,37 +1997,37 @@
                         <cv_NodeId>2</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>3</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>4</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>5</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>22</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>6</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>7</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>8</cv_NodeId>
@@ -2082,27 +2082,27 @@
             <GlassData>
                 <cv_EnterBufferTime/>
                 <cv_LastDevice>0</cv_LastDevice>
-                <cv_CimMode>0</cv_CimMode>
-                <cv_FoupSeq>0</cv_FoupSeq>
-                <cv_WorkSlot>0</cv_WorkSlot>
-                <cv_WorkOrderNo>0</cv_WorkOrderNo>
-                <cv_Id/>
+                <cv_CimMode>1</cv_CimMode>
+                <cv_FoupSeq>2</cv_FoupSeq>
+                <cv_WorkSlot>18</cv_WorkSlot>
+                <cv_WorkOrderNo>2</cv_WorkOrderNo>
+                <cv_Id>glass18</cv_Id>
                 <cv_SlotInEq>18</cv_SlotInEq>
-                <cv_SourcePort>0</cv_SourcePort>
+                <cv_SourcePort>4</cv_SourcePort>
                 <cv_WorkType>0</cv_WorkType>
-                <cv_ProductionCategory>0</cv_ProductionCategory>
-                <cv_PortProductionCategory>0</cv_PortProductionCategory>
+                <cv_ProductionCategory>2</cv_ProductionCategory>
+                <cv_PortProductionCategory>2</cv_PortProductionCategory>
                 <cv_GlassJudge>0</cv_GlassJudge>
                 <cv_ProcessFlag>0</cv_ProcessFlag>
                 <cv_OcrDecide>-1</cv_OcrDecide>
-                <cv_Ppid/>
-                <cv_Priority>0</cv_Priority>
+                <cv_Ppid>BD10300011_ODF1</cv_Ppid>
+                <cv_Priority>1</cv_Priority>
                 <cv_OcrRead>0</cv_OcrRead>
                 <cv_OcrResult>-1</cv_OcrResult>
-                <cv_AssamblyFlag>0</cv_AssamblyFlag>
+                <cv_AssamblyFlag>1</cv_AssamblyFlag>
                 <cv_AssamblyResult>0</cv_AssamblyResult>
-                <cv_HasSensor>0</cv_HasSensor>
-                <cv_HasData>0</cv_HasData>
+                <cv_HasSensor>1</cv_HasSensor>
+                <cv_HasData>1</cv_HasData>
                 <cv_IsWaitAlignerRotation>False</cv_IsWaitAlignerRotation>
                 <cv_IsWaitAlignerVaccumOn>False</cv_IsWaitAlignerVaccumOn>
                 <cv_IsWaitAlignerVaccumOff>False</cv_IsWaitAlignerVaccumOff>
@@ -2118,37 +2118,37 @@
                         <cv_NodeId>2</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>3</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>4</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>5</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>22</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>6</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>7</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>8</cv_NodeId>
@@ -2203,27 +2203,27 @@
             <GlassData>
                 <cv_EnterBufferTime/>
                 <cv_LastDevice>0</cv_LastDevice>
-                <cv_CimMode>0</cv_CimMode>
-                <cv_FoupSeq>0</cv_FoupSeq>
-                <cv_WorkSlot>0</cv_WorkSlot>
-                <cv_WorkOrderNo>0</cv_WorkOrderNo>
-                <cv_Id/>
+                <cv_CimMode>1</cv_CimMode>
+                <cv_FoupSeq>2</cv_FoupSeq>
+                <cv_WorkSlot>19</cv_WorkSlot>
+                <cv_WorkOrderNo>2</cv_WorkOrderNo>
+                <cv_Id>glass19</cv_Id>
                 <cv_SlotInEq>19</cv_SlotInEq>
-                <cv_SourcePort>0</cv_SourcePort>
+                <cv_SourcePort>4</cv_SourcePort>
                 <cv_WorkType>0</cv_WorkType>
-                <cv_ProductionCategory>0</cv_ProductionCategory>
-                <cv_PortProductionCategory>0</cv_PortProductionCategory>
+                <cv_ProductionCategory>2</cv_ProductionCategory>
+                <cv_PortProductionCategory>2</cv_PortProductionCategory>
                 <cv_GlassJudge>0</cv_GlassJudge>
                 <cv_ProcessFlag>0</cv_ProcessFlag>
                 <cv_OcrDecide>-1</cv_OcrDecide>
-                <cv_Ppid/>
-                <cv_Priority>0</cv_Priority>
+                <cv_Ppid>BD10300011_ODF1</cv_Ppid>
+                <cv_Priority>1</cv_Priority>
                 <cv_OcrRead>0</cv_OcrRead>
                 <cv_OcrResult>-1</cv_OcrResult>
-                <cv_AssamblyFlag>0</cv_AssamblyFlag>
+                <cv_AssamblyFlag>1</cv_AssamblyFlag>
                 <cv_AssamblyResult>0</cv_AssamblyResult>
-                <cv_HasSensor>0</cv_HasSensor>
-                <cv_HasData>0</cv_HasData>
+                <cv_HasSensor>1</cv_HasSensor>
+                <cv_HasData>1</cv_HasData>
                 <cv_IsWaitAlignerRotation>False</cv_IsWaitAlignerRotation>
                 <cv_IsWaitAlignerVaccumOn>False</cv_IsWaitAlignerVaccumOn>
                 <cv_IsWaitAlignerVaccumOff>False</cv_IsWaitAlignerVaccumOff>
@@ -2239,37 +2239,37 @@
                         <cv_NodeId>2</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>3</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>4</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>5</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>22</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>6</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>7</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>8</cv_NodeId>
@@ -2324,27 +2324,27 @@
             <GlassData>
                 <cv_EnterBufferTime/>
                 <cv_LastDevice>0</cv_LastDevice>
-                <cv_CimMode>0</cv_CimMode>
-                <cv_FoupSeq>0</cv_FoupSeq>
-                <cv_WorkSlot>0</cv_WorkSlot>
-                <cv_WorkOrderNo>0</cv_WorkOrderNo>
-                <cv_Id/>
+                <cv_CimMode>1</cv_CimMode>
+                <cv_FoupSeq>2</cv_FoupSeq>
+                <cv_WorkSlot>20</cv_WorkSlot>
+                <cv_WorkOrderNo>2</cv_WorkOrderNo>
+                <cv_Id>glass20</cv_Id>
                 <cv_SlotInEq>20</cv_SlotInEq>
-                <cv_SourcePort>0</cv_SourcePort>
+                <cv_SourcePort>4</cv_SourcePort>
                 <cv_WorkType>0</cv_WorkType>
-                <cv_ProductionCategory>0</cv_ProductionCategory>
-                <cv_PortProductionCategory>0</cv_PortProductionCategory>
+                <cv_ProductionCategory>2</cv_ProductionCategory>
+                <cv_PortProductionCategory>2</cv_PortProductionCategory>
                 <cv_GlassJudge>0</cv_GlassJudge>
                 <cv_ProcessFlag>0</cv_ProcessFlag>
                 <cv_OcrDecide>-1</cv_OcrDecide>
-                <cv_Ppid/>
-                <cv_Priority>0</cv_Priority>
+                <cv_Ppid>BD10300011_ODF1</cv_Ppid>
+                <cv_Priority>1</cv_Priority>
                 <cv_OcrRead>0</cv_OcrRead>
                 <cv_OcrResult>-1</cv_OcrResult>
-                <cv_AssamblyFlag>0</cv_AssamblyFlag>
+                <cv_AssamblyFlag>1</cv_AssamblyFlag>
                 <cv_AssamblyResult>0</cv_AssamblyResult>
-                <cv_HasSensor>0</cv_HasSensor>
-                <cv_HasData>0</cv_HasData>
+                <cv_HasSensor>1</cv_HasSensor>
+                <cv_HasData>1</cv_HasData>
                 <cv_IsWaitAlignerRotation>False</cv_IsWaitAlignerRotation>
                 <cv_IsWaitAlignerVaccumOn>False</cv_IsWaitAlignerVaccumOn>
                 <cv_IsWaitAlignerVaccumOff>False</cv_IsWaitAlignerVaccumOff>
@@ -2360,37 +2360,37 @@
                         <cv_NodeId>2</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>3</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>4</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>5</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>22</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>6</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>7</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>8</cv_NodeId>
@@ -2445,27 +2445,27 @@
             <GlassData>
                 <cv_EnterBufferTime/>
                 <cv_LastDevice>0</cv_LastDevice>
-                <cv_CimMode>0</cv_CimMode>
-                <cv_FoupSeq>0</cv_FoupSeq>
-                <cv_WorkSlot>0</cv_WorkSlot>
-                <cv_WorkOrderNo>0</cv_WorkOrderNo>
-                <cv_Id/>
+                <cv_CimMode>1</cv_CimMode>
+                <cv_FoupSeq>2</cv_FoupSeq>
+                <cv_WorkSlot>21</cv_WorkSlot>
+                <cv_WorkOrderNo>2</cv_WorkOrderNo>
+                <cv_Id>glass21</cv_Id>
                 <cv_SlotInEq>21</cv_SlotInEq>
-                <cv_SourcePort>0</cv_SourcePort>
+                <cv_SourcePort>4</cv_SourcePort>
                 <cv_WorkType>0</cv_WorkType>
-                <cv_ProductionCategory>0</cv_ProductionCategory>
-                <cv_PortProductionCategory>0</cv_PortProductionCategory>
+                <cv_ProductionCategory>2</cv_ProductionCategory>
+                <cv_PortProductionCategory>2</cv_PortProductionCategory>
                 <cv_GlassJudge>0</cv_GlassJudge>
                 <cv_ProcessFlag>0</cv_ProcessFlag>
                 <cv_OcrDecide>-1</cv_OcrDecide>
-                <cv_Ppid/>
-                <cv_Priority>0</cv_Priority>
+                <cv_Ppid>BD10300011_ODF1</cv_Ppid>
+                <cv_Priority>1</cv_Priority>
                 <cv_OcrRead>0</cv_OcrRead>
                 <cv_OcrResult>-1</cv_OcrResult>
-                <cv_AssamblyFlag>0</cv_AssamblyFlag>
+                <cv_AssamblyFlag>1</cv_AssamblyFlag>
                 <cv_AssamblyResult>0</cv_AssamblyResult>
-                <cv_HasSensor>0</cv_HasSensor>
-                <cv_HasData>0</cv_HasData>
+                <cv_HasSensor>1</cv_HasSensor>
+                <cv_HasData>1</cv_HasData>
                 <cv_IsWaitAlignerRotation>False</cv_IsWaitAlignerRotation>
                 <cv_IsWaitAlignerVaccumOn>False</cv_IsWaitAlignerVaccumOn>
                 <cv_IsWaitAlignerVaccumOff>False</cv_IsWaitAlignerVaccumOff>
@@ -2481,37 +2481,37 @@
                         <cv_NodeId>2</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>3</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>4</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>5</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>22</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>6</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>7</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>8</cv_NodeId>
@@ -2566,27 +2566,27 @@
             <GlassData>
                 <cv_EnterBufferTime/>
                 <cv_LastDevice>0</cv_LastDevice>
-                <cv_CimMode>0</cv_CimMode>
-                <cv_FoupSeq>0</cv_FoupSeq>
-                <cv_WorkSlot>0</cv_WorkSlot>
-                <cv_WorkOrderNo>0</cv_WorkOrderNo>
-                <cv_Id/>
+                <cv_CimMode>1</cv_CimMode>
+                <cv_FoupSeq>2</cv_FoupSeq>
+                <cv_WorkSlot>22</cv_WorkSlot>
+                <cv_WorkOrderNo>2</cv_WorkOrderNo>
+                <cv_Id>glass22</cv_Id>
                 <cv_SlotInEq>22</cv_SlotInEq>
-                <cv_SourcePort>0</cv_SourcePort>
+                <cv_SourcePort>4</cv_SourcePort>
                 <cv_WorkType>0</cv_WorkType>
-                <cv_ProductionCategory>0</cv_ProductionCategory>
-                <cv_PortProductionCategory>0</cv_PortProductionCategory>
+                <cv_ProductionCategory>2</cv_ProductionCategory>
+                <cv_PortProductionCategory>2</cv_PortProductionCategory>
                 <cv_GlassJudge>0</cv_GlassJudge>
                 <cv_ProcessFlag>0</cv_ProcessFlag>
                 <cv_OcrDecide>-1</cv_OcrDecide>
-                <cv_Ppid/>
-                <cv_Priority>0</cv_Priority>
+                <cv_Ppid>BD10300011_ODF1</cv_Ppid>
+                <cv_Priority>1</cv_Priority>
                 <cv_OcrRead>0</cv_OcrRead>
                 <cv_OcrResult>-1</cv_OcrResult>
-                <cv_AssamblyFlag>0</cv_AssamblyFlag>
+                <cv_AssamblyFlag>1</cv_AssamblyFlag>
                 <cv_AssamblyResult>0</cv_AssamblyResult>
-                <cv_HasSensor>0</cv_HasSensor>
-                <cv_HasData>0</cv_HasData>
+                <cv_HasSensor>1</cv_HasSensor>
+                <cv_HasData>1</cv_HasData>
                 <cv_IsWaitAlignerRotation>False</cv_IsWaitAlignerRotation>
                 <cv_IsWaitAlignerVaccumOn>False</cv_IsWaitAlignerVaccumOn>
                 <cv_IsWaitAlignerVaccumOff>False</cv_IsWaitAlignerVaccumOff>
@@ -2602,37 +2602,37 @@
                         <cv_NodeId>2</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>3</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>4</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>5</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>22</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>6</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>7</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>8</cv_NodeId>
@@ -2687,11 +2687,11 @@
             <GlassData>
                 <cv_EnterBufferTime/>
                 <cv_LastDevice>0</cv_LastDevice>
-                <cv_CimMode>4</cv_CimMode>
-                <cv_FoupSeq>15</cv_FoupSeq>
+                <cv_CimMode>1</cv_CimMode>
+                <cv_FoupSeq>2</cv_FoupSeq>
                 <cv_WorkSlot>23</cv_WorkSlot>
-                <cv_WorkOrderNo>15</cv_WorkOrderNo>
-                <cv_Id>Substate23</cv_Id>
+                <cv_WorkOrderNo>2</cv_WorkOrderNo>
+                <cv_Id>glass23</cv_Id>
                 <cv_SlotInEq>23</cv_SlotInEq>
                 <cv_SourcePort>4</cv_SourcePort>
                 <cv_WorkType>0</cv_WorkType>
@@ -2700,11 +2700,11 @@
                 <cv_GlassJudge>0</cv_GlassJudge>
                 <cv_ProcessFlag>0</cv_ProcessFlag>
                 <cv_OcrDecide>-1</cv_OcrDecide>
-                <cv_Ppid>CIMOF</cv_Ppid>
-                <cv_Priority>0</cv_Priority>
+                <cv_Ppid>BD10300011_ODF1</cv_Ppid>
+                <cv_Priority>1</cv_Priority>
                 <cv_OcrRead>0</cv_OcrRead>
                 <cv_OcrResult>-1</cv_OcrResult>
-                <cv_AssamblyFlag>0</cv_AssamblyFlag>
+                <cv_AssamblyFlag>1</cv_AssamblyFlag>
                 <cv_AssamblyResult>0</cv_AssamblyResult>
                 <cv_HasSensor>1</cv_HasSensor>
                 <cv_HasData>1</cv_HasData>
@@ -2723,37 +2723,37 @@
                         <cv_NodeId>2</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>3</cv_NodeId>
-                        <cv_ProcessHistory>1</cv_ProcessHistory>
+                        <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>4</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>5</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>22</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>6</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>7</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>8</cv_NodeId>
@@ -2808,11 +2808,11 @@
             <GlassData>
                 <cv_EnterBufferTime/>
                 <cv_LastDevice>0</cv_LastDevice>
-                <cv_CimMode>4</cv_CimMode>
-                <cv_FoupSeq>15</cv_FoupSeq>
+                <cv_CimMode>1</cv_CimMode>
+                <cv_FoupSeq>2</cv_FoupSeq>
                 <cv_WorkSlot>24</cv_WorkSlot>
-                <cv_WorkOrderNo>15</cv_WorkOrderNo>
-                <cv_Id>Substate24</cv_Id>
+                <cv_WorkOrderNo>2</cv_WorkOrderNo>
+                <cv_Id>glass24</cv_Id>
                 <cv_SlotInEq>24</cv_SlotInEq>
                 <cv_SourcePort>4</cv_SourcePort>
                 <cv_WorkType>0</cv_WorkType>
@@ -2821,11 +2821,11 @@
                 <cv_GlassJudge>0</cv_GlassJudge>
                 <cv_ProcessFlag>0</cv_ProcessFlag>
                 <cv_OcrDecide>-1</cv_OcrDecide>
-                <cv_Ppid>CIMOF</cv_Ppid>
-                <cv_Priority>0</cv_Priority>
+                <cv_Ppid>BD10300011_ODF1</cv_Ppid>
+                <cv_Priority>1</cv_Priority>
                 <cv_OcrRead>0</cv_OcrRead>
                 <cv_OcrResult>-1</cv_OcrResult>
-                <cv_AssamblyFlag>0</cv_AssamblyFlag>
+                <cv_AssamblyFlag>1</cv_AssamblyFlag>
                 <cv_AssamblyResult>0</cv_AssamblyResult>
                 <cv_HasSensor>1</cv_HasSensor>
                 <cv_HasData>1</cv_HasData>
@@ -2844,37 +2844,37 @@
                         <cv_NodeId>2</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>3</cv_NodeId>
-                        <cv_ProcessHistory>1</cv_ProcessHistory>
+                        <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>4</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>2</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>5</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>22</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>6</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>7</cv_NodeId>
                         <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
-                        <cv_Recipe>0</cv_Recipe>
+                        <cv_Recipe>1</cv_Recipe>
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>8</cv_NodeId>
@@ -2929,27 +2929,27 @@
             <GlassData>
                 <cv_EnterBufferTime/>
                 <cv_LastDevice>0</cv_LastDevice>
-                <cv_CimMode>4</cv_CimMode>
-                <cv_FoupSeq>15</cv_FoupSeq>
-                <cv_WorkSlot>25</cv_WorkSlot>
-                <cv_WorkOrderNo>15</cv_WorkOrderNo>
-                <cv_Id>Substate25</cv_Id>
+                <cv_CimMode>0</cv_CimMode>
+                <cv_FoupSeq>0</cv_FoupSeq>
+                <cv_WorkSlot>0</cv_WorkSlot>
+                <cv_WorkOrderNo>0</cv_WorkOrderNo>
+                <cv_Id/>
                 <cv_SlotInEq>25</cv_SlotInEq>
-                <cv_SourcePort>4</cv_SourcePort>
+                <cv_SourcePort>0</cv_SourcePort>
                 <cv_WorkType>0</cv_WorkType>
-                <cv_ProductionCategory>2</cv_ProductionCategory>
-                <cv_PortProductionCategory>2</cv_PortProductionCategory>
+                <cv_ProductionCategory>0</cv_ProductionCategory>
+                <cv_PortProductionCategory>0</cv_PortProductionCategory>
                 <cv_GlassJudge>0</cv_GlassJudge>
                 <cv_ProcessFlag>0</cv_ProcessFlag>
                 <cv_OcrDecide>-1</cv_OcrDecide>
-                <cv_Ppid>CIMOF</cv_Ppid>
+                <cv_Ppid/>
                 <cv_Priority>0</cv_Priority>
                 <cv_OcrRead>0</cv_OcrRead>
-                <cv_OcrResult>-1</cv_OcrResult>
+                <cv_OcrResult>0</cv_OcrResult>
                 <cv_AssamblyFlag>0</cv_AssamblyFlag>
                 <cv_AssamblyResult>0</cv_AssamblyResult>
-                <cv_HasSensor>1</cv_HasSensor>
-                <cv_HasData>1</cv_HasData>
+                <cv_HasSensor>0</cv_HasSensor>
+                <cv_HasData>0</cv_HasData>
                 <cv_IsWaitAlignerRotation>False</cv_IsWaitAlignerRotation>
                 <cv_IsWaitAlignerVaccumOn>False</cv_IsWaitAlignerVaccumOn>
                 <cv_IsWaitAlignerVaccumOff>False</cv_IsWaitAlignerVaccumOff>
@@ -2969,7 +2969,7 @@
                     </GlassDataNodeItem>
                     <GlassDataNodeItem>
                         <cv_NodeId>3</cv_NodeId>
-                        <cv_ProcessHistory>1</cv_ProcessHistory>
+                        <cv_ProcessHistory>0</cv_ProcessHistory>
                         <cv_ProcessAbnormal>0</cv_ProcessAbnormal>
                         <cv_Recipe>0</cv_Recipe>
                     </GlassDataNodeItem>

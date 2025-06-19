@@ -14,7 +14,7 @@
         <cv_PortStatus>0</cv_PortStatus>
         <cv_WorkCount>0</cv_WorkCount>
         <cv_WaitUnload>False</cv_WaitUnload>
-        <cv_ProductionType>0</cv_ProductionType>
+        <cv_ProductionType>1</cv_ProductionType>
         <cv_EfemPortType>0</cv_EfemPortType>
         <cv_IsWaitCancel>False</cv_IsWaitCancel>
         <cv_IsWaitAbort>False</cv_IsWaitAbort>

@@ -216,18 +216,18 @@ namespace CommonData.HIRATA
             }
             PPortAgvMode = CommonData.HIRATA.PortAgv.MGV;
             PPortEnable = CommonData.HIRATA.PortEnable.Enable;
-            PPortMode = CommonData.HIRATA.PortMode.Loader;
+            //PPortMode = CommonData.HIRATA.PortMode.Loader;
             PPortType = CommonData.HIRATA.PortType.MIX;
             if ((cv_Id == 1) || (cv_Id == 2))
             {
-                PPortMode = CommonData.HIRATA.PortMode.Unloader;
-                cv_ProductionType = (int)ProductCategory.None;
+                //PPortMode = CommonData.HIRATA.PortMode.Unloader;
+                cv_ProductionType = (int)ProductCategory.Wafer;
             }
             else if ((cv_Id == 3) || (cv_Id == 4))
             {
                 cv_ProductionType = (int)ProductCategory.Glass;
             }
-            else if ((cv_Id == 5) || (cv_Id == 6))
+            else if ((cv_Id == 5) || (cv_Id == 6)|| (cv_Id == 7)|| (cv_Id == 8))
             {
                 cv_ProductionType = (int)ProductCategory.Wafer;
             }

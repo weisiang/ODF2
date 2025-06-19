@@ -355,11 +355,12 @@ namespace BaseAp
             */
             string log = "";
             log += "Alarm list : " + Environment.NewLine;
-            for (int i = 0; i < BaseForm.cv_Alarms.cv_AlarmList.Count; i++)
+            for (int i = 0; i < lgcBase.cv_Alarms.cv_AlarmList.Count; i++)
             {
-                log += "Code : " + BaseForm.cv_Alarms.cv_AlarmList[i].PCode;
-                log += ". Level : " + BaseForm.cv_Alarms.cv_AlarmList[i].PLevel.ToString();
-                log += ". Time : " + BaseForm.cv_Alarms.cv_AlarmList[i].PTime.ToString() + Environment.NewLine;
+                log += "Code : " + lgcBase.cv_Alarms.cv_AlarmList[i].PCode;
+                log += "Code : " + lgcBase.cv_Alarms.cv_AlarmList[i].PCode;
+                log += ". Level : " + lgcBase.cv_Alarms.cv_AlarmList[i].PLevel.ToString();
+                log += ". Time : " + lgcBase.cv_Alarms.cv_AlarmList[i].PTime.ToString() + Environment.NewLine;
             }
             if (!string.IsNullOrEmpty(log))
             {
@@ -437,11 +438,11 @@ namespace BaseAp
             MDAlarmAction obj = m_Object as MDAlarmAction;
             string log = "";
             log += "Alarm list : " + Environment.NewLine;
-            for (int i = 0; i < BaseForm.cv_Alarms.cv_AlarmList.Count; i++)
+            for (int i = 0; i < lgcBase.cv_Alarms.cv_AlarmList.Count; i++)
             {
-                log += "Code : " + BaseForm.cv_Alarms.cv_AlarmList[i].PCode;
-                log += ". Level : " + BaseForm.cv_Alarms.cv_AlarmList[i].PLevel.ToString();
-                log += ". Time : " + BaseForm.cv_Alarms.cv_AlarmList[i].PTime.ToString() + Environment.NewLine;
+                log += "Code : " + lgcBase.cv_Alarms.cv_AlarmList[i].PCode;
+                log += ". Level : " + lgcBase.cv_Alarms.cv_AlarmList[i].PLevel.ToString();
+                log += ". Time : " + lgcBase.cv_Alarms.cv_AlarmList[i].PTime.ToString() + Environment.NewLine;
             }
             if (!string.IsNullOrEmpty(log))
             {
@@ -457,12 +458,12 @@ namespace BaseAp
             BaseForm.cv_Recipes.Clone(obj);
             */
             string log = "";
-            log += "Current Recipe : " + BaseForm.cv_Recipes.PCurRecipeId + Environment.NewLine;
+            log += "Current Recipe : " + lgcBase.cv_Recipes.PCurRecipeId + Environment.NewLine;
             log += "Recipe list : " + Environment.NewLine;
-            for (int i = 0; i < BaseForm.cv_Recipes.cv_RecipeList.Count; i++)
+            for (int i = 0; i < lgcBase.cv_Recipes.cv_RecipeList.Count; i++)
             {
-                log += "Id : " + BaseForm.cv_Recipes.cv_RecipeList[i].PId;
-                log += ". Flow : " + BaseForm.cv_Recipes.cv_RecipeList[i].PFlow.ToString() + Environment.NewLine;
+                log += "Id : " + lgcBase.cv_Recipes.cv_RecipeList[i].PId;
+                log += ". Flow : " + lgcBase.cv_Recipes.cv_RecipeList[i].PFlow.ToString() + Environment.NewLine;
             }
             if (!string.IsNullOrEmpty(log))
             {

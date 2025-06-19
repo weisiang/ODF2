@@ -17,6 +17,21 @@ namespace BaseAp
         public static KMemoLog cv_Log;
         public static KMemoryIOClient cv_Mio = null;
         public static BaseEventController cv_mmfController = null;
+
+
+        public static CommonData.HIRATA.SystemData cv_SystemData = new SystemData();
+        public static SystemData PSystemData
+        {
+            get { return cv_SystemData; }
+            set { cv_SystemData = value; }
+        }
+        public static AlarmData cv_Alarms = new AlarmData();
+        public static RecipeData cv_Recipes = new RecipeData();
+        public static TimeOutData cv_TimeoutData = new TimeOutData();
+        public static GlassCountData cv_GlassCountData = new GlassCountData();
+
+
+
         public lgcBase(FdModule m_Module)
         {
             cv_Module = m_Module;
@@ -129,5 +144,8 @@ namespace BaseAp
         protected virtual void DerivedOnTimer()
         {
         }
+
+
+
     }
 }
