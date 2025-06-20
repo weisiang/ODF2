@@ -17,7 +17,7 @@ namespace LGC
     {
         public void InitRecipe()
         {
-            cv_Recipes.SetFilePath(CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_FDModuleName + "\\PPID.xml");
+            cv_Recipes.SetFilePath(CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_LgcModule + "\\PPID.xml");
             cv_Recipes.PIsAutoSave = true;
             cv_Recipes.LoadFromFile();
             cv_Recipes.SaveToFile();

@@ -310,9 +310,9 @@ namespace CIM
 
         public TimechartControllerBase(string m_TimechartXmlPathname)
         {
-            KIniFile ini = new KIniFile(GlobalBase.SystemIniPathname);
-            string memory_io_server_id = ini.ReadString("Config", "MIOS", "KGSMEMORYIODEMO");
-            ini.WriteString("Config", "MIOS", memory_io_server_id);
+            //KIniFile ini = new KIniFile(GlobalBase.SystemIniPathname);
+            string memory_io_server_id = "KGSMEMORYIODEMO";
+            //ini.WriteString("Config", "MIOS", memory_io_server_id);
 
             cv_MemoryIoClient.ServerName = memory_io_server_id;
             cv_MemoryIoClient.Open();

@@ -109,7 +109,6 @@
     <Compile Include="lgcModule\Instance\Obj.cs" />
     <Compile Include="lgcModule\Instance\Port.cs" />
     <Compile Include="lgcModule\Instance\Robot.cs" />
-    <Compile Include="lgcModule\Kernel\Global.cs" />
     <Compile Include="lgcModule\Kernel\LGCController.cs" />
     <Compile Include="lgcModule\Kernel\lgcController_baseEvent.cs" />
     <Compile Include="lgcModule\Kernel\LogBase.cs" />
@@ -151,11 +150,14 @@
     <Compile Include="uiModule\Kernel\StaicData.cs" />
     <Compile Include="uiModule\Kernel\UIController.cs" />
     <Compile Include="uiModule\Kernel\uiiController_baseEvent.cs" />
-    <Compile Include="uiModule\Template\UiForm.cs">
+    <Compile Include="uiModule\Template\UiForm_processEvent_HirataODF2.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="uiModule\Template\UiForm.Designer.cs">
-      <DependentUpon>UiForm.cs</DependentUpon>
+    <Compile Include="uiModule\Template\UiForm_base.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="uiModule\Template\UiForm_base.Designer.cs">
+      <DependentUpon>UiForm_base.cs</DependentUpon>
     </Compile>
     <Compile Include="uiModule\UI\Aligner\AlignerUI.cs">
       <SubType>UserControl</SubType>
@@ -348,8 +350,8 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="uiModule\Template\UiForm.resx">
-      <DependentUpon>UiForm.cs</DependentUpon>
+    <EmbeddedResource Include="uiModule\Template\UiForm_base.resx">
+      <DependentUpon>UiForm_base.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="uiModule\UI\Aligner\AlignerUI.resx">
       <DependentUpon>AlignerUI.cs</DependentUpon>

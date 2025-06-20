@@ -35,7 +35,8 @@ namespace BaseAp
         public lgcBase(FdModule m_Module)
         {
             cv_Module = m_Module;
-            CommonData.HIRATA.CommonStaticData.Init(cv_Module.ToString());
+            Global.LogIniPathname = CommonData.HIRATA.CommonStaticData.g_LgcModuleLogsIniFile;
+            Global.SystemIniPathname = CommonData.HIRATA.CommonStaticData.g_LgcModuleSystemIniFile;
             initMio();
             initLog();
             ModuleInit();
@@ -61,11 +62,11 @@ namespace BaseAp
         {
             if (cv_Log == null)
             {
-                string enviPath = CommonData.HIRATA.CommonStaticData.g_RootLogsFolderPath + CommonData.HIRATA.CommonStaticData.g_FDModuleName;
+                string enviPath = CommonData.HIRATA.CommonStaticData.g_RootLogsFolderPath + CommonData.HIRATA.CommonStaticData.g_LgcModule;
                 cv_Log = new KMemoLog();
-                cv_Log.LoadFromIni(CommonData.HIRATA.CommonStaticData.g_ModuleLogsIniFile, CommonData.HIRATA.CommonStaticData.g_FDModuleName);
-                cv_Log.LogFileName = enviPath + "\\" + CommonData.HIRATA.CommonStaticData.g_FDModuleName + ".log";
-                cv_Log.SaveToIni(CommonData.HIRATA.CommonStaticData.g_ModuleLogsIniFile, CommonData.HIRATA.CommonStaticData.g_FDModuleName);
+                cv_Log.LoadFromIni(CommonData.HIRATA.CommonStaticData.g_LgcModuleLogsIniFile, CommonData.HIRATA.CommonStaticData.g_LgcModule);
+                cv_Log.LogFileName = enviPath + "\\" + CommonData.HIRATA.CommonStaticData.g_LgcModule + ".log";
+                cv_Log.SaveToIni(CommonData.HIRATA.CommonStaticData.g_LgcModuleLogsIniFile, CommonData.HIRATA.CommonStaticData.g_LgcModule);
             }
         }
         public static void WriteLog(LogLevelType m_Type, string m_str, CommonData.HIRATA.FunInOut m_FunInOut = CommonData.HIRATA.FunInOut.None)

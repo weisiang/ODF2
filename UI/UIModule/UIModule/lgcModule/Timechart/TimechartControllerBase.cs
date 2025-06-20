@@ -217,7 +217,7 @@ namespace LGC
             internal void OnEnterStep(int m_StepId)
             {
                 string log = "[Enter] Time chart Id : " + cv_TimechartId.ToString() + " Step : " + m_StepId.ToString();
-                SysUtils.DebugWindowTrace(CommonData.HIRATA.CommonStaticData.g_FDModuleName, "TimeChart", 1, log);
+                SysUtils.DebugWindowTrace(CommonData.HIRATA.CommonStaticData.g_LgcModule, "TimeChart", 1, log);
                 if (cv_TimechartEnterStepEventSet.Count <= 0)
                 {
                     return;
@@ -241,7 +241,7 @@ namespace LGC
             internal void OnLeaveStep(int m_StepId)
             {
                 string log = "[Leave] Time chart Id : " + cv_TimechartId.ToString() + " Step : " + m_StepId.ToString();
-                SysUtils.DebugWindowTrace(CommonData.HIRATA.CommonStaticData.g_FDModuleName, "TimeChart", 1, log);
+                SysUtils.DebugWindowTrace(CommonData.HIRATA.CommonStaticData.g_LgcModule, "TimeChart", 1, log);
                 if (cv_TimechartLeaveStepEventSet.Count <= 0)
                 {
                     return;

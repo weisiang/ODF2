@@ -119,6 +119,11 @@ namespace CommonData.HIRATA
         {
 
         }
+        public bool PEnable
+        {
+            get { return cv_Enable; }
+            set { cv_Enable = value; }
+        }
         public PortData(KMemoryIOClient m_MemoIO , int m_PortAddress)
             : base(0, CommonStaticData.g_CstSize)
         {

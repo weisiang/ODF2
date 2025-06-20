@@ -19,12 +19,6 @@ namespace UI
 
         private void MonitorForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            /*
-            for (int i = 0; i < this.Controls.Count; i++)
-            {
-                (this.Controls[i] as IfMonitor).StopUpdate();
-            }
-            */
             e.Cancel = true;
             this.Hide();
         }
@@ -32,9 +26,13 @@ namespace UI
         {
             if (!this.Visible)
             {
-                for (int i = 0; i < this.Controls.Count; i++)
+                for (int i = 0; i < this.Controls[0].Controls.Count; i++)
                 {
-                    (this.Controls[i] as IfMonitor).StartUpdate();
+                    IfMonitor tmp = this.Controls[0].Controls[i] as IfMonitor;
+                    if (tmp != null)
+                    {
+                        tmp.StartUpdate();
+                    }
                 }
                 base.Show();
             }

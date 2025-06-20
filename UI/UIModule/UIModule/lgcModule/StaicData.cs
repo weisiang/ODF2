@@ -30,13 +30,13 @@ namespace LGC
 
         static CommonStaticData()
         {
-            g_TimeOutPath = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_FDModuleName + "\\TimeOut.xml";
-            g_GlassCountDataPath = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_FDModuleName + "\\GlassCount.xml";
-            g_TimeChartTemplate = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_FDModuleName + "\\timechartsT.xml";
-            g_TimeChart = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_FDModuleName + "\\timecharts.xml";
-            g_RecipePath = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_FDModuleName + "\\PPID.xml";
-            g_StatsRecordPath = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_FDModuleName + "\\StatusRecord.xml";
-            g_FlowStepSettingFile = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_FDModuleName + "\\Flow.ini";
+            g_TimeOutPath = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_LgcModule + "\\TimeOut.xml";
+            g_GlassCountDataPath = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_LgcModule + "\\GlassCount.xml";
+            g_TimeChartTemplate = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_LgcModule + "\\timechartsT.xml";
+            g_TimeChart = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_LgcModule + "\\timecharts.xml";
+            g_RecipePath = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_LgcModule + "\\PPID.xml";
+            g_StatsRecordPath = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_LgcModule + "\\StatusRecord.xml";
+            g_FlowStepSettingFile = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_LgcModule + "\\Flow.ini";
             if (!File.Exists(g_RecipePath)) Environment.Exit(CommonData.HIRATA.ReturnCodeDefine.LGC_RecipeFileNotDefined);
             if (!File.Exists(g_StatsRecordPath)) Environment.Exit(CommonData.HIRATA.ReturnCodeDefine.LGC_StatusRecordFileNotDefined);
             if (!File.Exists(g_TimeChartTemplate)) Environment.Exit(CommonData.HIRATA.ReturnCodeDefine.LGC_GIFTimeChartFile);

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.cv_GbUpStream = new System.Windows.Forms.GroupBox();
+            this.lbl_StepName = new System.Windows.Forms.Label();
             this.cv_btnReset = new System.Windows.Forms.Button();
             this.lbl_Step = new System.Windows.Forms.Label();
             this.cv_EqNameGroup = new System.Windows.Forms.ComboBox();
@@ -36,12 +37,12 @@
             this.cv_BtUpForceCom = new System.Windows.Forms.Button();
             this.cv_RobotGroup = new System.Windows.Forms.GroupBox();
             this.cv_EqGroup = new System.Windows.Forms.GroupBox();
-            this.lbl_StepName = new System.Windows.Forms.Label();
             this.cv_GbUpStream.SuspendLayout();
             this.SuspendLayout();
             // 
             // cv_GbUpStream
             // 
+            this.cv_GbUpStream.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.cv_GbUpStream.Controls.Add(this.lbl_StepName);
             this.cv_GbUpStream.Controls.Add(this.cv_btnReset);
             this.cv_GbUpStream.Controls.Add(this.lbl_Step);
@@ -57,6 +58,16 @@
             this.cv_GbUpStream.TabIndex = 1;
             this.cv_GbUpStream.TabStop = false;
             this.cv_GbUpStream.Text = "Monitor";
+            // 
+            // lbl_StepName
+            // 
+            this.lbl_StepName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.lbl_StepName.Location = new System.Drawing.Point(169, 528);
+            this.lbl_StepName.Name = "lbl_StepName";
+            this.lbl_StepName.Size = new System.Drawing.Size(100, 23);
+            this.lbl_StepName.TabIndex = 45;
+            this.lbl_StepName.Text = "Step_name";
+            this.lbl_StepName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // cv_btnReset
             // 
@@ -124,16 +135,6 @@
             this.cv_EqGroup.TabIndex = 37;
             this.cv_EqGroup.TabStop = false;
             this.cv_EqGroup.Text = "EQ";
-            // 
-            // lbl_StepName
-            // 
-            this.lbl_StepName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.lbl_StepName.Location = new System.Drawing.Point(169, 528);
-            this.lbl_StepName.Name = "lbl_StepName";
-            this.lbl_StepName.Size = new System.Drawing.Size(100, 23);
-            this.lbl_StepName.TabIndex = 45;
-            this.lbl_StepName.Text = "Step_name";
-            this.lbl_StepName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // IfMonitor
             // 

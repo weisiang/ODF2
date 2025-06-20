@@ -50,7 +50,7 @@ namespace LGC
             cv_Client.Open();
         }
         public RBController(string m_Ip, int m_Port)
-            : base(CommonData.HIRATA.CommonStaticData.g_FDModuleName, "RobotController")
+            : base(CommonData.HIRATA.CommonStaticData.g_LgcModule, "RobotController")
         {
             InitLog();
             if (!IpFormatCheck(m_Ip, m_Port))
@@ -136,11 +136,11 @@ namespace LGC
             {
                 cv_Log = new KFileLog();
             }
-            string enviPath = CommonData.HIRATA.CommonStaticData.g_RootLogsFolderPath + CommonData.HIRATA.CommonStaticData.g_FDModuleName;
+            string enviPath = CommonData.HIRATA.CommonStaticData.g_RootLogsFolderPath + CommonData.HIRATA.CommonStaticData.g_LgcModule;
 
-            cv_Log.LoadFromIni(CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_FDModuleName + "\\logs.ini", "ControlRaw");
+            cv_Log.LoadFromIni(CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_LgcModule + "\\logs.ini", "ControlRaw");
             cv_Log.LogFileName = enviPath + "\\ControlRaw.log";
-            cv_Log.SaveToIni(CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_FDModuleName + "\\logs.ini", "ControlRaw");
+            cv_Log.SaveToIni(CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_LgcModule + "\\logs.ini", "ControlRaw");
             cv_Log.WriteLog("Create ControlRaw");
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
         }

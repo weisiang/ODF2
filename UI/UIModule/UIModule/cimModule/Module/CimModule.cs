@@ -27,6 +27,7 @@ namespace CIM
         public CimModule() : base( FdModule.CIM)
         {
             WriteLog(LogLevelType.General, "[CIM module start]");
+            InitEventController();
             InitMdFun();
 
             cv_Timer.Start();
@@ -39,7 +40,7 @@ namespace CIM
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
             if(g_eventController == null)
             {
-                g_eventController = new CIMController(FdModule.CIM);
+                g_eventController = new CIMController();
             }
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
         }

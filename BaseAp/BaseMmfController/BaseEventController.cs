@@ -12,38 +12,32 @@ namespace BaseAp
 {
     public class BaseEventController
     {
-
+        object lockObj = new object();
+        FdModule cv_module;
         public delegate void deleSubscription(FdModule module, string messageId, Object obj);
         public Dictionary<string, deleSubscription> subscriptionMap = new Dictionary<string, deleSubscription>();
         public Queue<EventObj>eventQueue = new Queue<EventObj>();
-        //public System.Timers.Timer eventTimer;
-        System.Threading.Thread eventThread;
+        KTimer cv_timer = null;
 
         public  KMemoLog cv_ControllerLog;
-        public BaseEventController(FdModule m_module)
+        public BaseEventController(FdModule m_Module)
         {
-            InitialBase();
+            cv_module = m_Module;
+
             logsSetting();
             addSubScription();
             linkEvent();
+            IniEventTimer();
         }
         public virtual void linkEvent()
         {
         }
         ~BaseEventController()
         {
-            if(eventThread != null)
+            if(cv_timer != null)
             {
-                eventThread.Abort();
-                eventThread = null;
+                cv_timer.Close();
             }
-            /*
-            if(eventTimer != null)
-            {
-                eventTimer.Stop();
-                eventTimer = null;
-            }
-            */
         }
         public virtual void addSubScription()
         {
@@ -51,69 +45,60 @@ namespace BaseAp
 
         public void receiveSubcription(FdModule module, string messageId, Object obj)
         {
+            Console.WriteLine("["+ cv_module.ToString() + "]receiveSubcription : " + System.Threading.Thread.CurrentThread.ManagedThreadId);
             if(subscriptionMap.ContainsKey(messageId))
             {
-                subscriptionMap[messageId](module, messageId, obj);
                 EventObj tmp = new EventObj();
                 tmp.messageId = messageId;
                 tmp.module = module;
                 tmp.obj = obj;
                 if(eventQueue != null)
                 {
-                    eventQueue.Enqueue(tmp);
+                    lock (lockObj)
+                    {
+                        eventQueue.Enqueue(tmp);
+                    }
                 }
             }
         }
 
         private void IniEventTimer()
         {
-            /*
-            if(eventTimer == null)
+            if(cv_timer == null)
             {
-                eventTimer = new System.Timers.Timer();
-                eventTimer.Interval = 5;
-                eventTimer.Elapsed += EventTimer_Elapsed;
-                eventTimer.Start();
-            }
-            */
-            if(eventThread == null)
-            {
-                eventThread = new Thread(OnThread);
-                eventThread.Start();
+                cv_timer = new KTimer();
+                cv_timer.ThreadEventEnabled = true;
+                cv_timer.Interval = 5;
+                cv_timer.OnTimer += OnThread;
+                cv_timer.Open();
+                cv_timer.Enabled = true;
             }
         }
 
-        private void EventTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            /*
-            if(eventQueue.Count >0)
-            {
-                if(subscriptionMap.ContainsKey(eventQueue.Peek().messageId))
-                {
-                    EventObj obj = eventQueue.Dequeue();
-                    string msgid = obj.messageId;
-                    subscriptionMap[msgid](obj.module.ToString(), msgid, obj.obj);
-                }
-                else
-                {
-                    eventQueue.Dequeue();
-                }
-            }
-            */
-        }
         private void OnThread()
         {
-            if(eventQueue.Count >0)
+            Console.WriteLine("OnThread : " + System.Threading.Thread.CurrentThread.ManagedThreadId + ". time : " + SysUtils.Now().LongTimeString());
+            if (eventQueue.Count > 0)
             {
-                if(subscriptionMap.ContainsKey(eventQueue.Peek().messageId))
+                if (subscriptionMap.ContainsKey(eventQueue.Peek().messageId))
                 {
-                    EventObj obj = eventQueue.Dequeue();
-                    string msgid = obj.messageId;
-                    subscriptionMap[msgid](obj.module, msgid, obj.obj);
+                    string msgid = eventQueue.Peek().messageId;
+                    EventObj obj = null;
+                    lock (lockObj)
+                    {
+                        obj = eventQueue.Dequeue();
+                    }
+                    if ((obj != null) && (msgid != ""))
+                    {
+                        subscriptionMap[msgid](obj.module, msgid, obj.obj);
+                    }
                 }
                 else
                 {
-                    eventQueue.Dequeue();
+                    lock (lockObj)
+                    {
+                        eventQueue.Dequeue();
+                    }
                 }
             }
         }
@@ -250,6 +235,7 @@ namespace BaseAp
 
         void logsSetting()
         {
+            /*
             string enviPath = CommonData.HIRATA.CommonStaticData.g_RootLogsFolderPath + CommonData.HIRATA.CommonStaticData.g_FDModuleName;
             KFileLog cv_MmfClientLog;
             cv_MmfClientLog = new KFileLog();
@@ -269,11 +255,7 @@ namespace BaseAp
             Global.DebugLog.LogFileName = enviPath + "\\Debug.log";
             Global.DebugLog.SaveToIni(Global.LogIniPathname, "DebugLog");
             Global.DebugLog.WriteLog("Create DebugLog");
-        }
-        void InitialBase()
-        {
-            Global.LogIniPathname = CommonData.HIRATA.CommonStaticData.g_ModuleLogsIniFile;
-            Global.SystemIniPathname = CommonData.HIRATA.CommonStaticData.g_ModuleSystemIniFile;
+            */
         }
         public void WriteLog(LogLevelType m_Type, string m_str, CommonData.HIRATA.FunInOut m_FunInOut = CommonData.HIRATA.FunInOut.None)
         {
@@ -314,20 +296,6 @@ namespace BaseAp
                     {
                     }
                 }
-            }
-        }
-        public void WriteDebugLog(List<string> m_Logs, int m_Level)
-        {
-            if (Global.DebugLog != null)
-            {
-                Global.DebugLog.WriteLog(m_Logs, m_Level);
-            }
-        }
-        public void WriteDebugLog(string m_Log, int m_Level)
-        {
-            if (Global.DebugLog != null)
-            {
-                Global.DebugLog.WriteLog(m_Log, m_Level);
             }
         }
         protected virtual void AssignProcessFunctions()

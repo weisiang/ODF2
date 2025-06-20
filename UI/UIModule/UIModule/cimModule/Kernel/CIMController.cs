@@ -27,7 +27,7 @@ namespace CIM
         TimechartController cv_TimechartController;
         KMemoryIOClient cv_Driver;
 
-        public CIMController(FdModule m_Module = FdModule.CIM):base(m_Module)
+        public CIMController():base(FdModule.CIM)
         {
             InitTimeChart();
             CimModule.g_eventController = this;
@@ -62,7 +62,7 @@ namespace CIM
         void InitTimeChart()
         {
             cv_TimechartController = new TimechartController(CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + "\\" +
-               CommonData.HIRATA.CommonStaticData.g_FDModuleName + "\\timecharts.xml");
+               CommonData.HIRATA.CommonStaticData.g_CimModule + "\\timecharts.xml");
             cv_TimeChart = cv_TimechartController.GetTimeChart();
             cv_Driver = cv_TimechartController.GetmemoryIoClient();
         }

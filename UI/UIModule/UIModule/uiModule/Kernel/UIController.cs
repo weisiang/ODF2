@@ -12,20 +12,21 @@ using System.Text.RegularExpressions;
 using System.Collections;
 using CommonData.HIRATA;
 using BaseAp;
+using LGC;
+using CIM;
 
 namespace UI
 {
     public partial class  UIController : BaseEventController
     {
-        public delegate void deleUi(FdModule module, string messageId, Object obj);
-        public static event deleUi eventUi;
+        public static event deleSubscription eventUi;
 
         public delegate void DeleAppEvent(string m_MessageId, object m_Object);
-        public  event DeleAppEvent EventAppEvent;
+        public static event DeleAppEvent EventAppEvent;
 
         public static UIController g_eventController = null;
 
-        public UIController(FdModule m_module = FdModule.UI) : base (m_module)
+        public UIController() : base (FdModule.UI)
         {
             AssignProcessFunctions();
             g_eventController = this;
@@ -33,18 +34,24 @@ namespace UI
         ~UIController()
         {
         }
+        public override void linkEvent()
+        {
+            LGCController.eventLgc += receiveSubcription;
+            CIMController.eventCim += receiveSubcription;
+        }
         public static void triggerUiEvent(string messageId, Object obj)
         {
             if (eventUi != null)
             {
                 eventUi(FdModule.UI, messageId, obj);
-                //triggerLgcEvent(typeof(CommonData.HIRATA.MDTimeChartChange).Name, timeChartStep);
             }
         }
         protected override void AssignProcessFunctions()
         {
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDTimeChartChange).Name, ProcessMmfEvent);
             //subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCTimeAdjust).Name, ProcessBcTimeAdjust); //time adjust
-            subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCMsg).Name, ProcessMsg);        // show bc msg.
+            subscriptionMap.Add( typeof(CommonData.HIRATA.MDShowMsg).Name , ProcessMmfEvent);
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCMsg).Name, ProcessMmfEvent);        // show bc msg.
             subscriptionMap.Add(typeof(CommonData.HIRATA.MDInitial).Name, ProcessMsg);        // show bc msg.
             subscriptionMap.Add(typeof(CommonData.HIRATA.MDPopMonitorForm).Name, ProcessMsg);        // show bc msg.
             subscriptionMap.Add(typeof(CommonData.HIRATA.MDShowOcrDecide).Name, ProcessMsg);        // show bc msg.
@@ -77,8 +84,9 @@ namespace UI
             */
         }
 
-        void ProcessMmfEvent(string m_MessageId, Object m_Object)
+        void ProcessMmfEvent(FdModule module, string m_MessageId, Object m_Object)
         {
+            Console.WriteLine("ProcessMmfEvent : " + System.Threading.Thread.CurrentThread.ManagedThreadId);
             //WriteIn
             string log = "Recv : " + m_MessageId + Environment.NewLine;
             if (EventAppEvent != null)

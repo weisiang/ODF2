@@ -28,11 +28,11 @@ namespace LGC
         {
             if (cv_AlarmLog == null)
             {
-                string enviPath = CommonData.HIRATA.CommonStaticData.g_RootLogsFolderPath + CommonData.HIRATA.CommonStaticData.g_FDModuleName;
+                string enviPath = CommonData.HIRATA.CommonStaticData.g_RootLogsFolderPath + CommonData.HIRATA.CommonStaticData.g_LgcModule;
                 cv_AlarmLog = new KMemoLog();
-                cv_AlarmLog.LoadFromIni(CommonData.HIRATA.CommonStaticData.g_ModuleLogsIniFile, "AlarmLog");
+                cv_AlarmLog.LoadFromIni(CommonData.HIRATA.CommonStaticData.g_LgcModuleLogsIniFile, "AlarmLog");
                 cv_AlarmLog.LogFileName = enviPath + "\\AlarmLog.log";
-                cv_AlarmLog.SaveToIni(CommonData.HIRATA.CommonStaticData.g_ModuleLogsIniFile, "AlarmLog");
+                cv_AlarmLog.SaveToIni(CommonData.HIRATA.CommonStaticData.g_LgcModuleLogsIniFile, "AlarmLog");
                 /*
                 for(int i=1 ; i<10000 ; i++)
                 {
@@ -118,7 +118,7 @@ namespace LGC
             KXmlItem file = new KXmlItem();
 
             string file_path = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + "\\" +
-            CommonData.HIRATA.CommonStaticData.g_FDModuleName + "\\Alarm.xml";
+            CommonData.HIRATA.CommonStaticData.g_LgcModule + "\\Alarm.xml";
             file.LoadFromFile(file_path);
             int index = 0;
             int alarm_count = file.ItemsByName["Data"].ItemNumber;

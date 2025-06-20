@@ -35,7 +35,7 @@ namespace HirataRbAPI
         private KTimer cv_ClientTimer = new KTimer();
 
         bool cv_IsWait = false;
-        public HIRATADevice(string m_Ip, int m_Port) : base(CommonData.HIRATA.CommonStaticData.g_FDModuleName , "RobotDevice")
+        public HIRATADevice(string m_Ip, int m_Port) : base(CommonData.HIRATA.CommonStaticData.g_LgcModule, "RobotDevice")
         {
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
             WriteLog(LogLevelType.General, "Device contructor IP : " + m_Ip + " , Port : " + m_Port.ToString());
@@ -286,11 +286,11 @@ namespace HirataRbAPI
             {
                 cv_Log = new KFileLog();
             }
-            string enviPath = CommonData.HIRATA.CommonStaticData.g_RootLogsFolderPath + CommonData.HIRATA.CommonStaticData.g_FDModuleName;
+            string enviPath = CommonData.HIRATA.CommonStaticData.g_RootLogsFolderPath + CommonData.HIRATA.CommonStaticData.g_LgcModule;
 
-            cv_Log.LoadFromIni(CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_FDModuleName + "\\logs.ini", "RobotRaw");
+            cv_Log.LoadFromIni(CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_LgcModule + "\\logs.ini", "RobotRaw");
             cv_Log.LogFileName = enviPath + "\\RobotRaw.log";
-            cv_Log.SaveToIni(CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_FDModuleName + "\\logs.ini", "RobotRaw");
+            cv_Log.SaveToIni(CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_LgcModule + "\\logs.ini", "RobotRaw");
             cv_Log.WriteLog("Create RobotRaw");
             WriteLog(LogLevelType.NormalFunctionInOut ,  this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name , CommonData.HIRATA.FunInOut.Leave);
         }

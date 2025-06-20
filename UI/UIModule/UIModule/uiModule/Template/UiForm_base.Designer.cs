@@ -2360,7 +2360,6 @@
             this.panel38.Name = "panel38";
             this.panel38.Size = new System.Drawing.Size(85, 124);
             this.panel38.TabIndex = 18;
-            this.panel38.Paint += new System.Windows.Forms.PaintEventHandler(this.panel38_Paint);
             // 
             // materialLabel4
             // 

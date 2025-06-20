@@ -748,7 +748,7 @@ namespace LGC
                     {
                         if (aligner.cv_Data.GlassDataMap[1].PId != m_Command.cv_ReplyParaList[0])
                         {
-                            cv_eventController.SendBcOcrReport(aligner.cv_Data.GlassDataMap[1], m_Command.cv_ReplyParaList[0].Trim());
+                            g_eventController.SendBcOcrReport(aligner.cv_Data.GlassDataMap[1], m_Command.cv_ReplyParaList[0].Trim());
                             aligner.cv_Data.GlassDataMap[1].PId = m_Command.cv_ReplyParaList[0];
                             aligner.cv_Data.GlassDataMap[1].POcrResult = OCRResult.Mismatch;
                             CommonData.HIRATA.AlarmItem alarm = new AlarmItem();
@@ -763,17 +763,17 @@ namespace LGC
                             ShowMsg("OCR read Error!!!", true, false);
                             //return;
                             //report BC ocr read.
-                            cv_eventController.SendWorkDataUpdateReport(aligner.cv_Data.GlassDataMap[1]);
+                            g_eventController.SendWorkDataUpdateReport(aligner.cv_Data.GlassDataMap[1]);
 
                             if (lgcBase.PSystemData.POperationModeLeft == OperationMode.Auto && lgcBase.PSystemData.POcrMode == OCRMode.ErrorHold)
                             {
-                                cv_eventController.SendShowOcrDecide();
+                                g_eventController.SendShowOcrDecide();
                             }
                         }
                         else
                         {
                             aligner.cv_Data.GlassDataMap[1].POcrResult = OCRResult.OK;
-                            cv_eventController.SendBcOcrReport(aligner.cv_Data.GlassDataMap[1], m_Command.cv_ReplyParaList[0].Trim());
+                            g_eventController.SendBcOcrReport(aligner.cv_Data.GlassDataMap[1], m_Command.cv_ReplyParaList[0].Trim());
                         }
 
                         if (aligner.cv_Data.PPreAction == AlignerPreAction.WaitReadOct)

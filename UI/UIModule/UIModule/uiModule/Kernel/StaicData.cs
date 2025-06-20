@@ -47,7 +47,7 @@ namespace UI
         static CommonStaticData()
         {
             InitColor();
-            g_LayoutPos = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_FDModuleName + "\\LayoutPos.xml";
+            g_LayoutPos = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_UiModule + "\\LayoutPos.xml";
             if (!File.Exists(g_LayoutPos)) Environment.Exit(CommonData.HIRATA.ReturnCodeDefine.UI_LayoutPosNotDefined);
         }
 

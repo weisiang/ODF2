@@ -11,11 +11,13 @@ namespace CommonData.HIRATA
         public uint cv_Id = 0;
         public uint cv_SlotCount = 0;
         public string cv_FilePath = "";
+        protected bool cv_Enable=true;
         public uint PId
         {
             get { return cv_Id; }
             set { cv_Id = value; }
         }
+
 
         private Dictionary<int, GlassData> cv_GlassDataMap = new Dictionary<int, GlassData>();
         public List<GlassData> cv_GlassDataList = new List<GlassData>();

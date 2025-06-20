@@ -36,6 +36,9 @@ namespace CommonData.HIRATA
     public class CommonStaticData
     {
         public static readonly string g_SplitLine = "--------------------------------------\n";
+        public static readonly string  g_UiModule = "UI"; 
+        public static readonly string  g_CimModule = "CIM"; 
+        public static readonly string  g_LgcModule = "LGC"; 
 
         public static PerformanceCounter g_PerformaceCount ;
         public static int g_PortNumber = 0;
@@ -58,10 +61,19 @@ namespace CommonData.HIRATA
         public static string g_SysGifPortAddrFileFile = "";
         public static string g_SysAccountFile = "";
         public static string g_SysPermissionGroupFile = "";
-        public static string g_ModuleLogsIniFile = "";
-        public static string g_ModuleSystemIniFile = "";
 
-        public static string g_FDModuleName = "";
+//        public static string g_ModuleLogsIniFile = "";
+//        public static string g_ModuleSystemIniFile = "";
+
+        public static string g_UiModuleLogsIniFile = "";
+        public static string g_UiModuleSystemIniFile = "";
+
+        public static string g_CimModuleLogsIniFile = "";
+        public static string g_CimModuleSystemIniFile = "";
+
+        public static string g_LgcModuleLogsIniFile = "";
+        public static string g_LgcModuleSystemIniFile = "";
+
         public static string g_RootConfigFolderPath = "";
         public static string g_RootLogsFolderPath = "";
         public static string g_WorkFolder = "";
@@ -72,9 +84,8 @@ namespace CommonData.HIRATA
             return ((UInt64)CommonData.HIRATA.CommonStaticData.g_PerformaceCount.NextValue() >> 20);
         }
 
-        public static void Init(string m_FDModule )
+        public static void Init()
         {
-            g_FDModuleName = m_FDModule;
             byte already_check_folder_amount = 0; // currently, total check file amount is 2. include Config and Logs folders.
             byte want_check_file_amount = 2;
             foreach (DictionaryEntry item in System.Environment.GetEnvironmentVariables())
@@ -110,23 +121,35 @@ namespace CommonData.HIRATA
 
             g_SysLayoutFile = g_RootConfigFolderPath +  "Sys\\EqLayout.xml";
             g_SysMemoryIoClientFile = g_RootConfigFolderPath + "Sys\\MemoryIOClient.xml";
-            g_ModuleLogsIniFile = g_RootConfigFolderPath + g_FDModuleName +"\\logs.ini";
-            g_ModuleSystemIniFile = g_RootConfigFolderPath + g_FDModuleName + "\\system.ini";
+            //g_ModuleLogsIniFile = g_RootConfigFolderPath + g_FDModuleName +"\\logs.ini";
+            //g_ModuleSystemIniFile = g_RootConfigFolderPath + g_FDModuleName + "\\system.ini";
+            g_UiModuleLogsIniFile = g_RootConfigFolderPath + g_UiModule +"\\logs.ini";
+            g_UiModuleSystemIniFile = g_RootConfigFolderPath + g_UiModule + "\\system.ini";
+            g_CimModuleLogsIniFile = g_RootConfigFolderPath + g_CimModule +"\\logs.ini";
+            g_CimModuleSystemIniFile = g_RootConfigFolderPath + g_CimModule + "\\system.ini";
+            g_LgcModuleLogsIniFile = g_RootConfigFolderPath + g_LgcModule +"\\logs.ini";
+            g_LgcModuleSystemIniFile = g_RootConfigFolderPath + g_LgcModule + "\\system.ini";
             g_SysGifPortAddrFileFile = g_RootConfigFolderPath + "Sys\\timechartAdd.xml";
             g_SysAccountFile = g_RootConfigFolderPath + "Sys\\Account.xml";
             g_SysPermissionGroupFile = g_RootConfigFolderPath + "Sys\\PermissionGroup.xml";
-            g_WorkFolder = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_FDModuleName + "\\Work";
+            g_WorkFolder = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_LgcModule + "\\Work";
 
 
             //ODF
 
             if (!File.Exists(g_SysLayoutFile)) Environment.Exit(ReturnCodeDefine.Sys_EqLayoutNotDefined);
             if (!File.Exists(g_SysMemoryIoClientFile)) Environment.Exit(ReturnCodeDefine.Sys_MemoryIoFileNotDefined);
-            if (!File.Exists(g_ModuleLogsIniFile)) Environment.Exit(ReturnCodeDefine.Module_LogIniNotDefined);
+            //if (!File.Exists(g_ModuleLogsIniFile)) Environment.Exit(ReturnCodeDefine.Module_LogIniNotDefined);
+            if (!File.Exists(g_UiModuleLogsIniFile)) Environment.Exit(ReturnCodeDefine.Module_LogIniNotDefined);
+            if (!File.Exists(g_CimModuleLogsIniFile)) Environment.Exit(ReturnCodeDefine.Module_LogIniNotDefined);
+            if (!File.Exists(g_LgcModuleLogsIniFile)) Environment.Exit(ReturnCodeDefine.Module_LogIniNotDefined);
             if (!File.Exists(g_SysGifPortAddrFileFile)) Environment.Exit(ReturnCodeDefine.LGC_GIFTimeChartPortAddressFile);
             if (!File.Exists(g_SysAccountFile)) Environment.Exit(ReturnCodeDefine.Sys_AccountNotDefined);
             if (!File.Exists(g_SysPermissionGroupFile)) Environment.Exit(ReturnCodeDefine.Sys_PermissionGroupNotDefined);
-            if (!File.Exists(g_ModuleSystemIniFile)) Environment.Exit(ReturnCodeDefine.Module_SystemIniNotDefined);
+            //if (!File.Exists(g_ModuleSystemIniFile)) Environment.Exit(ReturnCodeDefine.Module_SystemIniNotDefined);
+            if (!File.Exists(g_UiModuleSystemIniFile)) Environment.Exit(ReturnCodeDefine.Module_SystemIniNotDefined);
+            if (!File.Exists(g_CimModuleSystemIniFile)) Environment.Exit(ReturnCodeDefine.Module_SystemIniNotDefined);
+            if (!File.Exists(g_LgcModuleSystemIniFile)) Environment.Exit(ReturnCodeDefine.Module_SystemIniNotDefined);
 
             if (!System.IO.Directory.Exists(g_WorkFolder))
             {

@@ -30,7 +30,7 @@ namespace BaseAp
         {
             InitializeComponent();
             cv_Module = m_Module;
-            CommonData.HIRATA.CommonStaticData.Init(cv_Module.ToString());
+            CommonData.HIRATA.CommonStaticData.Init();
             ModuleInit();
             initMio();
             initLog();
@@ -62,11 +62,11 @@ namespace BaseAp
         {
             if (cv_Log == null)
             {
-                string enviPath = CommonData.HIRATA.CommonStaticData.g_RootLogsFolderPath + CommonData.HIRATA.CommonStaticData.g_FDModuleName;
+                string enviPath = CommonData.HIRATA.CommonStaticData.g_RootLogsFolderPath + CommonData.HIRATA.CommonStaticData.g_UiModule;
                 cv_Log = new KMemoLog();
-                cv_Log.LoadFromIni(CommonData.HIRATA.CommonStaticData.g_ModuleLogsIniFile, CommonData.HIRATA.CommonStaticData.g_FDModuleName);
-                cv_Log.LogFileName = enviPath + "\\" + CommonData.HIRATA.CommonStaticData.g_FDModuleName + ".log";
-                cv_Log.SaveToIni(CommonData.HIRATA.CommonStaticData.g_ModuleLogsIniFile, CommonData.HIRATA.CommonStaticData.g_FDModuleName);
+                cv_Log.LoadFromIni(CommonData.HIRATA.CommonStaticData.g_UiModuleLogsIniFile, CommonData.HIRATA.CommonStaticData.g_UiModule);
+                cv_Log.LogFileName = enviPath + "\\" + CommonData.HIRATA.CommonStaticData.g_UiModule + ".log";
+                cv_Log.SaveToIni(CommonData.HIRATA.CommonStaticData.g_UiModuleLogsIniFile, CommonData.HIRATA.CommonStaticData.g_UiModule);
             }
         }
         public static void WriteLog(LogLevelType m_Type, string m_str, CommonData.HIRATA.FunInOut m_FunInOut = CommonData.HIRATA.FunInOut.None)

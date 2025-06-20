@@ -287,6 +287,10 @@ namespace UI
                 }
             }
         }
+        public void setGroupBoxColor(int m_R , int m_G , int m_B)
+        {
+            cv_GbUpStream.BackColor = Color.FromArgb(m_R, m_G, m_B);
+        }
         public void StopUpdate()
         {
             if(cv_Timer != null)

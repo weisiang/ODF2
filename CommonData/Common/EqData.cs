@@ -17,6 +17,11 @@ namespace CommonData.HIRATA
             : base(0, CommonData.HIRATA.CommonStaticData.g_CstSize)
         {
         }
+        public bool PEnable
+        {
+            get { return cv_Enable; }
+            set { cv_Enable = value; }
+        }
         public void LoadFromFile()
         {
             string ori_path = cv_FilePath;

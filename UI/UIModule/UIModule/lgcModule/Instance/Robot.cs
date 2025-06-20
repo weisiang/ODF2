@@ -211,72 +211,6 @@ namespace LGC
             */
             cv_Data.SaveToFile();
         }
-        private static void ApiReplyAbnormal(CommandData m_Command)
-        {
-            string log = "[Process API Abnormal Reply] " + m_Command.GetCommandStr() + "\n" ;
-            CommonData.HIRATA.AlarmItem alarm = new AlarmItem();
-            int rep_code = m_Command.cv_ReturnCode;
-            string str_rep_code = "";
-            List<AlarmItem> list = new List<AlarmItem>();
-            bool is_find = false;
-            if (rep_code < 10)
-            {
-                str_rep_code = rep_code.ToString().Trim().PadLeft(2, '0');
-            }
-            else
-            {
-                str_rep_code = rep_code.ToString().Trim();
-            }
-            if(LgcModule.cv_ApiAlarm.ContainsKey(str_rep_code))
-            {
-                list = LgcModule.cv_ApiAlarm[str_rep_code];
-            }
-            else
-            {
-                log += "API alarm table can't find the Big Code.\n";
-                LgcModule.ShowMsg(log, true, false);
-            }
-            for(int i=0 ; i<list.Count ; i++)
-            {
-                AlarmItem tmp_alarm = list.ElementAt(i);
-                if(tmp_alarm.PCommandDevice == m_Command.PCommandDevice)
-                {
-                    if(tmp_alarm.cv_ResCode.Trim() == m_Command.cv_ReplyParaList[0].Trim())
-                    {
-                        alarm = list.ElementAt(i);
-                        is_find = true;
-                        break;
-                    }
-                }
-            }
-            LgcModule.ShowMsg("Command Reply Abnormal : " + m_Command.GetCommandStr(), true, false);
-            if(is_find)
-            {
-                log += "Fined the alarm in Alarm List and report";
-                alarm.PStatus = AlarmStatus.Occur;
-                LgcModule.EditAlarm(alarm);
-            }
-            else
-            {
-                log += "Can't fine the alarm in Alarm List";
-                //LgcForm.ShowMsg(log, true, false);
-            }
-            log += "--------------------------------";
-            LgcModule.WriteLog(LogLevelType.General, log, FunInOut.None);
-            /*
-            alarm.PCode = m_Command.GetAlarmCode().ToString();
-            alarm.PLevel = AlarmLevele.Serious;
-            //alarm.PMainDescription = "Command Reply Abnormal : " + m_Command.GetCommandStr();
-            alarm.PMainDescription = "Reply Abnormal : " + m_Command.cv_ReturnCode + "," + m_Command.cv_ReplyParaList[0] + " , " + m_Command.cv_ReplyParaList[1];
-            if(m_Command.cv_ReplyParaList.Count>2)
-            {
-                alarm.PMainDescription += "," + m_Command.cv_ReplyParaList[2];
-            }
-            alarm.PStatus = AlarmStatus.Occur;
-            LgcForm.ShowMsg("Command Reply Abnormal : " + m_Command.GetCommandStr(), true, false);
-            LgcForm.EditAlarm(alarm);
-            */
-        }
         public void SetInitilize(enSideGroup m_Side , bool m_IsForce=false )
         {
             lgcBase.PSystemData.PIsForceInitial = m_IsForce;
@@ -358,7 +292,6 @@ namespace LGC
         }
 
         #region process robot action complete
-
         public void ProcessRobotGetStandbyArmExtend(CommandData m_Command, RobotJob job)
         {
             /*
@@ -486,7 +419,7 @@ namespace LGC
                     if (job.PTarget == ActionTarget.Eq && (job.PTargetId == (int)EqId.VAS1 || job.PTargetId == (int)EqId.VAS2) && 
                         job.PTargetSlot == 2)
                     {
-                        LgcModule.cv_eventController.SendBcTreansferReport(DataFlowAction.Send, cv_Data.GlassDataMap[(int)job.PPutArm]);
+                        LgcModule.g_eventController.SendBcTreansferReport(DataFlowAction.Send, cv_Data.GlassDataMap[(int)job.PPutArm]);
 
                         cv_Data.GlassDataMap[(int)job.PPutArm] = new GlassData();
                         cv_Data.GlassDataMap[(int)job.PPutArm].cv_SlotInEq = (uint)job.PPutArm;
@@ -578,7 +511,7 @@ namespace LGC
                         port.SendDataViaMmf();
                         port.cv_Data.SaveToFile();
                         robot.cv_Data.SaveToFile();
-                        LgcModule.cv_eventController.SendBcTreansferReport(DataFlowAction.Store, port.cv_Data.GlassDataMap[job.PTargetSlot], (int)port.cv_Data.cv_Id,
+                        LgcModule.g_eventController.SendBcTreansferReport(DataFlowAction.Store, port.cv_Data.GlassDataMap[job.PTargetSlot], (int)port.cv_Data.cv_Id,
                             (int)port.cv_Data.GlassDataMap[job.PTargetSlot].cv_SlotInEq);
                            
                         if(lgcBase.PSystemData.PONT)
@@ -632,7 +565,7 @@ namespace LGC
                     }
                     else if (job.PTarget == ActionTarget.Eq)
                     {
-                        LgcModule.cv_eventController.SendBcTreansferReport(DataFlowAction.Send, robot.cv_Data.GlassDataMap[(int)job.PPutArm]);
+                        LgcModule.g_eventController.SendBcTreansferReport(DataFlowAction.Send, robot.cv_Data.GlassDataMap[(int)job.PPutArm]);
 
                         robot.cv_Data.GlassDataMap[(int)job.PPutArm] = new GlassData();
                         robot.cv_Data.GlassDataMap[(int)job.PPutArm].PSlotInEq = (uint)job.PPutArm;
@@ -679,11 +612,11 @@ namespace LGC
                         robot.SendDataViaMmf();
                         port.cv_Data.SaveToFile();
                         robot.cv_Data.SaveToFile();
-                        LgcModule.cv_eventController.SendBcTreansferReport(DataFlowAction.Fetch, robot.cv_Data.GlassDataMap[(int)job.PGetArm] , (int)port.cv_Data.cv_Id,
+                        LgcModule.g_eventController.SendBcTreansferReport(DataFlowAction.Fetch, robot.cv_Data.GlassDataMap[(int)job.PGetArm] , (int)port.cv_Data.cv_Id,
                             (int)job.PTargetSlot);
                         if(!port.cv_Data.HasOtherJobHaveToDo())
                         {
-                            LgcModule.cv_eventController.SendBcLastSubstrateReport(robot.cv_Data.GlassDataMap[(int)job.PGetArm], (int)port.cv_Data.cv_Id, job.PTargetSlot);
+                            LgcModule.g_eventController.SendBcLastSubstrateReport(robot.cv_Data.GlassDataMap[(int)job.PGetArm], (int)port.cv_Data.cv_Id, job.PTargetSlot);
                         }
 
                     }

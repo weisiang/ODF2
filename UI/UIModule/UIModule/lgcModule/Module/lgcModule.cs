@@ -31,7 +31,7 @@ namespace LGC
         internal bool cv_CheckEqDataLocalMode = false;
         public static int cv_WaitFfuSpeed;
         //MMF
-        internal static LGCController cv_eventController = null;
+        internal static LGCController g_eventController = null;
 
         KDateTime cv_DataTime = SysUtils.Now();
         KDateTime cv_WaitUvRecordTime = SysUtils.Now();
@@ -40,17 +40,38 @@ namespace LGC
             : base(FdModule.LGC)
         {
             LoadAlarmTable();
-            cv_eventController = new LGCController();
+            InitEventController();
             initRbController();
             ModuleInit();
-            cv_eventController.SetTimeChartTimeOut();
+            g_eventController.SetTimeChartTimeOut();
             layoutInit();
             ParserFlowStep();
             initTimer();
-            cv_eventController.initTimer();
+            g_eventController.initTimer();
             cv_Mio.SetPortValue(0x344d, (int)lgcBase.PSystemData.POcrMode + (1 << 4));
             WriteLog(LogLevelType.General, "[LGC module start]");
             cv_Timer.Start();
+
+            for (int i = 0; i < 10; i++)
+            {
+                MDBCMsg msg = new MDBCMsg();
+                msg.PBuzzer = true;
+                msg.PIntervalSec = 10000;
+                msg.PMsgType = BcMsgType.Interval;
+                msg.PType = MmfEventClientEventType.etNotify;
+                msg.PMsg = "123";
+                LGCController.triggerLgcEvent(typeof(MDBCMsg).Name.ToString(), msg);
+                Console.WriteLine("pictureBox1_Click : " + System.Threading.Thread.CurrentThread.ManagedThreadId);
+            }
+        }
+        private void InitEventController()
+        {
+            WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
+            if (g_eventController == null)
+            {
+                g_eventController = new LGCController();
+            }
+            WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
         }
         protected override void initLog()
         {
@@ -143,7 +164,7 @@ namespace LGC
             GlassData glass = null;
             if (m_Job.PTarget == ActionTarget.Eq && (m_Job.PTargetId == (int)EqId.UV_1))
             {
-                time_chart_instance = (TimechartNormal)cv_eventController.cv_TimechartController.GetTimeChartInstance(time_chart_id);
+                time_chart_instance = (TimechartNormal)g_eventController.cv_TimechartController.GetTimeChartInstance(time_chart_id);
                 try
                 {
                     glass = new GlassData(cv_Mio, time_chart_instance.cv_ReadDataStartPort);
@@ -445,7 +466,7 @@ namespace LGC
             InitGlassCount();
 
 
-            KIniFile ini = new KIniFile(CommonData.HIRATA.CommonStaticData.g_ModuleSystemIniFile);
+            KIniFile ini = new KIniFile(CommonData.HIRATA.CommonStaticData.g_LgcModuleSystemIniFile);
             //check eq data at local mode.
             if (ini.ReadString("Config", "CheckEqDataLocalMode", "1").Trim() == "1")
             {
@@ -1415,11 +1436,13 @@ namespace LGC
                 string get_arm = CommonData.HIRATA.CommonStaticData.g_EqXml.Items[i].Attributes["GetArm"].Trim();
                 string put_arm = CommonData.HIRATA.CommonStaticData.g_EqXml.Items[i].Attributes["PutArm"].Trim();
                 string side = CommonData.HIRATA.CommonStaticData.g_EqXml.Items[i].Attributes["SideGroup"].Trim();
+                int enable = Convert.ToInt16(CommonData.HIRATA.CommonStaticData.g_EqXml.Items[i].Attributes["Enable"].Trim());
 
                 Eq eq_control = new Eq(eq_no, node, max_slot, GetRobotArmEnumString(get_arm), GetRobotArmEnumString(put_arm), tool_id);
                 eq_control.cv_Comm.cv_TimeChatId = time_chat_id;
                 eq_control.cv_Comm.cv_RobotPosition = position;
                 eq_control.cv_Data.LoadFromFile();
+                eq_control.cv_Data.PEnable = enable == 1 ? true : false;
                 eq_control.cv_Data.SaveToFile();
                 cv_EqContainer.Add(eq_no, eq_control);
             }
@@ -1428,9 +1451,11 @@ namespace LGC
                 int eq_no = i + 1;
                 int max_slot = Convert.ToInt16(CommonData.HIRATA.CommonStaticData.g_AlignerXml.Items[i].Attributes["Capacity"].Trim());
                 string side = CommonData.HIRATA.CommonStaticData.g_AlignerXml.Items[i].Attributes["SideGroup"].Trim();
+                int enable = Convert.ToInt16(CommonData.HIRATA.CommonStaticData.g_AlignerXml.Items[i].Attributes["Enable"].Trim());
                 Aligner aligner_control = new Aligner(eq_no, max_slot);
                 aligner_control.PSideGroup = Regex.Match(side , "left").Success ? enSideGroup.Left : enSideGroup.Right;
                 aligner_control.cv_Data.LoadFromFile();
+                aligner_control.cv_Data.PEnable = enable == 1 ? true : false;
                 aligner_control.cv_Data.SaveToFile();
                 cv_AlignerContainer.Add(eq_no, aligner_control);
                 //cv_SideGroup[aligner_control.PSideGroup].Add(aligner_control);
@@ -1439,11 +1464,13 @@ namespace LGC
             for (int i = 0; i < port_number; ++i)
             {
                 int max_slot = Convert.ToInt16(CommonData.HIRATA.CommonStaticData.g_PortXml.Items[i].Attributes["Capacity"].Trim());
+                int enable = Convert.ToInt16(CommonData.HIRATA.CommonStaticData.g_PortXml.Items[i].Attributes["Enable"].Trim());
                 string side = CommonData.HIRATA.CommonStaticData.g_PortXml.Items[i].Attributes["SideGroup"].Trim();
                 int port_no = i + 1;
                 Port port_control = new Port(port_no, max_slot);
                 port_control.PSideGroup = Regex.Match(side , "left").Success ? enSideGroup.Left : enSideGroup.Right;
                 port_control.cv_Data.LoadFromFile();
+                port_control.cv_Data.PEnable = enable == 1 ? true : false;
                 port_control.cv_Data.SaveToFile();
                 cv_PortContainer.Add(port_no, port_control);
                 //cv_SideGroup[port_control.PSideGroup].Add(port_control);
@@ -1453,6 +1480,7 @@ namespace LGC
             {
                 int max_slot = Convert.ToInt16(CommonData.HIRATA.CommonStaticData.g_BufferXml.Items[i].Attributes["Capacity"].Trim());
                 int position = Convert.ToInt16(CommonData.HIRATA.CommonStaticData.g_BufferXml.Items[i].Attributes["Stage"].Trim());
+                int enable = Convert.ToInt16(CommonData.HIRATA.CommonStaticData.g_BufferXml.Items[i].Attributes["Enable"].Trim());
                 int buffer_no = i + 1;
                 string side = CommonData.HIRATA.CommonStaticData.g_BufferXml.Items[i].Attributes["SideGroup"].Trim();
                 Buffer buffer_control = new Buffer(buffer_no, max_slot);
@@ -1492,6 +1520,7 @@ namespace LGC
                 buffer_control.cv_Data.SetSlotType(cv_Types);
 
                 buffer_control.cv_Data.LoadFromFile();
+                buffer_control.cv_Data.PEnable = enable == 1 ? true : false;
                 buffer_control.cv_Data.SaveToFile();
                 buffer_control.cv_Comm.cv_RobotPosition = position;
                 if(Regex.Match(side , "left" , RegexOptions.IgnoreCase).Success)
@@ -1515,6 +1544,7 @@ namespace LGC
             for (int i = 0; i < robot_number; ++i)
             {
                 int max_slot = Convert.ToInt16(CommonData.HIRATA.CommonStaticData.g_RobotXml.Items[i].Attributes["Capacity"].Trim());
+                int enable = Convert.ToInt16(CommonData.HIRATA.CommonStaticData.g_RobotXml.Items[i].Attributes["Enable"].Trim());
                 string side = CommonData.HIRATA.CommonStaticData.g_RobotXml.Items[i].Attributes["SideGroup"].Trim();
                 int robot_no = i + 1;
                 //string ip = CommonData.HIRATA.CommonStaticData.g_RobotXml.Items[i].Attributes["IP"].Trim();
@@ -1522,6 +1552,7 @@ namespace LGC
                 Robot robot_control = new Robot(robot_no, max_slot);
                 robot_control.PSideGroup = Regex.Match(side , "left").Success ? enSideGroup.Left : enSideGroup.Right;
                 robot_control.cv_Data.LoadFromFile();
+                robot_control.cv_Data.PEnable = enable == 1 ? true : false;
                 robot_control.cv_Data.SaveToFile();
                 cv_RobotContainer.Add(robot_no, robot_control);
                 //cv_SideGroup[robot_control.PSideGroup].Add(robot_control);

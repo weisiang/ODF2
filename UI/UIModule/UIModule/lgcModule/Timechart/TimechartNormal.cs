@@ -36,6 +36,7 @@ namespace LGC
         public static int STEP_ID_ForceCom = 35;
         public static int STEP_ID_ForceComFinish = 36;
 
+        public int cv_relativeRobot = 0;
         public GlassData cv_GetData = null;
         public GlassData cv_PutData = null;
         public RobotArm cv_GetArm = RobotArm.rabNone;
@@ -48,6 +49,7 @@ namespace LGC
             AssignFunction();
             InitTimer();
         }
+
 
         private void InitTimer()
         {
@@ -67,13 +69,11 @@ namespace LGC
             bool eq_ready = GetSignal(EqSideBitAddressOffset.Equipment_Ready);
             if (!eq_ready)
             {
-                /*
                 if (step >= STEP_ID_WaitRobotPutStart && step <= STEP_ID_WaitRobotGetVasStandByEnd)
                 {
-                    LgcModule.SetRobotStop();
-                    //LgcForm.GetRobotById(1).cv_Comm.SetRobotStop();
+                    LgcModule.SetRobotStop(cv_relativeRobot);
 
-                    LgcForm.PSystemData.PSystemStatus = EquipmentStatus.Down;
+                    LgcModule.PSystemData.PSystemStatus = EquipmentStatus.Down;
                     JumpToStep(this.cv_TimechartId, STEP_ID_EqPause);
 
                     CommonData.HIRATA.AlarmItem alarm = new AlarmItem();
@@ -83,9 +83,8 @@ namespace LGC
                     alarm.PLevel = AlarmLevele.Serious;
                     alarm.PStatus = AlarmStatus.Occur;
                     alarm.PTime = DateTime.Now.ToString("yyyyMMDDHHmmss");
-                    LgcForm.EditAlarm(alarm);
+                    LgcModule.EditAlarm(alarm);
                 }
-                */
             }
         }
         private void AssignFunction()
@@ -318,14 +317,13 @@ namespace LGC
         }
         public void STEP_ID_6_WaitRobotCommandStart(int m_StepId)
         {
-            /*
             if (cv_ActionType == EqInterFaceType.Load)
             {
-                if (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS_UP)
+                if ( (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS1_UP) || (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS2_UP))
                 {
                     JumpToStep(this.cv_TimechartId, STEP_ID_WaitRobotPutVasStandByStart);
                 }
-                else if (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS_DOWN)
+                else if ( (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS1_DOWN) || (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS2_DOWN))
                 {
                     JumpToStep(this.cv_TimechartId, STEP_ID_WaitRobotPutVasStandByStart);
                 }
@@ -336,10 +334,10 @@ namespace LGC
             }
             else if (cv_ActionType == EqInterFaceType.Unload)
             {
-                if (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS_UP)
+                if ( (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS1_UP) || (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS2_UP))
                 {
                 }
-                else if (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS_DOWN)
+                else if ( (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS1_DOWN) || (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS2_DOWN))
                 {
                     JumpToStep(this.cv_TimechartId, STEP_ID_WaitRobotGetVasStandByStart);
                 }
@@ -350,10 +348,10 @@ namespace LGC
             }
             else if (cv_ActionType == EqInterFaceType.Exchange)
             {
-                if (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS_UP)
+                if ( (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS1_UP) || (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS2_UP))
                 {
                 }
-                else if (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS_DOWN)
+                else if ( (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS1_DOWN) || (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS2_DOWN))
                 {
                 }
                 else
@@ -361,7 +359,6 @@ namespace LGC
                     JumpToStep(this.cv_TimechartId, STEP_ID_WaitRobotGetStart);
                 }
             }
-            */
         }
         public void STEP_ID_7_WaitRobotCommandFinish(int m_StepId)
         {
@@ -408,13 +405,12 @@ namespace LGC
 
         public void STEP_ID_20_WaitRobotPutStart(int m_StepId)
         {
-            /*
             if (cv_ActionType == EqInterFaceType.Load)
             {
-                if (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS_UP)
+                if ( (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS1_UP) || (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS2_UP))
                 {
                 }
-                else if (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS_DOWN)
+                else if ( (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS1_DOWN) || (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS2_DOWN))
                 {
                 }
                 else
@@ -424,10 +420,10 @@ namespace LGC
             }
             else if (cv_ActionType == EqInterFaceType.Exchange)
             {
-                if (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS_UP)
+                if ( (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS1_UP) || (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS2_UP))
                 {
                 }
-                else if (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS_DOWN)
+                else if ( (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS1_DOWN) || (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS2_DOWN))
                 {
                 }
                 else
@@ -435,7 +431,6 @@ namespace LGC
                     SetSignal(RobotSideBitAddressOffset.Interlock_2, false);
                 }
             }
-            */
         }
         public void STEP_ID_21_WaitRobotPutEnd(int m_StepId)
         {
@@ -448,13 +443,12 @@ namespace LGC
         }
         public void STEP_ID_22_WaitRobotGetStart(int m_StepId)
         {
-            /*
             if (cv_ActionType == EqInterFaceType.Unload)
             {
-                if (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS_UP)
+                if ( (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS1_UP) || (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS2_UP))
                 {
                 }
-                else if (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS_DOWN)
+                else if ( (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS1_DOWN) || (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS2_DOWN))
                 {
                 }
                 else
@@ -464,10 +458,10 @@ namespace LGC
             }
             else if (cv_ActionType == EqInterFaceType.Exchange)
             {
-                if (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS_UP)
+                if ( (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS1_UP) || (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS2_UP))
                 {
                 }
-                else if (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS_DOWN)
+                else if ( (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS1_DOWN) || (this.cv_TimechartId == (int)EqGifTimeChartId.TIMECHART_ID_VAS2_DOWN))
                 {
                 }
                 else
@@ -475,7 +469,6 @@ namespace LGC
                     SetSignal(RobotSideBitAddressOffset.Interlock_2, false);
                 }
             }
-            */
         }
         public void STEP_ID_23_WaitRobotGetEnd(int m_StepId)
         {
@@ -541,10 +534,9 @@ namespace LGC
         }
         public void STEP_ID_33_ForceIni(int m_StepId)
         {
-            /*
             SetSignal(RobotSideBitAddressOffset.Force_Initial_Request, true);
             RecoverData(false);
-            //LgcForm.AdjustRobotJob(cv_Action , this.TimechartId);
+            /*
             if (LgcForm.cv_RobotJobPath.Count > 1)
             {
                 if (!LgcForm.CheckAutoJobPathOk(LgcForm.cv_RobotJobPath.Count - 1))
@@ -559,12 +551,12 @@ namespace LGC
                     LgcForm.EditAlarm(alarm);
                 }
             }
+            */
             if (GetSignal(RobotSideBitAddressOffset.Force_Initial_Request))
             {
                 StartTimeOut(GifTimeout.ForceIni);
                 SetTrigger(this.cv_TimechartId);
             }
-            */
         }
         public void STEP_ID_34_ForceIniFinish(int m_StepId)
         {
@@ -577,13 +569,13 @@ namespace LGC
         }
         public void STEP_ID_35_ForceCom(int m_StepId)
         {
-            /*
             SetSignal(RobotSideBitAddressOffset.Force_Complete_Request, true);
             RecoverData(true);
-            LgcForm.AdjustRobotJob(cv_Action, this.TimechartId);
-            if (LgcForm.cv_RobotJobPath.Count > 1)
+            //LgcForm.AdjustRobotJob(cv_Action, this.TimechartId);
+            //if (LgcForm.cv_RobotJobPath.Count > 1)
             {
 
+                /*
                 if (!LgcForm.CheckAutoJobPathOk(LgcForm.cv_RobotJobPath.Count - 1))
                 {
                     CommonData.HIRATA.AlarmItem alarm = new AlarmItem();
@@ -595,6 +587,7 @@ namespace LGC
                     alarm.PUnit = 0;
                     LgcForm.EditAlarm(alarm);
                 }
+                */
                 if (GetSignal(RobotSideBitAddressOffset.Force_Complete_Request))
                 {
                     //StopTimeOut(GifTimeout.ForceCom);
@@ -602,7 +595,6 @@ namespace LGC
                     SetTrigger(this.cv_TimechartId);
                 }
             }
-            */
         }
         public void STEP_ID_36_ForceComFinish(int m_StepId)
         {
@@ -616,7 +608,6 @@ namespace LGC
 
         public override void OnTimeout(int m_TimeoutId)
         {
-            /*
             StopTimeout(cv_TimechartId, m_TimeoutId);
             CommonData.HIRATA.AlarmItem obj = new AlarmItem();
             obj.PCode = m_TimeoutId.ToString();
@@ -641,8 +632,7 @@ namespace LGC
             }
             obj.PUnit = 0;
             obj.PLevel = CommonData.HIRATA.AlarmLevele.Light;
-            LgcForm.EditAlarm(obj);
-            */
+            LgcModule.EditAlarm(obj);
         }
         private void StartTimeOut(GifTimeout m_WhichOne)
         {
@@ -717,8 +707,7 @@ namespace LGC
         }
         private void RecoverData(bool m_IsCom)
         {
-            /*
-            Robot rb = LgcForm.GetRobotById(1);
+            Robot rb = LgcModule.GetRobotById(cv_relativeRobot);
             if (m_IsCom)
             {
                 if (cv_Action == EqInterFaceType.Load && !rb.cv_Data.GlassDataMap[(int)cv_PutArm].PHasSensor)
@@ -747,8 +736,7 @@ namespace LGC
                     }
                 }
             }
-            LgcForm.GetRobotById(1).SendDataViaMmf();
-            */
+            LgcModule.GetRobotById(cv_relativeRobot).SendDataViaMmf();
         }
     }
 }

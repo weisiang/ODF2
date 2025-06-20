@@ -15,14 +15,14 @@ using System.Security.Permissions;
 using CommonData.HIRATA;
 using BaseAp;
 using UI;
+using CIM;
 
 
 namespace LGC
 {
     public partial class LGCController : BaseEventController
     {
-        public delegate void deleLgc(FdModule module , string messageId, Object obj);
-        public static event deleLgc eventLgc;
+        public static event deleSubscription eventLgc;
 
 
         Dictionary<EqGifTimeChartId, int> cv_TimeChartStep = new Dictionary<EqGifTimeChartId, int>();
@@ -35,18 +35,23 @@ namespace LGC
 
         KTimer cv_TimeChartTImer = null;
 
-        public LGCController(FdModule m_Module = FdModule.LGC) :base(m_Module)
+        public LGCController() :base(FdModule.LGC)
         {
             iniStatus();
             AssignProcessFunctions();
             g_eventController = this;
             InitTimeChart();
-            LGCController.eventLgc += receiveSubcription;
+            CIMController.eventCim += receiveSubcription;
             UIController.eventUi += receiveSubcription;
 
         }
         ~LGCController()
         {
+        }
+        public override void linkEvent()
+        {
+            CIMController.eventCim += receiveSubcription;
+            UIController.eventUi += receiveSubcription;
         }
         public static void triggerLgcEvent(string messageId, Object obj)
         {
@@ -114,6 +119,23 @@ namespace LGC
             string time_chart_contents = generator_time_chart.Text;
 
             cv_TimechartController = new TimechartController(CommonStaticData.g_TimeChart);
+
+            for (int i = (int)EqGifTimeChartId.TIMECHART_ID_SDP1; i <= (int)EqGifTimeChartId.TIMECHART_ID_UV_2; i++)
+            {
+                TimechartNormal time_chart_instance = null;
+                time_chart_instance = (TimechartNormal)cv_TimechartController.GetTimeChartInstance(i);
+                if( (i == (int)EqGifTimeChartId.TIMECHART_ID_VAS1_DOWN) || (i == (int)EqGifTimeChartId.TIMECHART_ID_VAS1_UP) || (i == (int)EqGifTimeChartId.TIMECHART_ID_VAS2_DOWN) 
+                    || (i == (int)EqGifTimeChartId.TIMECHART_ID_VAS2_UP))
+                {
+                    time_chart_instance.cv_relativeRobot = 2;
+                }
+                else
+                {
+                    time_chart_instance.cv_relativeRobot = 1;
+                }
+            }
+
+
             cv_TimeChartParser = new TimeChartParser(CommonStaticData.g_TimeChart);
             cv_TimeChart = cv_TimechartController.GetTimeChart();
             cv_Driver = cv_TimechartController.GetmemoryIoClient();
