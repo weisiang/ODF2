@@ -60,6 +60,8 @@
     <Compile Include="BaseMmfController\Global.cs" />
     <Compile Include="moduleBase\cimBase.cs" />
     <Compile Include="moduleBase\lgcBase.cs" />
+    <Compile Include="moduleBase\moduleBase.cs" />
+    <Compile Include="moduleBase\uiBase.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="BaseForm\BaseForm.resx">

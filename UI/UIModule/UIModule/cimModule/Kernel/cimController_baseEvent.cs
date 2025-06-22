@@ -42,7 +42,7 @@ namespace CIM
             tmp[0] = 0;
             tmp[1] = Convert.ToByte(((lgcBase.cv_Alarms.IsHasAlarm() ? 1 : 0) << 4) + (lgcBase.cv_Alarms.IsHasWarning() ? 1 : 0));
 
-            cv_Driver.SetBinaryLengthData(0x3445, tmp, 1, false);
+            CimModule.PMio.SetBinaryLengthData(0x3445, tmp, 1, false);
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
         }
         #endregion
@@ -61,7 +61,7 @@ namespace CIM
                 int value = Convert.ToInt32(cur_recipe.PId.Trim()); // obj.PCurReipe;
                 tmp[0] = Convert.ToByte(value & 0x00ff);
                 tmp[1] = Convert.ToByte((value & 0xff00) >> 8);
-                cv_Driver.SetBinaryLengthData(0x3447, tmp, 1 , false);
+                CimModule.PMio.SetBinaryLengthData(0x3447, tmp, 1 , false);
             }
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
         }
@@ -79,7 +79,7 @@ namespace CIM
             int value = (lgcBase.cv_TimeoutData.PIdleDelayTime / 1000 + ((lgcBase.cv_TimeoutData.PIntervalTime / 1000) << 12));
             tmp[0] = Convert.ToByte(value & 0x00ff);
             tmp[1] = Convert.ToByte((value & 0xff00) >> 8);
-            cv_Driver.SetBinaryLengthData(0x3446, tmp, 1, false);
+            CimModule.PMio.SetBinaryLengthData(0x3446, tmp, 1, false);
 
             if (lgcBase.cv_TimeoutData.PIntervalTime != cv_TimechartController.IntervalTime)
             {
@@ -120,7 +120,7 @@ namespace CIM
             tmp[5] = Convert.ToByte((value & 0x0000ff00) >> 8);
             tmp[6] = Convert.ToByte((value & 0x00ff0000) >> 16);
             tmp[7] = Convert.ToByte((value & 0xff000000) >> 24);
-            cv_Driver.SetBinaryLengthData(0x3448, tmp, 4, false);
+            CimModule.PMio.SetBinaryLengthData(0x3448, tmp, 4, false);
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
         }
         #endregion
@@ -136,15 +136,15 @@ namespace CIM
 
             if (lgcBase.PSystemData.PSystemStatus == EquipmentStatus.WaitIdle)
             {
-                cv_Driver.SetPortValue(0x344F, (int)EquipmentStatus.Run);
+                CimModule.PMio.SetPortValue(0x344F, (int)EquipmentStatus.Run);
                 tmp[0] = Convert.ToByte((int)EquipmentStatus.Run);
             }
             else
             {
                 tmp[0] = Convert.ToByte((int)lgcBase.PSystemData.PSystemStatus);
-                cv_Driver.SetPortValue(0x344F, (int)lgcBase.PSystemData.PSystemStatus);
+                CimModule.PMio.SetPortValue(0x344F, (int)lgcBase.PSystemData.PSystemStatus);
             }
-            cv_Driver.SetBinaryLengthData(0x344F, tmp, 5, false);
+            CimModule.PMio.SetBinaryLengthData(0x344F, tmp, 5, false);
 
             tmp = null;
             tmp = new byte[11 << 1];
@@ -153,7 +153,7 @@ namespace CIM
             tmp[0] = Convert.ToByte(value & 0x00ff);
             tmp[1] = Convert.ToByte((value & 0xff00) >> 8);
 
-            cv_Driver.SetBinaryLengthData(0x3444, tmp, 1, false);
+            CimModule.PMio.SetBinaryLengthData(0x3444, tmp, 1, false);
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
         }
         protected override void OnRobot1StatusChange()

@@ -24,7 +24,6 @@ namespace BaseAp
         protected System.Timers.Timer cv_Timer;
         public static KMemoLog cv_Log;
         public static KMemoryIOClient cv_Mio = null;
-        public static BaseEventController cv_mmfController = null;
 
         public BaseForm(string[] args, FdModule m_Module)
         {

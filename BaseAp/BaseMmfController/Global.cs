@@ -24,10 +24,12 @@ namespace BaseAp
 
     public class Global : GlobalBase
     {
+        /*
         static public string ConfigPathname = string.Empty;
         public static BaseEventController Controller = null;
 
         static public KFileLog DebugLog;
+        */
 
         [DllImport("kernel32.dll")]
         public extern static uint SetSystemTime(ref SYSTEMTIME lpSystemTime);

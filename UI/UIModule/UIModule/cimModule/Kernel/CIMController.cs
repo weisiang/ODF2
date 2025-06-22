@@ -20,27 +20,39 @@ namespace CIM
 {
     public partial class CIMController : BaseEventController
     {
-        public delegate void deleCim(FdModule module, string messageId, Object obj);
-        public static event deleCim eventCim;
+        public static event deleSubscription eventCim;
 
         public KTimeCharts cv_TimeChart;
-        TimechartController cv_TimechartController;
-        KMemoryIOClient cv_Driver;
+        public TimechartController cv_TimechartController;
+        //KMemoryIOClient cv_Driver;
 
         public CIMController():base(FdModule.CIM)
         {
-            InitTimeChart();
             CimModule.g_eventController = this;
+            InitTimeChart();
         }
         ~CIMController()
         {
         }
+
         public override void linkEvent()
         {
-            LGCController.eventLgc += receiveSubcription;
-            UIController.eventUi += receiveSubcription;
+            if (cv_module == FdModule.CIM)
+            {
+                LGCController.eventLgc += receiveSubcription;
+                UIController.eventUi += receiveSubcription;
+            }
+            else if (cv_module == FdModule.UI)
+            {
+                LGCController.eventLgc += receiveSubcription;
+                CIMController.eventCim += receiveSubcription;
+            }
+            else if (cv_module == FdModule.LGC)
+            {
+                CIMController.eventCim += receiveSubcription;
+                UIController.eventUi += receiveSubcription;
+            }
         }
-
 
         public static void triggerCimEvent(string messageId , Object obj)
         {
@@ -64,7 +76,7 @@ namespace CIM
             cv_TimechartController = new TimechartController(CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + "\\" +
                CommonData.HIRATA.CommonStaticData.g_CimModule + "\\timecharts.xml");
             cv_TimeChart = cv_TimechartController.GetTimeChart();
-            cv_Driver = cv_TimechartController.GetmemoryIoClient();
+            //cv_Driver = cv_TimechartController.GetmemoryIoClient();
         }
 
         public override void addSubScription()
@@ -118,7 +130,8 @@ namespace CIM
             tmp[20] = Convert.ToByte(value & 0x00ff);
             tmp[21] = Convert.ToByte((value & 0xff00) >> 8);
 
-            cv_Driver.SetBinaryLengthData(0x3444, tmp, 11, false);
+            //cv_Driver.SetBinaryLengthData(0x3444, tmp, 11, false);
+            CimModule.PMio.SetBinaryLengthData(0x3444, tmp, 11, false);
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
         }
         public void ProcessGlassDataTransferReport(FdModule m_SourceModule,string m_MessageId, Object m_Object)

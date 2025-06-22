@@ -10,13 +10,12 @@ using System.Text.RegularExpressions;
 
 namespace BaseAp
 {
-    public class cimBase: moduleBase
+    public class uiBase : moduleBase
     {
-        public cimBase(FdModule m_Module) : base(m_Module)
+        public uiBase(FdModule m_Module) : base(m_Module)
         {
         }
-
-        ~cimBase()
+        ~uiBase()
         {
         }
         protected override void DerivedOnTimer()

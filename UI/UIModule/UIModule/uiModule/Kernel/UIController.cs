@@ -28,16 +28,10 @@ namespace UI
 
         public UIController() : base (FdModule.UI)
         {
-            AssignProcessFunctions();
             g_eventController = this;
         }
         ~UIController()
         {
-        }
-        public override void linkEvent()
-        {
-            LGCController.eventLgc += receiveSubcription;
-            CIMController.eventCim += receiveSubcription;
         }
         public static void triggerUiEvent(string messageId, Object obj)
         {
@@ -46,8 +40,28 @@ namespace UI
                 eventUi(FdModule.UI, messageId, obj);
             }
         }
-        protected override void AssignProcessFunctions()
+        public override void linkEvent()
         {
+            if (cv_module == FdModule.CIM)
+            {
+                LGCController.eventLgc += receiveSubcription;
+                UIController.eventUi += receiveSubcription;
+            }
+            else if (cv_module == FdModule.UI)
+            {
+                LGCController.eventLgc += receiveSubcription;
+                CIMController.eventCim += receiveSubcription;
+            }
+            else if (cv_module == FdModule.LGC)
+            {
+                CIMController.eventCim += receiveSubcription;
+                UIController.eventUi += receiveSubcription;
+            }
+        }
+
+        public override void addSubScription()
+        {
+            base.addSubScription();
             subscriptionMap.Add(typeof(CommonData.HIRATA.MDTimeChartChange).Name, ProcessMmfEvent);
             //subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCTimeAdjust).Name, ProcessBcTimeAdjust); //time adjust
             subscriptionMap.Add( typeof(CommonData.HIRATA.MDShowMsg).Name , ProcessMmfEvent);

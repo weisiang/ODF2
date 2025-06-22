@@ -22,37 +22,54 @@ namespace LGC
 {
     public partial class LGCController : BaseEventController
     {
-        public static event deleSubscription eventLgc;
 
+        public static event deleSubscription eventLgc;
 
         Dictionary<EqGifTimeChartId, int> cv_TimeChartStep = new Dictionary<EqGifTimeChartId, int>();
         public KTimeCharts cv_TimeChart;
         public TimechartController cv_TimechartController;
         public TimeChartParser cv_TimeChartParser;
-        KMemoryIOClient cv_Driver;
+        //KMemoryIOClient cv_Driver;
 
         public static LGCController g_eventController = null;
 
         KTimer cv_TimeChartTImer = null;
 
+
+
         public LGCController() :base(FdModule.LGC)
         {
-            iniStatus();
-            AssignProcessFunctions();
             g_eventController = this;
+            iniStatus();
+            Console.Write("LGC" + SysUtils.Now().LongTimeString());
             InitTimeChart();
-            CIMController.eventCim += receiveSubcription;
-            UIController.eventUi += receiveSubcription;
+            Console.Write("LGC" + SysUtils.Now().LongTimeString());
 
         }
         ~LGCController()
         {
         }
+
+
         public override void linkEvent()
         {
-            CIMController.eventCim += receiveSubcription;
-            UIController.eventUi += receiveSubcription;
+            if (cv_module == FdModule.CIM)
+            {
+                LGCController.eventLgc += receiveSubcription;
+                UIController.eventUi += receiveSubcription;
+            }
+            else if (cv_module == FdModule.UI)
+            {
+                LGCController.eventLgc += receiveSubcription;
+                CIMController.eventCim += receiveSubcription;
+            }
+            else if (cv_module == FdModule.LGC)
+            {
+                CIMController.eventCim += receiveSubcription;
+                UIController.eventUi += receiveSubcription;
+            }
         }
+
         public static void triggerLgcEvent(string messageId, Object obj)
         {
             if (eventLgc != null)
@@ -60,6 +77,7 @@ namespace LGC
                 eventLgc(FdModule.LGC, messageId, obj);
             }
         }
+
         public void initTimer()
         {
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
@@ -92,6 +110,7 @@ namespace LGC
             }
             //WriteTimerOut
         }
+
         private void iniStatus()
         {
             LgcModule.CheckSystemStatus();
@@ -138,7 +157,7 @@ namespace LGC
 
             cv_TimeChartParser = new TimeChartParser(CommonStaticData.g_TimeChart);
             cv_TimeChart = cv_TimechartController.GetTimeChart();
-            cv_Driver = cv_TimechartController.GetmemoryIoClient();
+            //cv_Driver = cv_TimechartController.GetmemoryIoClient();
 
         }
 
@@ -148,8 +167,9 @@ namespace LGC
             TimechartControllerBase.TimechartInstanceBase.cv_T1 = lgcBase.cv_TimeoutData.cv_T1Time;
             TimechartControllerBase.TimechartInstanceBase.cv_T3 = lgcBase.cv_TimeoutData.cv_T3Time;
         }
-        protected override void AssignProcessFunctions()
+        public override void addSubScription()
         {
+            base.addSubScription();
             #region system data change request
             subscriptionMap.Add(typeof(CommonData.HIRATA.AlarmData).Name, ProcessAlarmChange);  //from UI do initial action.
             subscriptionMap.Add(typeof(CommonData.HIRATA.MDInitial).Name, ProcessInitialize);  //from UI do initial action.
@@ -293,7 +313,7 @@ namespace LGC
         {
             CommonData.HIRATA.MDOcrMode obj = m_Object as CommonData.HIRATA.MDOcrMode;
             lgcBase.PSystemData.POcrMode = obj.POcrMode;
-            LgcModule.cv_Mio.SetPortValue(0x344d, (int)lgcBase.PSystemData.POcrMode + (1 << 4));
+            LgcModule.PMio.SetPortValue(0x344d, (int)lgcBase.PSystemData.POcrMode + (1 << 4));
         }
         protected void ProcessGlassCheck(FdModule m_SourceModule, string m_MessageId, Object m_Object)
         {

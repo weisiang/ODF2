@@ -16,7 +16,7 @@ using System.Runtime.InteropServices;
 
 namespace CIM
 {
-    class TimechartControllerBase
+    public class TimechartControllerBase
     {
         public class TimechartInstanceBase
         {

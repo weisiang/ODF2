@@ -12,8 +12,9 @@ namespace BaseAp
 {
     public class BaseEventController
     {
+
         object lockObj = new object();
-        FdModule cv_module;
+        protected FdModule cv_module;
         public delegate void deleSubscription(FdModule module, string messageId, Object obj);
         public Dictionary<string, deleSubscription> subscriptionMap = new Dictionary<string, deleSubscription>();
         public Queue<EventObj>eventQueue = new Queue<EventObj>();
@@ -23,7 +24,6 @@ namespace BaseAp
         public BaseEventController(FdModule m_Module)
         {
             cv_module = m_Module;
-
             logsSetting();
             addSubScription();
             linkEvent();
@@ -31,6 +31,7 @@ namespace BaseAp
         }
         public virtual void linkEvent()
         {
+
         }
         ~BaseEventController()
         {
@@ -235,21 +236,40 @@ namespace BaseAp
 
         void logsSetting()
         {
+            string logini="";
+            string enviPath = CommonData.HIRATA.CommonStaticData.g_RootLogsFolderPath;
+            if (cv_module == FdModule.CIM)
+            {
+                enviPath += CommonData.HIRATA.CommonStaticData.g_CimModule;
+                logini = CommonData.HIRATA.CommonStaticData.g_CimModuleLogsIniFile;
+            }
+            else if (cv_module == FdModule.UI)
+            {
+                enviPath += CommonData.HIRATA.CommonStaticData.g_UiModule;
+                logini = CommonData.HIRATA.CommonStaticData.g_UiModuleLogsIniFile;
+            }
+            else if (cv_module == FdModule.LGC)
+            {
+                enviPath += CommonData.HIRATA.CommonStaticData.g_LgcModule;
+                logini = CommonData.HIRATA.CommonStaticData.g_LgcModuleLogsIniFile;
+            }
+
             /*
-            string enviPath = CommonData.HIRATA.CommonStaticData.g_RootLogsFolderPath + CommonData.HIRATA.CommonStaticData.g_FDModuleName;
             KFileLog cv_MmfClientLog;
             cv_MmfClientLog = new KFileLog();
             cv_MmfClientLog.LoadFromIni(Global.LogIniPathname, "MmfEventClient");
             cv_MmfClientLog.LogFileName = enviPath + "\\MmfClient.log";
             cv_MmfClientLog.SaveToIni(Global.LogIniPathname, "MmfEventClient");
             cv_MmfClientLog = null;
+            */
 
             cv_ControllerLog = new KMemoLog();
-            cv_ControllerLog.LoadFromIni(Global.LogIniPathname, "CONTROLLER");
+            cv_ControllerLog.LoadFromIni(logini, "CONTROLLER");
             cv_ControllerLog.LogFileName = enviPath + "\\Controller.log";
-            cv_ControllerLog.SaveToIni(Global.LogIniPathname, "CONTROLLER");
-            cv_ControllerLog.WriteLog("Create Controller Log");
+            cv_ControllerLog.SaveToIni(logini, "CONTROLLER");
+            cv_ControllerLog.WriteLog("[" + cv_module.ToString() +"]  Create Controller Log");
 
+            /*
             Global.DebugLog = new KFileLog();
             Global.DebugLog.LoadFromIni(Global.LogIniPathname, "DebugLog");
             Global.DebugLog.LogFileName = enviPath + "\\Debug.log";
@@ -297,9 +317,6 @@ namespace BaseAp
                     }
                 }
             }
-        }
-        protected virtual void AssignProcessFunctions()
-        {
         }
  
 

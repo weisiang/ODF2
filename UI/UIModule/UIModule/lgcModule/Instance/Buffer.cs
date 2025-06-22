@@ -41,7 +41,7 @@ namespace LGC
             //Global.Controller.SendMmfNotifyObject(typeof(CommonData.HIRATA.BufferData).Name, this.cv_Data, KgsCommon.KParseObjToXmlPropertyType.Field);
             for(int i = 0 ; i< this.cv_SlotCount ; i++)
             {
-                this.cv_Data.GlassDataMap[i + 1].WriteWokeNoOnly(LgcModule.cv_Mio, 0x381A + i * 2);
+                this.cv_Data.GlassDataMap[i + 1].WriteWokeNoOnly(LgcModule.PMio, 0x381A + i * 2);
             }
             cv_Data.SaveToFile();
         }

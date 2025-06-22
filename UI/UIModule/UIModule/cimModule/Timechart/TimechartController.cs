@@ -5,7 +5,7 @@ using KgsCommon;
 
 namespace CIM
 {
-    class TimechartController : TimechartControllerBase
+    public class TimechartController : TimechartControllerBase
     {
         public TimechartController(string m_TimechartXmlPathname)
             : base(m_TimechartXmlPathname)

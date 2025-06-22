@@ -131,7 +131,6 @@ namespace UI
             CommonData.HIRATA.CommonStaticData.KillTerminal(args);
             WriteLog(LogLevelType.General, "[UI module start]");
             InitialOtherModule();
-            LinkLgcData();
             initTimer();
             cv_Timer.Start();
         }

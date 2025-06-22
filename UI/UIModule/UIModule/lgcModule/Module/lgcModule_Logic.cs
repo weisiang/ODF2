@@ -511,12 +511,12 @@ namespace LGC
             bool down_sensor = robot.cv_Data.GlassDataMap[(int)RobotArm.rbaDown].PHasSensor;
             if (m_Arm == RobotArm.rbaUp)
             {
-                cv_Mio.SetPortValue(m_PortAddress, up_sensor ? 1 : 0);
+                PMio.SetPortValue(m_PortAddress, up_sensor ? 1 : 0);
                 WriteLog(LogLevelType.TimerFunction, "Set GIF sensor for Up arm" + (up_sensor ? "On" : "off"), FunInOut.None);
             }
             else if (m_Arm == RobotArm.rbaDown)
             {
-                cv_Mio.SetPortValue(m_PortAddress, down_sensor ? 1 : 0);
+                PMio.SetPortValue(m_PortAddress, down_sensor ? 1 : 0);
                 WriteLog(LogLevelType.TimerFunction, "Set GIF sensor for down arm" + (down_sensor ? "On" : "off"), FunInOut.None);
             }
         }

@@ -18,6 +18,13 @@ namespace LGC
 {
     public partial class LgcModule : lgcBase
     {
+        public static LgcModule g_LgcModule = null;
+        public static KMemoryIOClient PMio
+        {
+            //get { return g_LgcModule.cv_Mio1; }
+            get { return g_eventController.cv_TimechartController.GetmemoryIoClient(); }
+        }
+
         public static Dictionary<int, List<AllDevice>> cv_CurRecipeFlowStepSetting = new Dictionary<int, List<AllDevice>>();
         public static List<int> cv_InProcessPort = new List<int>();
         internal static Dictionary<int, Eq> cv_EqContainer = new Dictionary<int, Eq>();
@@ -39,29 +46,60 @@ namespace LGC
         public LgcModule()
             : base(FdModule.LGC)
         {
-            LoadAlarmTable();
+            g_LgcModule = this;
             InitEventController();
+            ReadGlassCountValueFromPlc();
+            LoadAlarmTable();
             initRbController();
-            ModuleInit();
             g_eventController.SetTimeChartTimeOut();
             layoutInit();
             ParserFlowStep();
             initTimer();
             g_eventController.initTimer();
-            cv_Mio.SetPortValue(0x344d, (int)lgcBase.PSystemData.POcrMode + (1 << 4));
+            PMio.SetPortValue(0x344d, (int)lgcBase.PSystemData.POcrMode + (1 << 4));
             WriteLog(LogLevelType.General, "[LGC module start]");
             cv_Timer.Start();
+        }
 
-            for (int i = 0; i < 10; i++)
+        public static void WriteLog(LogLevelType m_Type, string m_str, CommonData.HIRATA.FunInOut m_FunInOut = CommonData.HIRATA.FunInOut.None)
+        {
+            string log = "";
+            int level = (int)(SamekLogLevelType)Enum.Parse(typeof(SamekLogLevelType), m_Type.ToString());
+            if (m_Type == LogLevelType.NormalFunctionInOut)
             {
-                MDBCMsg msg = new MDBCMsg();
-                msg.PBuzzer = true;
-                msg.PIntervalSec = 10000;
-                msg.PMsgType = BcMsgType.Interval;
-                msg.PType = MmfEventClientEventType.etNotify;
-                msg.PMsg = "123";
-                LGCController.triggerLgcEvent(typeof(MDBCMsg).Name.ToString(), msg);
-                Console.WriteLine("pictureBox1_Click : " + System.Threading.Thread.CurrentThread.ManagedThreadId);
+                if (m_FunInOut != CommonData.HIRATA.FunInOut.None)
+                {
+                    log = "[FUN_" + m_FunInOut.ToString() + " ]" + m_str;
+                    if (m_FunInOut == FunInOut.Leave)
+                    {
+                        log += "\n---------------------------------------------";
+                    }
+                }
+            }
+            else if (m_Type == LogLevelType.TimerFunction)
+            {
+                if (m_FunInOut != CommonData.HIRATA.FunInOut.None)
+                {
+                    log = "[Timer FUN_" + m_FunInOut.ToString() + " ]" + m_str;
+                }
+            }
+            else
+            {
+                log = "[" + m_Type.ToString() + " ]" + m_str;
+            }
+
+            if (g_LgcModule != null)
+            {
+                lock (g_LgcModule.cv_Log)
+                {
+                    try
+                    {
+                        g_LgcModule.cv_Log.WriteLog(log, level);
+                    }
+                    catch (Exception e)
+                    {
+                    }
+                }
             }
         }
         private void InitEventController()
@@ -167,7 +205,7 @@ namespace LGC
                 time_chart_instance = (TimechartNormal)g_eventController.cv_TimechartController.GetTimeChartInstance(time_chart_id);
                 try
                 {
-                    glass = new GlassData(cv_Mio, time_chart_instance.cv_ReadDataStartPort);
+                    glass = new GlassData(PMio, time_chart_instance.cv_ReadDataStartPort);
                 }
                 catch (Exception e)
                 {
@@ -609,12 +647,12 @@ namespace LGC
             Aligner aligner = GetAlignerById(1);
             Buffer buffer = GetBufferById(1);
 
-            robot.cv_Data.GlassDataMap[(int)RobotArm.rbaDown].WriteWokeNoOnly(cv_Mio, 0x381A);
-            robot.cv_Data.GlassDataMap[(int)RobotArm.rbaUp].WriteWokeNoOnly(cv_Mio, 0x381C);
-            aligner.cv_Data.GlassDataMap[1].WriteWokeNoOnly(cv_Mio, 0x381E);
+            robot.cv_Data.GlassDataMap[(int)RobotArm.rbaDown].WriteWokeNoOnly(PMio, 0x381A);
+            robot.cv_Data.GlassDataMap[(int)RobotArm.rbaUp].WriteWokeNoOnly(PMio, 0x381C);
+            aligner.cv_Data.GlassDataMap[1].WriteWokeNoOnly(PMio, 0x381E);
             for (int i = 1; i <= buffer.cv_SlotCount; i++)
             {
-                buffer.cv_Data.GlassDataMap[i].WriteWokeNoOnly(cv_Mio, 0x3820 + ((i - 1) << 1));
+                buffer.cv_Data.GlassDataMap[i].WriteWokeNoOnly(PMio, 0x3820 + ((i - 1) << 1));
             }
         }
         void SendTowerCommand()
@@ -694,14 +732,14 @@ namespace LGC
             }
             else
             {
-                /*
                 if (!cv_Alarms.IsHasAlarm())
                 {
                     if (PSystemData.PSystemStatus != EquipmentStatus.WaitIdle && PSystemData.PSystemStatus != EquipmentStatus.Idle)
                     {
                         if(PSystemData.PSystemStatus == EquipmentStatus.None)
                         {
-                            if(PSystemData.PRobot1Connect)
+                            //if(PSystemData.PRobot1Connect)
+                            if(PSystemData.PapiConnect)
                             PSystemData.PSystemStatus = EquipmentStatus.Idle;
                             else
                             PSystemData.PSystemStatus = EquipmentStatus.Down;
@@ -720,7 +758,6 @@ namespace LGC
                         PSystemData.POperationModeLeft = OperationMode.Manual;
                     }
                 }
-                */
             }
         }
         private void DoPortChangeToLDRQ()
@@ -1903,16 +1940,16 @@ namespace LGC
             log += "Lot Status : " + port.PLotStatus.ToString() + "\n";
             log += "Port Mode : " + port.cv_Data.PPortMode.ToString() + "\n";
             log += "Port ProductionType : " + port.cv_Data.PProductionType.ToString() + "\n";
-            cv_Mio.SetPortValue(start + 0, value);
+            LgcModule.PMio.SetPortValue(start + 0, value);
 
             value = (int)port.PLotStatus;
 
-            cv_Mio.SetPortValue(start + 1, value);
+            LgcModule.PMio.SetPortValue(start + 1, value);
 
-            cv_Mio.SetPortValue(start + 2, 0);
+            LgcModule.PMio.SetPortValue(start + 2, 0);
 
             value = (int)port.cv_Data.PProductionType;
-            cv_Mio.SetPortValue(start + 3, value);
+            LgcModule.PMio.SetPortValue(start + 3, value);
 
             int work_count = 0;
             value = 0;
@@ -1922,7 +1959,7 @@ namespace LGC
                 if (i <= GetPortById(m_PortId).cv_Data.cv_SlotCount)
                 {
                     value += (Convert.ToInt32(port.cv_Data.GlassDataMap[i].PHasSensor) << (i - 1));
-                    port.cv_Data.GlassDataMap[i].WriteWokeNoOnly(cv_Mio, start + 12 + 2 * (i - 1));
+                    port.cv_Data.GlassDataMap[i].WriteWokeNoOnly(LgcModule.PMio, start + 12 + 2 * (i - 1));
                     log += "Slot : " + i.ToString() + "CIM Mode : " + port.cv_Data.GlassDataMap[i].PCimMode.ToString();
                     log += " Foup Seq : " + port.cv_Data.GlassDataMap[i].PFoupSeq.ToString();
                     log += " Work Order No : " + port.cv_Data.GlassDataMap[i].PWorkOrderNo.ToString();
@@ -1933,7 +1970,7 @@ namespace LGC
                     }
                 }
             }
-            cv_Mio.SetPortValue(start + 4, value);
+            LgcModule.PMio.SetPortValue(start + 4, value);
             log += "Slot 1-16 : " + SysUtils.IntToHex(value) + "\n";
 
             value = 0;
@@ -1942,7 +1979,7 @@ namespace LGC
                 if (i <= GetPortById(m_PortId).cv_Data.cv_SlotCount)
                 {
                     value += (Convert.ToInt32(port.cv_Data.GlassDataMap[i].PHasSensor) << (i - 16 - 1));
-                    port.cv_Data.GlassDataMap[i].WriteWokeNoOnly(cv_Mio, start + 12 + 2 * (i - 1));
+                    port.cv_Data.GlassDataMap[i].WriteWokeNoOnly(LgcModule.PMio, start + 12 + 2 * (i - 1));
                     log += "Slot : " + i.ToString() + "CIM Mode : " + port.cv_Data.GlassDataMap[i].PCimMode.ToString();
                     log += " Foup Seq : " + port.cv_Data.GlassDataMap[i].PFoupSeq.ToString();
                     log += " Work Order No : " + port.cv_Data.GlassDataMap[i].PWorkOrderNo.ToString();
@@ -1955,12 +1992,12 @@ namespace LGC
             }
             log += "Slot 17-25 : " + SysUtils.IntToHex(value) + "\n";
             log += "work count : " + work_count + "\n";
-            cv_Mio.SetPortValue(start + 5, value);
-            cv_Mio.SetPortValue(start + 6, work_count);
+            LgcModule.PMio.SetPortValue(start + 5, value);
+            LgcModule.PMio.SetPortValue(start + 6, work_count);
 
             log += "lot Id : " + port.cv_Data.PLotId + "\n";
             string id = SysUtils.GetFixedLengthString(port.cv_Data.PLotId, 10);
-            cv_Mio.SetBinaryLengthData(start + 7, SysUtils.StringToByteArray(id), 5);
+            LgcModule.PMio.SetBinaryLengthData(start + 7, SysUtils.StringToByteArray(id), 5);
 
             WriteLog(CommonData.HIRATA.LogLevelType.Detail, log);
             WriteLog(CommonData.HIRATA.LogLevelType.NormalFunctionInOut, "WritePortToPlc", CommonData.HIRATA.FunInOut.Leave);

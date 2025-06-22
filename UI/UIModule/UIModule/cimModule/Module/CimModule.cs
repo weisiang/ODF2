@@ -18,6 +18,13 @@ namespace CIM
 {
     public partial class CimModule : cimBase
     {
+        public static CimModule g_cimModule = null;
+        public static KMemoryIOClient PMio
+        {
+            //get { return g_cimModule.cv_Mio1; }
+            get { return g_eventController.cv_TimechartController.GetmemoryIoClient(); }
+        }
+
         KDateTime cv_TimerTime = SysUtils.Now();
 
         private MDFun cv_MdFun = null;
@@ -26,6 +33,7 @@ namespace CIM
 
         public CimModule() : base( FdModule.CIM)
         {
+            g_cimModule = this;
             WriteLog(LogLevelType.General, "[CIM module start]");
             InitEventController();
             InitMdFun();
@@ -34,6 +42,47 @@ namespace CIM
         }
         ~CimModule()
         {
+        }
+        public static void WriteLog(LogLevelType m_Type, string m_str, CommonData.HIRATA.FunInOut m_FunInOut = CommonData.HIRATA.FunInOut.None)
+        {
+            string log = "";
+            int level = (int)(SamekLogLevelType)Enum.Parse(typeof(SamekLogLevelType), m_Type.ToString());
+            if (m_Type == LogLevelType.NormalFunctionInOut)
+            {
+                if (m_FunInOut != CommonData.HIRATA.FunInOut.None)
+                {
+                    log = "[FUN_" + m_FunInOut.ToString() + " ]" + m_str;
+                    if (m_FunInOut == FunInOut.Leave)
+                    {
+                        log += "\n---------------------------------------------";
+                    }
+                }
+            }
+            else if (m_Type == LogLevelType.TimerFunction)
+            {
+                if (m_FunInOut != CommonData.HIRATA.FunInOut.None)
+                {
+                    log = "[Timer FUN_" + m_FunInOut.ToString() + " ]" + m_str;
+                }
+            }
+            else
+            {
+                log = "[" + m_Type.ToString() + " ]" + m_str;
+            }
+
+            if (g_cimModule != null)
+            {
+                lock (g_cimModule.cv_Log)
+                {
+                    try
+                    {
+                        g_cimModule.cv_Log.WriteLog(log, level);
+                    }
+                    catch (Exception e)
+                    {
+                    }
+                }
+            }
         }
         private void InitEventController()
         {

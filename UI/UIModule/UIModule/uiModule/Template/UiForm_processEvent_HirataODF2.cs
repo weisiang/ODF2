@@ -354,6 +354,8 @@ namespace UI{
             }
 
 
+
+
             GetRobot(1).reFresh();
             WriteLog(LogLevelType.General, log);
             //WriteNormalOut

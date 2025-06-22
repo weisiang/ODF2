@@ -159,6 +159,7 @@
     <Compile Include="uiModule\Template\UiForm_base.Designer.cs">
       <DependentUpon>UiForm_base.cs</DependentUpon>
     </Compile>
+    <Compile Include="uiModule\Template\UiModule.cs" />
     <Compile Include="uiModule\UI\Aligner\AlignerUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
