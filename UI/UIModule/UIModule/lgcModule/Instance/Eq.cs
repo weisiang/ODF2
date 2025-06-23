@@ -50,12 +50,12 @@ namespace LGC
                 if (m_Slot == 1)
                 {
                     //step = LGCController.g_eventController.cv_TimechartController.GetTimeChartInstance(cv_Comm.cv_TimeChatId + m_Slot).GetCurrentStep(cv_Comm.cv_TimeChatId + m_Slot);
-                    step = LGCController.g_eventController.cv_TimechartController.GetTimeChartInstance((int)EqGifTimeChartId.TIMECHART_ID_VAS1_DOWN).GetCurrentStep((int)EqGifTimeChartId.TIMECHART_ID_VAS1_DOWN);
+                    step = LgcModule.g_eventController.cv_TimechartController.GetTimeChartInstance((int)EqGifTimeChartId.TIMECHART_ID_VAS1_DOWN).GetCurrentStep((int)EqGifTimeChartId.TIMECHART_ID_VAS1_DOWN);
                 }
                 else if (m_Slot == 2)
                 {
                     //step = LGCController.g_eventController.cv_TimechartController.GetTimeChartInstance(cv_Comm.cv_TimeChatId).GetCurrentStep(cv_Comm.cv_TimeChatId);
-                    step = LGCController.g_eventController.cv_TimechartController.GetTimeChartInstance((int)EqGifTimeChartId.TIMECHART_ID_VAS1_UP).GetCurrentStep((int)EqGifTimeChartId.TIMECHART_ID_VAS1_UP);
+                    step = LgcModule.g_eventController.cv_TimechartController.GetTimeChartInstance((int)EqGifTimeChartId.TIMECHART_ID_VAS1_UP).GetCurrentStep((int)EqGifTimeChartId.TIMECHART_ID_VAS1_UP);
                 }
             }
             else if (cv_Id == (int)EqId.VAS2)
@@ -63,17 +63,17 @@ namespace LGC
                 if (m_Slot == 1)
                 {
                     //step = LGCController.g_eventController.cv_TimechartController.GetTimeChartInstance(cv_Comm.cv_TimeChatId + m_Slot).GetCurrentStep(cv_Comm.cv_TimeChatId + m_Slot);
-                    step = LGCController.g_eventController.cv_TimechartController.GetTimeChartInstance((int)EqGifTimeChartId.TIMECHART_ID_VAS2_DOWN).GetCurrentStep((int)EqGifTimeChartId.TIMECHART_ID_VAS2_DOWN);
+                    step = LgcModule.g_eventController.cv_TimechartController.GetTimeChartInstance((int)EqGifTimeChartId.TIMECHART_ID_VAS2_DOWN).GetCurrentStep((int)EqGifTimeChartId.TIMECHART_ID_VAS2_DOWN);
                 }
                 else if (m_Slot == 2)
                 {
                     //step = LGCController.g_eventController.cv_TimechartController.GetTimeChartInstance(cv_Comm.cv_TimeChatId).GetCurrentStep(cv_Comm.cv_TimeChatId);
-                    step = LGCController.g_eventController.cv_TimechartController.GetTimeChartInstance((int)EqGifTimeChartId.TIMECHART_ID_VAS2_UP).GetCurrentStep((int)EqGifTimeChartId.TIMECHART_ID_VAS2_UP);
+                    step = LgcModule.g_eventController.cv_TimechartController.GetTimeChartInstance((int)EqGifTimeChartId.TIMECHART_ID_VAS2_UP).GetCurrentStep((int)EqGifTimeChartId.TIMECHART_ID_VAS2_UP);
                 }
             }
             else
             {
-                step = LGCController.g_eventController.cv_TimechartController.GetTimeChartInstance(cv_Comm.cv_TimeChatId).GetCurrentStep(cv_Comm.cv_TimeChatId);
+                step = LgcModule.g_eventController.cv_TimechartController.GetTimeChartInstance(cv_Comm.cv_TimeChatId).GetCurrentStep(cv_Comm.cv_TimeChatId);
             }
             return step;
         }

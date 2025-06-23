@@ -120,82 +120,166 @@ namespace LGC
             initAlarmLog();
         }
 
-
-        private void ParserFlowStep()
+        #region Alarm Event function
+        //Trigger this event When AlarmData add/del successful.(LGC must override)
+        protected override void OnAlarmActionEvent(AlarmStatus m_Action, List<CommonData.HIRATA.AlarmItem> m_Alarms)
         {
-            WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
-            cv_CurRecipeFlowStepSetting = null;
-            cv_CurRecipeFlowStepSetting = new Dictionary<int, List<AllDevice>>();
-            KIniFile stepIni = new KIniFile(CommonStaticData.g_FlowStepSettingFile);
-            Dictionary<string, string> tmp = new Dictionary<string, string>();
-            RecipeItem recipe = null;
-            if (lgcBase.cv_Recipes.GetCurRecipe(out recipe))
+            CommonData.HIRATA.MDAlarmAction report_plc = new MDAlarmAction();
+            for (int i = 0; i < m_Alarms.Count; i++)
             {
-                string section = recipe.PFlow.ToString().Substring(4);
-                stepIni.ReadSection(section, tmp);
-                foreach (KeyValuePair<string, string> pair in tmp)
+                if (m_Action == AlarmStatus.Clean)
                 {
-                    Match match = Match.Empty;
-                    match = Regex.Match(pair.Key, @"\d", RegexOptions.IgnoreCase);
-                    if (match.Success)
+                    m_Alarms[i].PStatus = AlarmStatus.Clean;
+                    report_plc.AlarmData.cv_AlarmList.Add(m_Alarms[i]);
+                }
+                else if (m_Action == AlarmStatus.Occur)
+                {
+                    m_Alarms[i].PStatus = AlarmStatus.Occur;
+                    report_plc.AlarmData.cv_AlarmList.Add(m_Alarms[i]);
+                }
+            }
+            if (g_eventController != null)
+            {
+                g_eventController.SendAlarmAction(report_plc.AlarmData, MmfEventClientEventType.etNotify);
+            }
+        }
+
+        //Trigger this event When AlarmData change.(LGC must override)
+        protected override void OnAlarmChange()
+        {
+            PSystemData.PSystemStatus = EquipmentStatus.Down;
+            if (cv_Alarms.IsHasAlarm(enSideGroup.Both))
+            {
+                PSystemData.POperationModeLeft = OperationMode.Manual;
+                PSystemData.POperationModeRight = OperationMode.Manual;
+            }
+            else if (cv_Alarms.IsHasAlarm(enSideGroup.Left))
+            {
+                PSystemData.POperationModeLeft = OperationMode.Manual;
+            }
+            else if (cv_Alarms.IsHasAlarm(enSideGroup.Right))
+            {
+                PSystemData.POperationModeRight = OperationMode.Manual;
+            }
+            if (g_eventController != null)
+            {
+                g_eventController.SendAlarmData();
+            }
+        }
+        #endregion
+
+        #region Recipe Event function
+        //Trigger this event When RecipeData add/del/Modify successful.(LGC must override)
+        protected override void OnRecipeActionEvent(DataEidtAction m_Action, List<RecipeItem> m_Recipes)
+        {
+            ParserFlowStep();
+            if (g_eventController != null)
+            {
+                g_eventController.SendRecipeData();
+                g_eventController.SendRecipeAction(m_Action, m_Recipes);
+            }
+        }
+        #endregion
+
+        #region Link Timeout data Event
+        //Trigger this event When Time out data change(LGC must override)
+        protected override void OnTimeOutDataChange()
+        {
+            if (cv_MmfController != null)
+            {
+                cv_MmfController.SendTimeoutData();
+            }
+        }
+        #endregion
+
+        #region Link GlassCount data Event
+        //Trigger this event When glass count change.(LGC must override)
+        protected override void OnGlassCountDataChange()
+        {
+            if (cv_MmfController != null)
+            {
+                cv_MmfController.SendGlassCountData();
+            }
+        }
+        #endregion
+
+        #region Link System data Event
+        protected override void OnSystemStatusChange()
+        {
+            if (PSystemData.PSystemStatus == EquipmentStatus.Down)
+            {
+                AddTowerCommand(SignalTowerColor.All, SignalTowerControl.Off);
+                AddTowerCommand(SignalTowerColor.Red, SignalTowerControl.On);
+                if(PSystemData.POperationMode == OperationMode.Auto)
+                {
+                    PSystemData.POperationMode = OperationMode.Manual;
+                }
+            }
+            else if (PSystemData.PSystemStatus == EquipmentStatus.Idle)
+            {
+                AddTowerCommand(SignalTowerColor.All, SignalTowerControl.Off);
+                AddTowerCommand(SignalTowerColor.Yellow, SignalTowerControl.On);
+            }
+            else if (PSystemData.PSystemStatus == EquipmentStatus.Run)
+            {
+                AddTowerCommand(SignalTowerColor.All, SignalTowerControl.Off);
+                AddTowerCommand(SignalTowerColor.Green, SignalTowerControl.On);
+            }
+            if (PSystemData.PRobotConnect)
+            {
+                for (int i = (int)EqGifTimeChartId.TIMECHART_ID_SDP1; i <= (int)EqGifTimeChartId.TIMECHART_ID_UV_2; i++)
+                {
+                    if (PSystemData.PSystemStatus != EquipmentStatus.Down)
                     {
-                        int step_id = Convert.ToInt16(match.Value);
-                        List<string> steps = pair.Value.Split(',').ToList();
-                        List<AllDevice> step_devices = new List<AllDevice>();
-                        foreach (string step_item in steps)
-                        {
-                            if (Regex.Match(step_item, @"LP").Success)
-                            {
-                                step_devices.Add(AllDevice.LP);
-                            }
-                            else if (Regex.Match(step_item, @"UP").Success)
-                            {
-                                step_devices.Add(AllDevice.UP);
-                            }
-                            else if (Regex.Match(step_item, @"Buffer1").Success)
-                            {
-                                step_devices.Add(AllDevice.Buffer1_Left);
-                            }
-                            else if (Regex.Match(step_item, @"Buffer2").Success)
-                            {
-                                step_devices.Add(AllDevice.Buffer2_Mid);
-                            }
-                            else if (Regex.Match(step_item, @"Aligner1").Success)
-                            {
-                                step_devices.Add(AllDevice.Aligner1_Left);
-                            }
-                            else if (Regex.Match(step_item, @"Aligner2").Success)
-                            {
-                                step_devices.Add(AllDevice.Aligner2_Right);
-                            }
-                            else if (Regex.Match(step_item, @"EQ").Success)
-                            {
-                                int eq_id = Convert.ToInt16(step_item.Substring(2));
-                                EqId enumid = (EqId)eq_id;
-                                AllDevice all_device_item = (AllDevice)Enum.Parse(typeof(AllDevice), enumid.ToString());
-                                step_devices.Add(all_device_item);
-                            }
-                        }
-                        cv_CurRecipeFlowStepSetting[step_id] = step_devices;
+                        cv_Mio.SetPortValue(cv_MmfController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Active_Standby, 1);
+                        cv_Mio.SetPortValue(cv_MmfController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Interlock_2, 1);
+                    }
+                    else if (PSystemData.PSystemStatus == EquipmentStatus.Down)
+                    {
+                        cv_Mio.SetPortValue(cv_MmfController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Active_Standby, 0);
+                        cv_Mio.SetPortValue(cv_MmfController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Interlock_2, 1);
+
                     }
                 }
             }
-            string log = "Set recipe flow : " + Environment.NewLine;
-            foreach (KeyValuePair<int, List<AllDevice>> item in cv_CurRecipeFlowStepSetting)
+            else
             {
-                log += "Step : " + item.Key + " : ";
-                foreach (AllDevice device_item in item.Value)
+                for (int i = (int)EqGifTimeChartId.TIMECHART_ID_SDP1; i <= (int)EqGifTimeChartId.TIMECHART_ID_UV_2; i++)
                 {
-                    log += device_item.ToString() + "  ";
+                    cv_Mio.SetPortValue(cv_MmfController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Active_Standby, 0);
+                    cv_Mio.SetPortValue(cv_MmfController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Interlock_2, 1);
                 }
-                log += Environment.NewLine;
             }
-            WriteLog(LogLevelType.General, log);
-            WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
         }
+        protected override void OnRobotStatusChange()
+        {
+            if (PSystemData.PSystemStatus == EquipmentStatus.Down)
+            {
+                PSystemData.PInitaiizeOk = false;
+                PSystemData.PInitaiizing = false;
+                GetRobotById(1).CurJob = null; // manual is ok , auto mode : buz has check sensor , so almost ok.
+                cv_RobotManaulJobPath.Clear();
+                cv_RobotJobPath.Clear();
+                SendRobotJobPath();
+            }
+            else if (PSystemData.PSystemStatus == EquipmentStatus.Idle)
+            {
+            }
+            else if (PSystemData.PSystemStatus == EquipmentStatus.Run)
+            {
+            }
+        }
+        //Trigger this event When system data change.(LGC must override)
+        protected override void OnSystemDataChange()
+        {
+            if (cv_MmfController != null)
+            {
+                cv_MmfController.SendSystemData();
+            }
+        }
+        #endregion
 
-
-        private bool FindUnloadPortToPutSubstrate(out int m_Port, out int m_Slot , RobotJob m_Job)
+        private bool FindUnloadPortToPutSubstrate(out int m_Port, out int m_Slot, RobotJob m_Job)
         {
             bool rtn = false;
             int port = 1;
@@ -303,177 +387,78 @@ namespace LGC
             return rtn;
         }
 
-        /* change new architecture. don't process base event here.
-        #region  log in/out Event function
-        //Trigger this event When AccountData login/out successful.(UI must override)
-        protected override void OnLogInOutEvent(LogInOut m_Action, CommonData.HIRATA.AccountItem m_CurAccount)
+        private void ParserFlowStep()
         {
-        }
-
-        //Trigger this event When AccountData change.(UI must override)
-        protected override void OnAccountChangeEvent()
-        {
-        }
-        #endregion
-
-        #region Alarm Event function
-        //Trigger this event When AlarmData add/del successful.(LGC must override)
-        protected override void OnAlarmActionEvent(AlarmStatus m_Action, List<CommonData.HIRATA.AlarmItem> m_Alarms)
-        {
-            if (cv_MmfController != null)
+            WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
+            cv_CurRecipeFlowStepSetting = null;
+            cv_CurRecipeFlowStepSetting = new Dictionary<int, List<AllDevice>>();
+            KIniFile stepIni = new KIniFile(CommonStaticData.g_FlowStepSettingFile);
+            Dictionary<string, string> tmp = new Dictionary<string, string>();
+            RecipeItem recipe = null;
+            if (lgcBase.cv_Recipes.GetCurRecipe(out recipe))
             {
-                CommonData.HIRATA.MDAlarmAction report_plc = new MDAlarmAction();
-                for (int i = 0; i < m_Alarms.Count; i++)
+                string section = recipe.PFlow.ToString().Substring(4);
+                stepIni.ReadSection(section, tmp);
+                foreach (KeyValuePair<string, string> pair in tmp)
                 {
-                    if (m_Action == AlarmStatus.Clean)
+                    Match match = Match.Empty;
+                    match = Regex.Match(pair.Key, @"\d", RegexOptions.IgnoreCase);
+                    if (match.Success)
                     {
-                        m_Alarms[i].PStatus = AlarmStatus.Clean;
-                        report_plc.AlarmData.cv_AlarmList.Add(m_Alarms[i]);
-                    }
-                    else if (m_Action == AlarmStatus.Occur)
-                    {
-                        m_Alarms[i].PStatus = AlarmStatus.Occur;
-                        report_plc.AlarmData.cv_AlarmList.Add(m_Alarms[i]);
-                    }
-                }
-                cv_MmfController.SendAlarmAction(report_plc.AlarmData, MmfEventClientEventType.etNotify);
-            }
-        }
-
-        //Trigger this event When AlarmData change.(LGC must override)
-        protected override void OnAlarmChange()
-        {
-            if (cv_Alarms.IsHasAlarm())
-            {
-                PSystemData.POperationMode = OperationMode.Manual;
-                //PSystemData.PSystemStatus = EquipmentStatus.Down;
-            }
-            if (cv_MmfController != null)
-            {
-                cv_MmfController.SendAlarmData();
-            }
-        }
-        #endregion
-
-        #region Recipe Event function
-        //Trigger this event When RecipeData add/del/Modify successful.(LGC must override)
-        protected override void OnRecipeActionEvent(DataEidtAction m_Action, List<RecipeItem> m_Recipes)
-        {
-            ParserFlowStep();
-            if (cv_MmfController != null)
-            {
-                cv_MmfController.SendRecipeData();
-                cv_MmfController.SendRecipeAction(m_Action, m_Recipes, MmfEventClientEventType.etNotify);
-            }
-        }
-        //Trigger this event When RecipeData change.(LGC must override)
-        protected override void OnRecipeChange()
-        {
-            if (cv_MmfController != null)
-            {
-                cv_MmfController.SendRecipeData();
-            }
-        }
-        #endregion
-
-        #region Link Timeout data Event
-        //Trigger this event When Time out data change(LGC must override)
-        protected override void OnTimeOutDataChange()
-        {
-            if (cv_MmfController != null)
-            {
-                cv_MmfController.SendTimeoutData();
-            }
-        }
-        #endregion
-
-        #region Link GlassCount data Event
-        //Trigger this event When glass count change.(LGC must override)
-        protected override void OnGlassCountDataChange()
-        {
-            if (cv_MmfController != null)
-            {
-                cv_MmfController.SendGlassCountData();
-            }
-        }
-        #endregion
-
-        #region Link System data Event
-        protected override void OnSystemStatusChange()
-        {
-            if (PSystemData.PSystemStatus == EquipmentStatus.Down)
-            {
-                AddTowerCommand(SignalTowerColor.All, SignalTowerControl.Off);
-                AddTowerCommand(SignalTowerColor.Red, SignalTowerControl.On);
-                if(PSystemData.POperationMode == OperationMode.Auto)
-                {
-                    PSystemData.POperationMode = OperationMode.Manual;
-                }
-            }
-            else if (PSystemData.PSystemStatus == EquipmentStatus.Idle)
-            {
-                AddTowerCommand(SignalTowerColor.All, SignalTowerControl.Off);
-                AddTowerCommand(SignalTowerColor.Yellow, SignalTowerControl.On);
-            }
-            else if (PSystemData.PSystemStatus == EquipmentStatus.Run)
-            {
-                AddTowerCommand(SignalTowerColor.All, SignalTowerControl.Off);
-                AddTowerCommand(SignalTowerColor.Green, SignalTowerControl.On);
-            }
-            if (PSystemData.PRobotConnect)
-            {
-                for (int i = (int)EqGifTimeChartId.TIMECHART_ID_SDP1; i <= (int)EqGifTimeChartId.TIMECHART_ID_UV_2; i++)
-                {
-                    if (PSystemData.PSystemStatus != EquipmentStatus.Down)
-                    {
-                        cv_Mio.SetPortValue(cv_MmfController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Active_Standby, 1);
-                        cv_Mio.SetPortValue(cv_MmfController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Interlock_2, 1);
-                    }
-                    else if (PSystemData.PSystemStatus == EquipmentStatus.Down)
-                    {
-                        cv_Mio.SetPortValue(cv_MmfController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Active_Standby, 0);
-                        cv_Mio.SetPortValue(cv_MmfController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Interlock_2, 1);
-
+                        int step_id = Convert.ToInt16(match.Value);
+                        List<string> steps = pair.Value.Split(',').ToList();
+                        List<AllDevice> step_devices = new List<AllDevice>();
+                        foreach (string step_item in steps)
+                        {
+                            if (Regex.Match(step_item, @"LP").Success)
+                            {
+                                step_devices.Add(AllDevice.LP);
+                            }
+                            else if (Regex.Match(step_item, @"UP").Success)
+                            {
+                                step_devices.Add(AllDevice.UP);
+                            }
+                            else if (Regex.Match(step_item, @"Buffer1").Success)
+                            {
+                                step_devices.Add(AllDevice.Buffer1_Left);
+                            }
+                            else if (Regex.Match(step_item, @"Buffer2").Success)
+                            {
+                                step_devices.Add(AllDevice.Buffer2_Mid);
+                            }
+                            else if (Regex.Match(step_item, @"Aligner1").Success)
+                            {
+                                step_devices.Add(AllDevice.Aligner1_Left);
+                            }
+                            else if (Regex.Match(step_item, @"Aligner2").Success)
+                            {
+                                step_devices.Add(AllDevice.Aligner2_Right);
+                            }
+                            else if (Regex.Match(step_item, @"EQ").Success)
+                            {
+                                int eq_id = Convert.ToInt16(step_item.Substring(2));
+                                EqId enumid = (EqId)eq_id;
+                                AllDevice all_device_item = (AllDevice)Enum.Parse(typeof(AllDevice), enumid.ToString());
+                                step_devices.Add(all_device_item);
+                            }
+                        }
+                        cv_CurRecipeFlowStepSetting[step_id] = step_devices;
                     }
                 }
             }
-            else
+            string log = "Set recipe flow : " + Environment.NewLine;
+            foreach (KeyValuePair<int, List<AllDevice>> item in cv_CurRecipeFlowStepSetting)
             {
-                for (int i = (int)EqGifTimeChartId.TIMECHART_ID_SDP1; i <= (int)EqGifTimeChartId.TIMECHART_ID_UV_2; i++)
+                log += "Step : " + item.Key + " : ";
+                foreach (AllDevice device_item in item.Value)
                 {
-                    cv_Mio.SetPortValue(cv_MmfController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Active_Standby, 0);
-                    cv_Mio.SetPortValue(cv_MmfController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Interlock_2, 1);
+                    log += device_item.ToString() + "  ";
                 }
+                log += Environment.NewLine;
             }
+            WriteLog(LogLevelType.General, log);
+            WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
         }
-        protected override void OnRobotStatusChange()
-        {
-            if (PSystemData.PSystemStatus == EquipmentStatus.Down)
-            {
-                PSystemData.PInitaiizeOk = false;
-                PSystemData.PInitaiizing = false;
-                GetRobotById(1).CurJob = null; // manual is ok , auto mode : buz has check sensor , so almost ok.
-                cv_RobotManaulJobPath.Clear();
-                cv_RobotJobPath.Clear();
-                SendRobotJobPath();
-            }
-            else if (PSystemData.PSystemStatus == EquipmentStatus.Idle)
-            {
-            }
-            else if (PSystemData.PSystemStatus == EquipmentStatus.Run)
-            {
-            }
-        }
-        //Trigger this event When system data change.(LGC must override)
-        protected override void OnSystemDataChange()
-        {
-            if (cv_MmfController != null)
-            {
-                cv_MmfController.SendSystemData();
-            }
-        }
-        #endregion
-        */
 
         private void AddTowerCommand(SignalTowerColor m_Color, SignalTowerControl m_Control)
         {

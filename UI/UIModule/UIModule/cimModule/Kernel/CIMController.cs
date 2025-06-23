@@ -71,11 +71,13 @@ namespace CIM
                 //CIMController.triggerCimEvent(typeof(CommonData.HIRATA.MDBCAlarmReportToLGC).Name, obj); //report alarm to other modules.
             }
         }
+        /*
         protected override void ProcessLgcStart(FdModule m_SourceModule, string m_MessageId, Object m_Object)
         {
             LinkCommonDataEvent(lgcBase.cv_Alarms, BaseForm.cv_AccountData, lgcBase.cv_Recipes,
                 lgcBase.cv_TimeoutData, lgcBase.cv_GlassCountData, lgcBase.PSystemData);
         }
+        */
         void InitTimeChart()
         {
             cv_TimechartController = new TimechartController(CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + "\\" +

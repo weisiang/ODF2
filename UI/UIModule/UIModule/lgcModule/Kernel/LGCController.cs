@@ -31,15 +31,12 @@ namespace LGC
         public TimeChartParser cv_TimeChartParser;
         //KMemoryIOClient cv_Driver;
 
-        public static LGCController g_eventController = null;
-
         KTimer cv_TimeChartTImer = null;
 
 
 
         public LGCController() :base(FdModule.LGC)
         {
-            g_eventController = this;
             iniStatus();
             Console.Write("LGC" + SysUtils.Now().LongTimeString());
             InitTimeChart();
@@ -404,20 +401,6 @@ namespace LGC
 
 
         #region base
-        /*
-        protected override void ProcessSystemData(Object m_Object)
-        {
-            WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
-            base.ProcessSystemData( m_Object);
-            //SendMmfReplyObject(typeof(CommonData.HIRATA.SystemData).Name, LgcForm.PSystemData, m_Ticket, typeof(CommonData.HIRATA.SystemData).Name, KParseObjToXmlPropertyType.Field);
-            CommonData.HIRATA.MDOnlineRequest online_obj = new CommonData.HIRATA.MDOnlineRequest();
-            online_obj.PType = CommonData.HIRATA.MmfEventClientEventType.etNotify;
-            online_obj.PCurMode = lgcBase.PSystemData.PSystemOnlineMode;
-           // SendMmfReplyObject(typeof(CommonData.HIRATA.MDOnlineRequest).Name, online_obj, m_Ticket, typeof(CommonData.HIRATA.MDOnlineRequest).Name, KParseObjToXmlPropertyType.Field);
-
-            WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
-        }
-        */
         protected override void ProcessRobotAction(Object m_Object)
         {
             /*
@@ -1810,5 +1793,62 @@ namespace LGC
         }
         #endregion
 
+        #region alarm
+        public bool SendAlarmAction(AlarmData m_AlarmData, MmfEventClientEventType m_Type)
+        {
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
+            bool rtn = true;
+            MDAlarmAction obj = new MDAlarmAction();
+            obj.PType = m_Type;
+            obj.AlarmData = m_AlarmData;
+            triggerLgcEvent(typeof(MDAlarmAction).Name, obj);
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
+            return rtn;
+        }
+        public virtual bool SendAlarmData()
+        {
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
+            triggerLgcEvent(typeof(AlarmData).Name, lgcBase.cv_Alarms);
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
+            return true;
+        }
+        #endregion
+        #region recipe
+        public virtual bool SendRecipeData()
+        {
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
+            bool rtn = true;
+            triggerLgcEvent(typeof(RecipeData).Name, lgcBase.cv_Recipes);
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
+            return rtn;
+        }
+        public virtual bool SendRecipeAction(DataEidtAction m_Action, List<RecipeItem> m_Recipes)
+        {
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
+            bool result = true;
+            MDRecipeAction obj = new MDRecipeAction();
+            obj.PAction = m_Action;
+            obj.Recipes = m_Recipes;
+            triggerLgcEvent(typeof(MDRecipeAction).Name, obj);
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
+            return result;
+        }
+        #endregion
+        #region TimeoutData
+        public virtual void SendTimeoutData()
+        {
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
+            triggerLgcEvent(typeof(TimeOutData).Name, lgcBase.cv_TimeoutData);
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
+        }
+        #endregion
+        #region GlassCountData
+        public virtual void SendGlassCountData()
+        {
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
+            triggerLgcEvent(typeof(GlassCountData).Name, lgcBase.cv_GlassCountData);
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
+        }
+        #endregion
     }
 }

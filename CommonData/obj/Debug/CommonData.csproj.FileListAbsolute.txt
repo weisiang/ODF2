@@ -1,6 +1,5 @@
 F:\work\Seeya\ODF2\ODF_2_code\CommonData\bin\Debug\CommonData.dll
 F:\work\Seeya\ODF2\ODF_2_code\CommonData\bin\Debug\CommonData.pdb
-F:\work\Seeya\ODF2\ODF_2_code\CommonData\obj\Debug\CommonData.csproj.AssemblyReference.cache
 F:\work\Seeya\ODF2\ODF_2_code\CommonData\obj\Debug\CommonData.csproj.CoreCompileInputs.cache
 F:\work\Seeya\ODF2\ODF_2_code\CommonData\obj\Debug\CommonData.csproj.CopyComplete
 F:\work\Seeya\ODF2\ODF_2_code\CommonData\obj\Debug\CommonData.dll

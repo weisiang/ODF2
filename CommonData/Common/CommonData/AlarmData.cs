@@ -10,6 +10,7 @@ namespace CommonData.HIRATA
     public enum AlarmAction { Set , Reset , };
     public class AlarmItem
     {
+        public int cv_Side;
         public int cv_Level;
         public int cv_Status;
         public int cv_Unit;
@@ -23,6 +24,12 @@ namespace CommonData.HIRATA
         public string cv_ResCode = "";
         public string cv_ApiTypeCode = "";
         public int cv_CommandDevice = 0;
+        public enSideGroup PSide
+        {
+            get { return (enSideGroup)cv_Side; }
+            set { cv_Side = (int)value; }
+
+        }
         public HIRATA.APIEnum.CommnadDevice PCommandDevice
         {
             get { return (APIEnum.CommnadDevice)cv_CommandDevice; }
@@ -106,6 +113,10 @@ namespace CommonData.HIRATA
         public event DeleAlarmChange EventAlarmCharge;
 
         public List<AlarmItem> cv_AlarmList = new List<AlarmItem>();
+        public bool IsHasAlarm(enSideGroup m_Side)
+        {
+            return  cv_AlarmList.Exists(x => (x.PLevel == AlarmLevele.Serious) && (x.PSide == m_Side)) ;
+        }
         public bool IsHasAlarm()
         {
             return  cv_AlarmList.Exists(x => x.PLevel == AlarmLevele.Serious);

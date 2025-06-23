@@ -24,11 +24,8 @@ namespace UI
         public delegate void DeleAppEvent(string m_MessageId, object m_Object);
         public static event DeleAppEvent EventAppEvent;
 
-        public static UIController g_eventController = null;
-
         public UIController() : base (FdModule.UI)
         {
-            g_eventController = this;
         }
         ~UIController()
         {
@@ -58,11 +55,13 @@ namespace UI
                 UIController.eventUi += receiveSubcription;
             }
         }
+        /*
         protected override void ProcessLgcStart(FdModule m_SourceModule, string m_MessageId, Object m_Object)
         {
             g_eventController.LinkCommonDataEvent(lgcBase.cv_Alarms, BaseForm.cv_AccountData, lgcBase.cv_Recipes,
                 lgcBase.cv_TimeoutData, lgcBase.cv_GlassCountData, lgcBase.PSystemData);
         }
+        */
 
         public override void addSubScription()
         {
