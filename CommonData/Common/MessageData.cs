@@ -4,6 +4,24 @@ using System.Text;
 
 namespace CommonData.HIRATA
 {
+    #region LGC start
+    public class MDLgcStart : MessageBase
+    {
+    }
+    #endregion
+
+    #region UI start
+    public class MDUiStart : MessageBase
+    {
+    }
+    #endregion
+
+    #region CIM start
+    public class MDCimStart : MessageBase
+    {
+    }
+    #endregion
+
     //base defined
     #region ONT
     public class MDOntMode : MessageBase

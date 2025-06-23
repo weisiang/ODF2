@@ -35,14 +35,33 @@ namespace LGC
                 cv_Data = new BufferData(cv_Id, cv_SlotCount);
             }
         }
+        protected GlassData this[int index]
+        {
+            get
+            {
+                GlassData rtn = null;
+                if (index > 0 && index <= cv_SlotCount)
+                {
+                    rtn = cv_Data.GlassDataMap[index];
+                }
+                return rtn;
+            }
+            set
+            {
+                if (index > 0 && index <= cv_SlotCount)
+                {
+                    cv_Data.GlassDataMap[index] = value;
+                    SendDataViaMmf();
+                }
+            }
+        }
         public override void SendDataViaMmf()
         {
-            //this.cv_Data.GlassDataMap = this.cv_Data.GlassDataMap;
-            //Global.Controller.SendMmfNotifyObject(typeof(CommonData.HIRATA.BufferData).Name, this.cv_Data, KgsCommon.KParseObjToXmlPropertyType.Field);
             for(int i = 0 ; i< this.cv_SlotCount ; i++)
             {
                 this.cv_Data.GlassDataMap[i + 1].WriteWokeNoOnly(LgcModule.PMio, 0x381A + i * 2);
             }
+            LGCController.triggerLgcEvent(typeof(CommonData.HIRATA.BufferData).Name, this.cv_Data);
             cv_Data.SaveToFile();
         }
         public override bool CanAccess(bool m_IsLoad , int m_Slot , bool m_IsExchange=false)

@@ -404,6 +404,7 @@ namespace LGC
 
 
         #region base
+        /*
         protected override void ProcessSystemData(Object m_Object)
         {
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
@@ -416,6 +417,7 @@ namespace LGC
 
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
         }
+        */
         protected override void ProcessRobotAction(Object m_Object)
         {
             /*

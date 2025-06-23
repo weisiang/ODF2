@@ -19,8 +19,12 @@ namespace CommonData.HIRATA
         }
 
 
+
         private Dictionary<int, GlassData> cv_GlassDataMap = new Dictionary<int, GlassData>();
         public List<GlassData> cv_GlassDataList = new List<GlassData>();
+
+
+
         //use GlassDataList = cv_GlassDataList to set glass map.
         public List<GlassData> GlassDataList
         {

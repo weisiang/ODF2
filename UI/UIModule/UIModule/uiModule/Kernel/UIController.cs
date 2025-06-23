@@ -58,6 +58,11 @@ namespace UI
                 UIController.eventUi += receiveSubcription;
             }
         }
+        protected override void ProcessLgcStart(FdModule m_SourceModule, string m_MessageId, Object m_Object)
+        {
+            g_eventController.LinkCommonDataEvent(lgcBase.cv_Alarms, BaseForm.cv_AccountData, lgcBase.cv_Recipes,
+                lgcBase.cv_TimeoutData, lgcBase.cv_GlassCountData, lgcBase.PSystemData);
+        }
 
         public override void addSubScription()
         {
@@ -98,7 +103,7 @@ namespace UI
             */
         }
 
-        void ProcessMmfEvent(FdModule module, string m_MessageId, Object m_Object)
+        protected override void ProcessMmfEvent(FdModule module, string m_MessageId, Object m_Object)
         {
             Console.WriteLine("ProcessMmfEvent : " + System.Threading.Thread.CurrentThread.ManagedThreadId);
             //WriteIn

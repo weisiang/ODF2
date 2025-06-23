@@ -42,6 +42,17 @@ namespace BaseAp
         }
         public virtual void addSubScription()
         {
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDLgcStart).Name, ProcessLgcStart);  //from UI do initial action.
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDCimStart).Name, ProcessCimStart);  //from UI do initial action.
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDUiStart).Name, ProcessUiStart);  //from UI do initial action.
+            if (cv_module == FdModule.UI)
+            {
+                subscriptionMap.Add(typeof(CommonData.HIRATA.SystemData).Name, ProcessMmfEvent);  //from UI do initial action.
+            }
+            else
+            {
+                subscriptionMap.Add(typeof(CommonData.HIRATA.SystemData).Name, ProcessSystemData);  //from UI do initial action.
+            }
         }
 
         public void receiveSubcription(FdModule module, string messageId, Object obj)
@@ -105,7 +116,7 @@ namespace BaseAp
         }
 
         #region alarm , account , recipe , timeout , glassCount , systemData event link and process functions.
-        private void LinkCommonDataEvent(AlarmData cv_Alarms, AccountData cv_AccountData, RecipeData cv_Recipes, TimeOutData cv_TimeoutData, GlassCountData cv_GlassCountData, SystemData cv_SystemData)
+        public virtual void LinkCommonDataEvent(AlarmData cv_Alarms, AccountData cv_AccountData, RecipeData cv_Recipes, TimeOutData cv_TimeoutData, GlassCountData cv_GlassCountData, SystemData cv_SystemData)
         {
             if(cv_AccountData != null)
             {
@@ -318,7 +329,18 @@ namespace BaseAp
                 }
             }
         }
- 
+
+        #region receive lgc , ui , cim start
+        protected virtual void ProcessUiStart(FdModule m_SourceModule, string m_MessageId, Object m_Object)
+        {
+        }
+        protected virtual void ProcessLgcStart(FdModule m_SourceModule, string m_MessageId, Object m_Object)
+        {
+        }
+        protected virtual void ProcessCimStart(FdModule m_SourceModule, string m_MessageId, Object m_Object)
+        {
+        }
+        #endregion
 
         #region base demand event. CIM or UI module send request wonder change common data. then Lgc receive and process.
         protected virtual void ProcessOnlineReq(FdModule m_SourceModule, string m_MessageId, Object m_Object)
@@ -471,7 +493,11 @@ namespace BaseAp
             WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
             WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
         }
-        protected virtual void ProcessSystemData(Object m_Object)
+        protected virtual void ProcessMmfEvent(FdModule module, string m_MessageId, Object m_Object)
+        {
+
+        }
+        protected virtual void ProcessSystemData(FdModule module, string messageId, Object obj)
         {
             WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
             /*

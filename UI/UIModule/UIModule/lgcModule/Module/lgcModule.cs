@@ -58,6 +58,9 @@ namespace LGC
             g_eventController.initTimer();
             PMio.SetPortValue(0x344d, (int)lgcBase.PSystemData.POcrMode + (1 << 4));
             WriteLog(LogLevelType.General, "[LGC module start]");
+            MDLgcStart lgcstart = new MDLgcStart();
+            LGCController.triggerLgcEvent(typeof(MDLgcStart).Name.ToString(), lgcstart);
+            LGCController.triggerLgcEvent(typeof(SystemData).Name.ToString(), PSystemData);
             cv_Timer.Start();
         }
 

@@ -34,10 +34,30 @@ namespace LGC
                 cv_Data = new AlignerData(cv_Id, cv_SlotCount);
             }
         }
+        protected GlassData this[int index]
+        {
+            get
+            {
+                GlassData rtn = null;
+                if (index > 0 && index <= cv_SlotCount)
+                {
+                    rtn = cv_Data.GlassDataMap[index];
+                }
+                return rtn;
+            }
+            set
+            {
+                if (index > 0 && index <= cv_SlotCount)
+                {
+                    cv_Data.GlassDataMap[index] = value;
+                    SendDataViaMmf();
+                }
+            }
+        }
+
         public override void  SendDataViaMmf()
         {
-            //this.cv_Data.GlassDataMap = this.cv_Data.GlassDataMap;
-            //Global.Controller.SendMmfNotifyObject(typeof(CommonData.HIRATA.AlignerData).Name, this.cv_Data, KgsCommon.KParseObjToXmlPropertyType.Field);
+            LGCController.triggerLgcEvent(typeof(CommonData.HIRATA.AlignerData).Name, this.cv_Data);
             cv_Data.SaveToFile();
         }
         public bool IsHasAnyDataAndSensor()
