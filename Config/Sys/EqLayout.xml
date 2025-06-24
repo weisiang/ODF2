@@ -5,10 +5,10 @@
         <Port KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Port 2" ID="2" ToolId="" Capacity="25" Show="1" SideGroup="left"	Enable="1"/>
         <Port KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Port 3" ID="3" ToolId="" Capacity="25" Show="1" SideGroup="right"	Enable="1"/>
         <Port KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Port 4" ID="4" ToolId="" Capacity="25" Show="1" SideGroup="right"	Enable="1"/>
-        <Port KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Port 5" ID="5" ToolId="" Capacity="13" Show="1" SideGroup="right"	Enable="1"/>
-        <Port KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Port 6" ID="6" ToolId="" Capacity="13" Show="1" SideGroup="right"	Enable="1"/>
+        <Port KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Port 5" ID="5" ToolId="" Capacity="25" Show="1" SideGroup="right"	Enable="1"/>
+        <Port KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Port 6" ID="6" ToolId="" Capacity="25" Show="1" SideGroup="right"	Enable="1"/>
         <Port KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Port 7" ID="7" ToolId="" Capacity="13" Show="1" SideGroup="right"	Enable="1"/>
-        <Port KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Port 8" ID="8" ToolId="" Capacity="13" Show="1" SideGroup="right"	Enable="1"/>
+        <Port KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Port 8" ID="8" ToolId="" Capacity="25" Show="1" SideGroup="right"	Enable="1"/>
     </PortList>
     <BufferList KGS_TYPE="L" KGS_ITEM_NUMBER="2">
         <Buffer KGS_TYPE="A" KGS_ITEM_NUMBER="0" Name="Buffer 1" ID="1" ToolId="" Capacity="12" Show="1" Stage="17" SideGroup="left"	Enable="1"/>
