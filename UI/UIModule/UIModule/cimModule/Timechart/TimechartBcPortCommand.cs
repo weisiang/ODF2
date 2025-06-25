@@ -40,18 +40,24 @@ namespace CIM
         int cv_Value4;
         int cv_Value5;
         int cv_Value6;
+        int cv_Value7;
+        int cv_Value8;
         int cv_Port1 = 0x31;
         int cv_Port2 = 0x33;
         int cv_Port3 = 0x35;
         int cv_Port4 = 0x37;
         int cv_Port5 = 0x39;
         int cv_Port6 = 0x3B;
+        int cv_Port7 = 0x3D;
+        int cv_Port8 = 0x3F;
         int port1 = 0x30;
         int port2 = 0x32;
         int port3 = 0x34;
         int port4 = 0x36;
         int port5 = 0x38;
         int port6 = 0x3A;
+        int port7 = 0x3C;
+        int port8 = 0x3E;
 
 
         public TimechartBcPortCommand(TimechartControllerBase m_TimechartController, int m_TimechartId, Dictionary<string, int> m_VarPortMap)
@@ -63,6 +69,8 @@ namespace CIM
             cv_Value4 = cv_MemoryIoClient.GetPortValue(cv_Port4);
             cv_Value5 = cv_MemoryIoClient.GetPortValue(cv_Port5);
             cv_Value6 = cv_MemoryIoClient.GetPortValue(cv_Port6);
+            cv_Value7 = cv_MemoryIoClient.GetPortValue(cv_Port7);
+            cv_Value8 = cv_MemoryIoClient.GetPortValue(cv_Port8);
             AssignRunningStepEventFunction(STEP_ID_BcPortCommand, OnRunning_BcPortCommand);
             //AssignEnterStepEventFunction(STEP_ID_BcPortCommand, OnEnter_BcPortCommand);
         }
@@ -112,7 +120,7 @@ namespace CIM
                     cv_Value3 = cv_MemoryIoClient.GetPortValue(cv_Port3);
                     int node = (cv_MemoryIoClient.GetPortValue(port3) & 0x0F00) >> 8;
                     int port = (cv_MemoryIoClient.GetPortValue(port3) & 0x00F0) >> 4;
-                    log += "Port 1 ,index change to " + cv_Value3.ToString() + " node : " + node.ToString() + " Port : " + port.ToString();
+                    log += "Port 3 ,index change to " + cv_Value3.ToString() + " node : " + node.ToString() + " Port : " + port.ToString();
                     if (node == 2 && port == 3)
                     {
                         log += " Enter BcPortCommand";
@@ -129,7 +137,7 @@ namespace CIM
                     cv_Value4 = cv_MemoryIoClient.GetPortValue(cv_Port4);
                     int node = (cv_MemoryIoClient.GetPortValue(port4) & 0x0F00) >> 8;
                     int port = (cv_MemoryIoClient.GetPortValue(port4) & 0x00F0) >> 4;
-                    log += "Port 1 ,index change to " + cv_Value4.ToString() + " node : " + node.ToString() + " Port : " + port.ToString();
+                    log += "Port 3 ,index change to " + cv_Value4.ToString() + " node : " + node.ToString() + " Port : " + port.ToString();
                     if (node == 2 && port == 4)
                     {
                         log += " Enter BcPortCommand";
@@ -146,7 +154,7 @@ namespace CIM
                     cv_Value5 = cv_MemoryIoClient.GetPortValue(cv_Port5);
                     int node = (cv_MemoryIoClient.GetPortValue(port5) & 0x0F00) >> 8;
                     int port = (cv_MemoryIoClient.GetPortValue(port5) & 0x00F0) >> 4;
-                    log += "Port 1 ,index change to " + cv_Value5.ToString() + " node : " + node.ToString() + " Port : " + port.ToString();
+                    log += "Port 5 ,index change to " + cv_Value5.ToString() + " node : " + node.ToString() + " Port : " + port.ToString();
                     if (node == 2 && port == 5)
                     {
                         log += " Enter BcPortCommand";
@@ -163,11 +171,45 @@ namespace CIM
                     cv_Value6 = cv_MemoryIoClient.GetPortValue(cv_Port6);
                     int node = (cv_MemoryIoClient.GetPortValue(port6) & 0x0F00) >> 8;
                     int port = (cv_MemoryIoClient.GetPortValue(port6) & 0x00F0) >> 4;
-                    log += "Port 1 ,index change to " + cv_Value6.ToString() + " node : " + node.ToString() + " Port : " + port.ToString();
+                    log += "Port 6 ,index change to " + cv_Value6.ToString() + " node : " + node.ToString() + " Port : " + port.ToString();
                     if (node == 2 && port == 6)
                     {
                         log += " Enter BcPortCommand";
                         BcPortCommand(6);
+                    }
+                    else
+                    {
+                        log += "[Warning] index change but node or port number Error!!!";
+                    }
+                    CimModule.WriteLog(CommonData.HIRATA.LogLevelType.Detail, log);
+                }
+                else if (cv_Value6 != cv_MemoryIoClient.GetPortValue(cv_Port7))
+                {
+                    cv_Value6 = cv_MemoryIoClient.GetPortValue(cv_Port7);
+                    int node = (cv_MemoryIoClient.GetPortValue(port7) & 0x0F00) >> 8;
+                    int port = (cv_MemoryIoClient.GetPortValue(port7) & 0x00F0) >> 4;
+                    log += "Port 7 ,index change to " + cv_Value7.ToString() + " node : " + node.ToString() + " Port : " + port.ToString();
+                    if (node == 2 && port == 7)
+                    {
+                        log += " Enter BcPortCommand";
+                        BcPortCommand(7);
+                    }
+                    else
+                    {
+                        log += "[Warning] index change but node or port number Error!!!";
+                    }
+                    CimModule.WriteLog(CommonData.HIRATA.LogLevelType.Detail, log);
+                }
+                else if (cv_Value6 != cv_MemoryIoClient.GetPortValue(cv_Port8))
+                {
+                    cv_Value6 = cv_MemoryIoClient.GetPortValue(cv_Port8);
+                    int node = (cv_MemoryIoClient.GetPortValue(port8) & 0x0F00) >> 8;
+                    int port = (cv_MemoryIoClient.GetPortValue(port8) & 0x00F0) >> 4;
+                    log += "Port 8 ,index change to " + cv_Value8.ToString() + " node : " + node.ToString() + " Port : " + port.ToString();
+                    if (node == 2 && port == 8)
+                    {
+                        log += " Enter BcPortCommand";
+                        BcPortCommand(8);
                     }
                     else
                     {

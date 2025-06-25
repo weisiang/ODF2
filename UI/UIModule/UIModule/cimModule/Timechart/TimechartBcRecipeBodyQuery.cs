@@ -36,7 +36,7 @@ namespace CIM
 
 
         int cv_Value;
-        int cv_Port = 0x050;
+        int cv_Port = 0x05E;
 
         public TimechartBcRecipeBodyQuery(TimechartControllerBase m_TimechartController, int m_TimechartId, Dictionary<string, int> m_VarPortMap)
             : base(m_TimechartController, m_TimechartId, m_VarPortMap)
@@ -57,7 +57,7 @@ namespace CIM
                 if (cv_Value != cv_MemoryIoClient.GetPortValue(cv_Port))
                 {
                     cv_Value = cv_MemoryIoClient.GetPortValue(cv_Port);
-                    int node = (cv_MemoryIoClient.GetPortValue(0x004E) & 0x1F00) >> 8;
+                    int node = (cv_MemoryIoClient.GetPortValue(0x005C) & 0x1F00) >> 8;
                     log += "index change to " + cv_Value.ToString() + " node : " + node.ToString();
 
                     if (node == 2)
@@ -92,7 +92,7 @@ namespace CIM
             {
                 string log = "[Process][BcRecipeBodyQuery]";
                 int no;
-                no = cv_MemoryIoClient.GetPortValue(0x04F);
+                no = cv_MemoryIoClient.GetPortValue(0x05D);
                 log += "Recipe query : " + no.ToString();
                 CimModule.WriteLog(CommonData.HIRATA.LogLevelType.Detail, log);
                 CommonData.HIRATA.MDBCRecipeBodyQuery obj = new CommonData.HIRATA.MDBCRecipeBodyQuery();

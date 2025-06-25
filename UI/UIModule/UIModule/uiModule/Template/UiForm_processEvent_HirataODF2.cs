@@ -47,28 +47,31 @@ namespace UI{
         }
         private void AssignAppEvent()
         {
-            //WriteNormalIn
-            //common 
-            cv_AppEventMap.Add(typeof(CommonData.HIRATA.MDOnlineRequest).Name, ProcessOnlineReq);
-            cv_AppEventMap.Add(typeof(CommonData.HIRATA.MDOperationModeChangeRight).Name, ProcessOperatorModeChange);
+            //common
+            cv_AppEventMap.Add(typeof(CommonData.HIRATA.RecipeData).Name, ProcessRecipeData);
+            cv_AppEventMap.Add(typeof(CommonData.HIRATA.AlarmData).Name, ProcessAlarmNoti);
+            cv_AppEventMap.Add(typeof(CommonData.HIRATA.SystemData).Name, ProcessSystemData);
+            cv_AppEventMap.Add(typeof(CommonData.HIRATA.TimeOutData).Name, ProcessTimeOutData);
+            cv_AppEventMap.Add(typeof(CommonData.HIRATA.GlassCountData).Name, ProcessGlassCountData);
 
+            //process robot , port , aligner , buffer , eq data
             cv_AppEventMap.Add(typeof(CommonData.HIRATA.PortData).Name, ProcessPortData);
             cv_AppEventMap.Add(typeof(CommonData.HIRATA.RobotData).Name, ProcessRobotData);
             cv_AppEventMap.Add(typeof(CommonData.HIRATA.BufferData).Name, ProcessBufferData);
             cv_AppEventMap.Add(typeof(CommonData.HIRATA.AlignerData).Name, ProcessAlignerData);
             cv_AppEventMap.Add(typeof(CommonData.HIRATA.EqData).Name, ProcessEqData);
-            cv_AppEventMap.Add(typeof(CommonData.HIRATA.RecipeData).Name, ProcessRecipeData);
-            cv_AppEventMap.Add(typeof(CommonData.HIRATA.AlarmData).Name, ProcessAlarmNoti);
+
+            //by case
+            cv_AppEventMap.Add(typeof(CommonData.HIRATA.MDOnlineRequest).Name, ProcessOnlineReq);
+            cv_AppEventMap.Add(typeof(CommonData.HIRATA.MDOperationModeChangeRight).Name, ProcessOperatorModeChange);
+
             cv_AppEventMap.Add(typeof(CommonData.HIRATA.MDInitial).Name, ProcessInit);
             cv_AppEventMap.Add(typeof(CommonData.HIRATA.MDPopOpidForm).Name, ProcessPopOpidFormReq);
             cv_AppEventMap.Add(typeof(CommonData.HIRATA.MDPopMonitorForm).Name, ProcessPopMonitorFormReq);
             cv_AppEventMap.Add(typeof(CommonData.HIRATA.MDRobotAction).Name, PrcessRobotAction);
-            cv_AppEventMap.Add(typeof(CommonData.HIRATA.SystemData).Name, ProcessSystemData);
-            cv_AppEventMap.Add(typeof(CommonData.HIRATA.TimeOutData).Name, ProcessTimeOutData);
-            cv_AppEventMap.Add(typeof(CommonData.HIRATA.GlassCountData).Name, ProcessGlassCountData);
 
             //by case 
-            cv_AppEventMap.Add(typeof(CommonData.HIRATA.MDBCMsg).Name, ProcessBcMsg);
+            cv_AppEventMap.Add(typeof(CommonData.HIRATA.MDBCMsg).Name, ProcessBcMsg);//ok
             cv_AppEventMap.Add(typeof(CommonData.HIRATA.MDEfemStatus).Name, ProcessEfemStatus);
             cv_AppEventMap.Add(typeof(CommonData.HIRATA.MDEfemStatusSingle).Name, ProcessEfemStatusSingle);
             cv_AppEventMap.Add(typeof(CommonData.HIRATA.MDTimeChartChange).Name, ProcessTimeChartStepChange);
@@ -100,15 +103,7 @@ namespace UI{
                     cmd = new CommandData(APIEnum.CommandType.IO, APIEnum.IoCommand.Buzzer.ToString(), APIEnum.CommnadDevice.IO, 0, para);
                     CommonData.HIRATA.MDApiCommand bz_obj = new MDApiCommand();
                     bz_obj.CommandData = cmd;
-                    string rtn;
-                    object tmp = null;
-                    uint ticket;
-                    /*
-                    if (!Global.Controller.SendMmfRequestObjectTimeout(typeof(CommonData.HIRATA.MDApiCommand).Name, bz_obj, out ticket, out rtn, out tmp, 3000))
-                    {
-                        CommonStaticData.PopForm("Manual API command time out!!", true, false);
-                    }
-                    */
+                    UIController.triggerUiEvent(typeof(CommonData.HIRATA.MDApiCommand).Name, bz_obj);
                 }
                 cv_BcMsgLog.WriteLog("[BC MSG]\n" + obj.PMsg);
             }
@@ -241,7 +236,7 @@ namespace UI{
             log += "Robot version  : " + obj.PapiVersion.ToString() + Environment.NewLine;
             log += "api remote  : " + obj.PapiInlineMode.ToString() + Environment.NewLine;
             log += "Data Check Rule  : " + obj.PDataCheckRule.ToString("X4") + Environment.NewLine;
-            log += "OCR mode  : " + obj.POcrMode.ToString() + Environment.NewLine;
+            log += "OCR mode  : " + obj.POcrMode1.ToString() + Environment.NewLine;
             log += "Initialize OK  : " + obj.PInitaiizeOkRight.ToString() + Environment.NewLine;
             log += CommonData.HIRATA.CommonStaticData.g_SplitLine + Environment.NewLine;
 
@@ -276,9 +271,9 @@ namespace UI{
 
             cv_RecipeCheckForm.SetNodeChecked();
 
-            if (lbl_Ocr.Text != obj.POcrMode.ToString())
+            if (lbl_Ocr.Text != obj.POcrMode1.ToString())
             {
-                lbl_Ocr.Text = obj.POcrMode.ToString();
+                lbl_Ocr.Text = obj.POcrMode1.ToString();
             }
 
             if (lbl_RobotInline.Text != obj.PapiInlineMode.ToString())

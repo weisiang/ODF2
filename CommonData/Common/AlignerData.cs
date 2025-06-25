@@ -52,6 +52,7 @@ namespace CommonData.HIRATA
         }
         public void SaveToFile()
         {
+            GlassDataMap = GlassDataMap;
             KXmlItem tmp = new KXmlItem();
             tmp.Text = "@<Data/>";
             KXmlItem body = EventCenterBase.ParseObjectToKXmlItem(this, KParseObjToXmlPropertyType.Field);

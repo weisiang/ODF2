@@ -66,10 +66,10 @@ namespace UI
         public override void addSubScription()
         {
             base.addSubScription();
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCMsg).Name, ProcessMmfEvent); //ok
+
             subscriptionMap.Add(typeof(CommonData.HIRATA.MDTimeChartChange).Name, ProcessMmfEvent);
-            //subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCTimeAdjust).Name, ProcessBcTimeAdjust); //time adjust
             subscriptionMap.Add( typeof(CommonData.HIRATA.MDShowMsg).Name , ProcessMmfEvent);
-            subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCMsg).Name, ProcessMmfEvent);        // show bc msg.
             subscriptionMap.Add(typeof(CommonData.HIRATA.MDInitial).Name, ProcessMsg);        // show bc msg.
             subscriptionMap.Add(typeof(CommonData.HIRATA.MDPopMonitorForm).Name, ProcessMsg);        // show bc msg.
             subscriptionMap.Add(typeof(CommonData.HIRATA.MDShowOcrDecide).Name, ProcessMsg);        // show bc msg.
@@ -83,11 +83,6 @@ namespace UI
             //subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCAlarmReportToLGC).Name, ProcessBcAlarm); //report alarm to other modules.
             /*
             //common
-            AssignMmfEventObjectFunction(typeof(CommonData.HIRATA.PortData).Name, ProcessMmfEvent);
-            AssignMmfEventObjectFunction(typeof(CommonData.HIRATA.RobotData).Name, ProcessMmfEvent);
-            AssignMmfEventObjectFunction(typeof(CommonData.HIRATA.BufferData).Name, ProcessMmfEvent);
-            AssignMmfEventObjectFunction(typeof(CommonData.HIRATA.AlignerData).Name, ProcessMmfEvent);
-            AssignMmfEventObjectFunction(typeof(CommonData.HIRATA.EqData).Name, ProcessMmfEvent);
             AssignMmfEventObjectFunction( typeof(CommonData.HIRATA.MDShowMsg).Name , ProcessMsg);
             AssignMmfEventObjectFunction(typeof(CommonData.HIRATA.MDPopMonitorForm).Name, ProcessMmfEvent);
             AssignMmfEventObjectFunction(typeof(CommonData.HIRATA.MDPopOpidForm).Name, ProcessMmfEvent);
@@ -95,7 +90,6 @@ namespace UI
 
             //by case , please remove following define. And Add by csae code.
             AssignMmfEventObjectFunction(typeof(CommonData.HIRATA.MDBCDataRequest).Name, ProcessMmfEvent);
-            AssignMmfEventObjectFunction(typeof(CommonData.HIRATA.MDBCMsg).Name, ProcessMmfEvent);
             AssignMmfEventObjectFunction(typeof(CommonData.HIRATA.MDEfemStatus).Name, ProcessMmfEvent);
             AssignMmfEventObjectFunction(typeof(CommonData.HIRATA.MDEfemStatusSingle).Name, ProcessMmfEvent);
             AssignMmfEventObjectFunction(typeof(CommonData.HIRATA.MDTimeChartChange).Name, ProcessMmfEvent);

@@ -56,11 +56,10 @@ namespace LGC
             ParserFlowStep();
             initTimer();
             g_eventController.initTimer();
-            PMio.SetPortValue(0x344d, (int)lgcBase.PSystemData.POcrMode + (1 << 4));
+            PMio.SetPortValue(0x344d, (int)lgcBase.PSystemData.POcrMode1 + (1 << 4));
             WriteLog(LogLevelType.General, "[LGC module start]");
             MDLgcStart lgcstart = new MDLgcStart();
             LGCController.triggerLgcEvent(typeof(MDLgcStart).Name.ToString(), lgcstart);
-            LGCController.triggerLgcEvent(typeof(SystemData).Name.ToString(), PSystemData);
             cv_Timer.Start();
         }
 
@@ -147,7 +146,10 @@ namespace LGC
         //Trigger this event When AlarmData change.(LGC must override)
         protected override void OnAlarmChange()
         {
-            PSystemData.PSystemStatus = EquipmentStatus.Down;
+            if (cv_Alarms.IsHasAlarm())
+            {
+                PSystemData.PSystemStatus = EquipmentStatus.Down;
+            }
             if (cv_Alarms.IsHasAlarm(enSideGroup.Both))
             {
                 PSystemData.POperationModeLeft = OperationMode.Manual;
@@ -155,16 +157,54 @@ namespace LGC
             }
             else if (cv_Alarms.IsHasAlarm(enSideGroup.Left))
             {
-                PSystemData.POperationModeLeft = OperationMode.Manual;
+                if (IsotherSideDoingJob(enSideGroup.Left) && (!cv_Alarms.IsHasAlarm(enSideGroup.Right)))
+                {
+                }
+                else
+                {
+                }
             }
             else if (cv_Alarms.IsHasAlarm(enSideGroup.Right))
             {
-                PSystemData.POperationModeRight = OperationMode.Manual;
+                if (IsotherSideDoingJob(enSideGroup.Right) && (!cv_Alarms.IsHasAlarm(enSideGroup.Left)))
+                {
+                }
+                else
+                {
+                }
             }
             if (g_eventController != null)
             {
                 g_eventController.SendAlarmData();
             }
+        }
+        private bool IsotherSideDoingJob(enSideGroup m_Side)
+        {
+            enSideGroup side = enSideGroup.None;
+            bool rtn = false;
+            switch(m_Side)
+            {
+                case enSideGroup.Left:
+                    side = enSideGroup.Right;
+                    Robot rb = GetRobotBySide(side);
+                    if( rb.IsBusy)
+                    {
+                        rtn = true;
+                    }
+                    break;
+                case enSideGroup.Right:
+                    side = enSideGroup.Left;
+                    rb = GetRobotBySide(side);
+                    if( rb.IsBusy)
+                    {
+                        rtn = true;
+                    }
+                    break;
+                default:
+                    rtn = false;
+                    break;
+            }
+            return rtn;
         }
         #endregion
 
@@ -185,9 +225,9 @@ namespace LGC
         //Trigger this event When Time out data change(LGC must override)
         protected override void OnTimeOutDataChange()
         {
-            if (cv_MmfController != null)
+            if (g_eventController != null)
             {
-                cv_MmfController.SendTimeoutData();
+                g_eventController.SendTimeoutData();
             }
         }
         #endregion
@@ -196,24 +236,27 @@ namespace LGC
         //Trigger this event When glass count change.(LGC must override)
         protected override void OnGlassCountDataChange()
         {
-            if (cv_MmfController != null)
+            if (g_eventController != null)
             {
-                cv_MmfController.SendGlassCountData();
+                g_eventController.SendGlassCountData();
             }
         }
         #endregion
 
         #region Link System data Event
+        protected override void OnSystemDataChange()
+        {
+            if (g_eventController != null)
+            {
+                g_eventController.SendSystemData();
+            }
+        }
         protected override void OnSystemStatusChange()
         {
             if (PSystemData.PSystemStatus == EquipmentStatus.Down)
             {
                 AddTowerCommand(SignalTowerColor.All, SignalTowerControl.Off);
                 AddTowerCommand(SignalTowerColor.Red, SignalTowerControl.On);
-                if(PSystemData.POperationMode == OperationMode.Auto)
-                {
-                    PSystemData.POperationMode = OperationMode.Manual;
-                }
             }
             else if (PSystemData.PSystemStatus == EquipmentStatus.Idle)
             {
@@ -225,20 +268,28 @@ namespace LGC
                 AddTowerCommand(SignalTowerColor.All, SignalTowerControl.Off);
                 AddTowerCommand(SignalTowerColor.Green, SignalTowerControl.On);
             }
-            if (PSystemData.PRobotConnect)
+        }
+        protected override void OnRobot1StatusChange()
+        {
+        }
+        protected override void OnRobot2StatusChange()
+        {
+        }
+        protected override void OnApiConnected()
+        {
+            if (PSystemData.PapiConnect)
             {
                 for (int i = (int)EqGifTimeChartId.TIMECHART_ID_SDP1; i <= (int)EqGifTimeChartId.TIMECHART_ID_UV_2; i++)
                 {
                     if (PSystemData.PSystemStatus != EquipmentStatus.Down)
                     {
-                        cv_Mio.SetPortValue(cv_MmfController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Active_Standby, 1);
-                        cv_Mio.SetPortValue(cv_MmfController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Interlock_2, 1);
+                        PMio.SetPortValue(g_eventController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Active_Standby, 1);
+                        PMio.SetPortValue(g_eventController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Interlock_2, 1);
                     }
                     else if (PSystemData.PSystemStatus == EquipmentStatus.Down)
                     {
-                        cv_Mio.SetPortValue(cv_MmfController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Active_Standby, 0);
-                        cv_Mio.SetPortValue(cv_MmfController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Interlock_2, 1);
-
+                        PMio.SetPortValue(g_eventController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Active_Standby, 0);
+                        PMio.SetPortValue(g_eventController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Interlock_2, 1);
                     }
                 }
             }
@@ -246,37 +297,47 @@ namespace LGC
             {
                 for (int i = (int)EqGifTimeChartId.TIMECHART_ID_SDP1; i <= (int)EqGifTimeChartId.TIMECHART_ID_UV_2; i++)
                 {
-                    cv_Mio.SetPortValue(cv_MmfController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Active_Standby, 0);
-                    cv_Mio.SetPortValue(cv_MmfController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Interlock_2, 1);
+                    PMio.SetPortValue(g_eventController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Active_Standby, 0);
+                    PMio.SetPortValue(g_eventController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Interlock_2, 1);
                 }
             }
         }
-        protected override void OnRobotStatusChange()
+        protected override void OnApiDisconnected()
         {
-            if (PSystemData.PSystemStatus == EquipmentStatus.Down)
+            if (!PSystemData.PapiConnect)
             {
-                PSystemData.PInitaiizeOk = false;
-                PSystemData.PInitaiizing = false;
-                GetRobotById(1).CurJob = null; // manual is ok , auto mode : buz has check sensor , so almost ok.
-                cv_RobotManaulJobPath.Clear();
-                cv_RobotJobPath.Clear();
-                SendRobotJobPath();
+                PSystemData.POperationModeLeft = OperationMode.Manual;
+                PSystemData.POperationModeRight = OperationMode.Manual;
+                PSystemData.PSystemStatus = EquipmentStatus.Down;
+                PSystemData.PapiInlineMode = EquipmentInlineMode.Local;
+                PSystemData.PInitaiizeOkLeft = false;
+                PSystemData.PInitaiizeOkRight = false;
+                for (int i = (int)EqGifTimeChartId.TIMECHART_ID_SDP1; i <= (int)EqGifTimeChartId.TIMECHART_ID_UV_2; i++)
+                {
+                    PMio.SetPortValue(g_eventController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Active_Standby, 0);
+                    PMio.SetPortValue(g_eventController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Interlock_2, 1);
+                }
             }
-            else if (PSystemData.PSystemStatus == EquipmentStatus.Idle)
-            {
-            }
-            else if (PSystemData.PSystemStatus == EquipmentStatus.Run)
-            {
-            }
+        }
+        protected override void OnOperationModeChangeLeft()
+        {
+        }
+        protected override void OnOperationModeChangeRight()
+        {
+        }
+        protected override void OnPlcConnected()
+        {
+        }
+        protected override void OnPlcDisconnected()
+        {
+        }
+        protected override void OnBclive()
+        {
+        }
+        protected override void OnBcDie()
+        {
         }
         //Trigger this event When system data change.(LGC must override)
-        protected override void OnSystemDataChange()
-        {
-            if (cv_MmfController != null)
-            {
-                cv_MmfController.SendSystemData();
-            }
-        }
         #endregion
 
         private bool FindUnloadPortToPutSubstrate(out int m_Port, out int m_Slot, RobotJob m_Job)
@@ -1470,6 +1531,7 @@ namespace LGC
                 eq_control.cv_Data.PEnable = enable == 1 ? true : false;
                 eq_control.cv_Data.SaveToFile();
                 cv_EqContainer.Add(eq_no, eq_control);
+                eq_control.SendDataViaMmf();
             }
             for (int i = 0; i < aligner_number; ++i)
             {
@@ -1483,6 +1545,7 @@ namespace LGC
                 aligner_control.cv_Data.PEnable = enable == 1 ? true : false;
                 aligner_control.cv_Data.SaveToFile();
                 cv_AlignerContainer.Add(eq_no, aligner_control);
+                aligner_control.SendDataViaMmf();
                 //cv_SideGroup[aligner_control.PSideGroup].Add(aligner_control);
             }
 
@@ -1498,6 +1561,7 @@ namespace LGC
                 port_control.cv_Data.PEnable = enable == 1 ? true : false;
                 port_control.cv_Data.SaveToFile();
                 cv_PortContainer.Add(port_no, port_control);
+                port_control.SendDataViaMmf();
                 //cv_SideGroup[port_control.PSideGroup].Add(port_control);
             }
 
@@ -1563,6 +1627,7 @@ namespace LGC
                 //cv_SideGroup[buffer_control.PSideGroup].Add(buffer_control);
 
                 cv_BufferContainer.Add(i + 1, buffer_control);
+                buffer_control.SendDataViaMmf();
             }
 
 
@@ -1580,6 +1645,7 @@ namespace LGC
                 robot_control.cv_Data.PEnable = enable == 1 ? true : false;
                 robot_control.cv_Data.SaveToFile();
                 cv_RobotContainer.Add(robot_no, robot_control);
+                robot_control.SendDataViaMmf();
                 //cv_SideGroup[robot_control.PSideGroup].Add(robot_control);
             }
 
@@ -1626,12 +1692,6 @@ namespace LGC
                     rtn = rb;
                 }
             }
-            /*
-            if (cv_RobotContainer.fin)
-            {
-                rtn = cv_RobotContainer[i];
-            }
-            */
             return rtn;
         }
         internal static Buffer GetBufferById(int i)

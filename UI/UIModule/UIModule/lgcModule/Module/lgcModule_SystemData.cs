@@ -23,6 +23,7 @@ namespace LGC
             PSystemData.PIsAutoSave = true;
             PSystemData.LoadFromFile();
             PSystemData.SaveToFile();
+            LGCController.triggerLgcEvent(typeof(SystemData).Name, PSystemData);
         }
     }
 }

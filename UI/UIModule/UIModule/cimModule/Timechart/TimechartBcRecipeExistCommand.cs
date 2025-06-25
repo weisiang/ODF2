@@ -34,7 +34,7 @@ namespace CIM
         public static int STEP_ID_BcRecipeExistCommand = 1;
 
         int cv_Value;
-        int cv_Port = 0x0095;
+        int cv_Port = 0x00BC;
 
         public TimechartBcRecipeExistCommand(TimechartControllerBase m_TimechartController, int m_TimechartId, Dictionary<string, int> m_VarPortMap)
             : base(m_TimechartController, m_TimechartId, m_VarPortMap)
@@ -54,7 +54,7 @@ namespace CIM
                 if (cv_Value != cv_MemoryIoClient.GetPortValue(cv_Port))
                 {
                     cv_Value = cv_MemoryIoClient.GetPortValue(cv_Port);
-                    int node = (cv_MemoryIoClient.GetPortValue(0x007B) & 0x1F00) >> 8;
+                    int node = (cv_MemoryIoClient.GetPortValue(0x00A2) & 0x1F00) >> 8;
                     log += "index change to " + cv_Value.ToString() + " node : " + node.ToString();
 
                     if (node == 2)
@@ -89,13 +89,13 @@ namespace CIM
             {
                 string log = "[Process][BcRecipeExistCommand]";
                 int port;
-                port = (cv_MemoryIoClient.GetPortValue(0x007B) & 0x00F0) >> 4;
+                port = (cv_MemoryIoClient.GetPortValue(0x00A2) & 0x00F0) >> 4;
                 CommonData.HIRATA.MDBCRecipeExist obj = new CommonData.HIRATA.MDBCRecipeExist();
                 obj.PPortId = port;
 
                 for (int i = 0; i < 25; i++)
                 {
-                    obj.cv_Recipes.Add(cv_MemoryIoClient.GetPortValue(0x007C + i));
+                    obj.cv_Recipes.Add(cv_MemoryIoClient.GetPortValue(0x00A3 + i));
                 }
                 log += "Port : " + port.ToString() + " Form slot 1 : " + string.Join(",", obj.cv_Recipes);
 

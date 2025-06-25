@@ -73,14 +73,14 @@ namespace CIM
                     tmp[6 + i] = bytes[i];
                 }
                 log += "Report id : " + id + "\n";
-                cv_MemoryIoClient.SetBinaryLengthData(0x3497, tmp, 13, false);
+                cv_MemoryIoClient.SetBinaryLengthData(0x4297, tmp, 13, false);
 
                 string opid = SysUtils.GetFixedLengthString(obj.POpid, 12);
-                cv_MemoryIoClient.SetBinaryLengthData(0x34A4, SysUtils.StringToByteArray(opid), 6, false);
+                cv_MemoryIoClient.SetBinaryLengthData(0x42A4, SysUtils.StringToByteArray(opid), 6, false);
                 log += "Report opid : " + opid + "\n";
 
                 string reason = SysUtils.GetFixedLengthString(obj.PReason, 80);
-                cv_MemoryIoClient.SetBinaryLengthData(0x34AA, SysUtils.StringToByteArray(reason), 40, false);
+                cv_MemoryIoClient.SetBinaryLengthData(0x42AA, SysUtils.StringToByteArray(reason), 40, false);
                 log += "Report reason : " + reason + "\n";
                 CimModule.WriteLog(CommonData.HIRATA.LogLevelType.Detail  ,log);
 
@@ -100,7 +100,7 @@ namespace CIM
 
             try
             {
-                uint index = (uint)cv_MemoryIoClient.GetPortValue(0x34D2);
+                uint index = (uint)cv_MemoryIoClient.GetPortValue(0x42D2);
                 if (index == 0xffff)
                 {
                     index = 1;
@@ -109,7 +109,7 @@ namespace CIM
                 {
                     index += 1;
                 }
-                cv_MemoryIoClient.SetPortValue(0x34D2, (int)index);
+                cv_MemoryIoClient.SetPortValue(0x42D2, (int)index);
                 cv_Timechart.SetTimeLock(this.cv_TimechartId, STEP_ID_WaitInterval, cv_IndexDelay);
             }
             catch (Exception ex)

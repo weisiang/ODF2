@@ -12,7 +12,6 @@ namespace LGC
     class Robot : Obj
     {//RobotComm("192.168.1.1" , 48879);
         public int cv_WaitRobotSpeed = 0;
-        public int cv_WaitFfuSpeed = 0;
         public Queue<TowerCommand> cv_TowerJobQ = new Queue<TowerCommand>();
         public  Queue<bool> cv_BuzzerQ = new Queue<bool>();
         private delegate void DeleProcessCommand(CommandData m_Command);
@@ -98,22 +97,6 @@ namespace LGC
                 rtn = false;
             }
             return rtn;
-        }
-        public bool SetRobotCommonAction(CommandData m_Command)
-        {
-            bool rtn = false;
-            if (lgcBase.PSystemData.PSystemStatus != EquipmentStatus.Down)
-            {
-                if (LgcModule.cv_ApiController.Connected)
-                {
-                    return SetRobotCommonAction(m_Command);
-                }
-                return rtn;
-            }
-            else
-            {
-                return rtn;
-            }
         }
         private void OnGIFTimer()
         {

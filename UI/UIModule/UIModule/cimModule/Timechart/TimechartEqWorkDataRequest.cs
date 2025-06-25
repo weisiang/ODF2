@@ -40,8 +40,8 @@ namespace CIM
         public TimechartEqWorkDataRequest(TimechartControllerBase m_TimechartController, int m_TimechartId, Dictionary<string, int> m_VarPortMap)
             : base(m_TimechartController, m_TimechartId, m_VarPortMap)
         {
-            m_VarPortMap[BcWorkDataReply] = 0x001AF;
-            m_VarPortMap[EqWorkDataRequest] = 0x00384F;
+            m_VarPortMap[BcWorkDataReply] = 0x025D;
+            m_VarPortMap[EqWorkDataRequest] = 0x46CB;
             AssignEnterStepEventFunction(STEP_ID_TriggerEqWorkDataRequest, OnEnter_TriggerEqWorkDataRequest);
             AssignEnterStepEventFunction(STEP_ID_WaitBcWorkDataReplyOn, OnEnter_WaitBcWorkDataReplyOn);
             AssignEnterStepEventFunction(STEP_ID_WaitBcWorkDataReplyOff, OnEnter_WaitBcWorkDataReplyOff);
@@ -53,7 +53,7 @@ namespace CIM
             try
             {
                 string log = "[Process][TimechartEqWorkDataRequest ProcessJob]\n";
-                cv_MemoryIoClient.SetPortValue(0x384F, 0);
+                cv_MemoryIoClient.SetPortValue(0x46CB, 0);
                 CommonData.HIRATA.MDBCDataRequest obj = m_obj as CommonData.HIRATA.MDBCDataRequest;
                 cur_job = null;
                 cur_job = obj;
@@ -79,12 +79,12 @@ namespace CIM
                 value = obj.PWorkOrderNo;
                 tmp[5] = Convert.ToByte(value);
                 log += "Report work order no : " + obj.PWorkOrderNo.ToString() + "\n";
-                cv_MemoryIoClient.SetBinaryLengthData(0x3842, tmp, 3);
+                cv_MemoryIoClient.SetBinaryLengthData(0x46BE, tmp, 3);
 
                 string work_id = SysUtils.GetFixedLengthString(obj.PWorkId.Trim(), 20);
                 log += "Report id : " + work_id  + "\n";
                 CimModule.WriteLog(CommonData.HIRATA.LogLevelType.Detail, log);
-                cv_MemoryIoClient.SetBinaryLengthData(0x3845, SysUtils.StringToByteArray(work_id), 10, false);
+                cv_MemoryIoClient.SetBinaryLengthData(0x46C1, SysUtils.StringToByteArray(work_id), 10, false);
             }
             catch (Exception ex)
             {
@@ -101,7 +101,7 @@ namespace CIM
             {
                 string log = "[Process][TimechartEqWorkDataRequest OnTimeout]\n";
                 CimModule.WriteLog(CommonData.HIRATA.LogLevelType.Detail, log);
-                cv_MemoryIoClient.SetPortValue(0x384F, 0);
+                cv_MemoryIoClient.SetPortValue(0x46CB, 0);
                 StopTimeout(cv_TimechartId, m_TimeoutId);
                 cv_Timechart.RestartTimeChart(cv_TimechartId);
                 CommonData.HIRATA.MDBCAlarmReportToLGC obj = new CommonData.HIRATA.MDBCAlarmReportToLGC();
@@ -132,7 +132,7 @@ namespace CIM
             CimModule.WriteLog(CommonData.HIRATA.LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
             try
             {
-                cv_MemoryIoClient.SetPortValue(0x384F, 1);
+                cv_MemoryIoClient.SetPortValue(0x46CB, 1);
                 cv_Timechart.StartTimeout(this.cv_TimechartId, CommonData.HIRATA.Alarmtable.BcHsDataRequestTsTimeOut, cv_Ts, false);
             }
             catch (Exception ex)
@@ -147,7 +147,7 @@ namespace CIM
             CimModule.WriteLog(CommonData.HIRATA.LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
             try
             {
-                cv_MemoryIoClient.SetPortValue(0x384F, 0);
+                cv_MemoryIoClient.SetPortValue(0x46CB, 0);
                 cv_Timechart.StopTimeout(this.cv_TimechartId, CommonData.HIRATA.Alarmtable.BcHsDataRequestTsTimeOut);
                 Read();
                 cv_Timechart.StartTimeout(this.cv_TimechartId, CommonData.HIRATA.Alarmtable.BcHsDataRequestTeTimeOut, cv_Ts, false);
@@ -179,8 +179,8 @@ namespace CIM
             try
             {
                 string log = "[Process][TimechartEqWorkDataRequest Read]\n";
-                cur_job.PResult = (cv_MemoryIoClient.GetPortValue(0x016E) == 0 ? CommonData.HIRATA.Result.OK : CommonData.HIRATA.Result.NG);
-                cur_job.PGlass = new CommonData.HIRATA.GlassData(cv_MemoryIoClient, 0x016F);
+                cur_job.PResult = (cv_MemoryIoClient.GetPortValue(0x021C) == 0 ? CommonData.HIRATA.Result.OK : CommonData.HIRATA.Result.NG);
+                cur_job.PGlass = new CommonData.HIRATA.GlassData(cv_MemoryIoClient, 0x021D);
                 log += "Result : " + cur_job.PResult.ToString() + "\n";
                 log += cur_job.PGlass.GetGlassDataStr();
                 CIMController.triggerCimEvent(typeof(CommonData.HIRATA.MDBCDataRequest).Name, cur_job);
@@ -199,7 +199,7 @@ namespace CIM
             {
                 byte[] tmp = new byte[26];
                 Array.Clear(tmp, 0, tmp.Length);
-                cv_MemoryIoClient.SetBinaryLengthData(0x345F, tmp, 13, false);
+                cv_MemoryIoClient.SetBinaryLengthData(0x46BE, tmp, 13, false);
             }
             catch (Exception ex)
             {

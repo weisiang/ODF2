@@ -28,6 +28,40 @@ namespace CommonData.HIRATA
         public event SendDataViaMmf OnBclive;
         public event SendDataViaMmf OnBcDie;
 
+        public int cv_WaitFfuSpeed = 0;
+
+        public int cv_LeftSideEnable = 0;
+        public int cv_RightSideEnable = 0;
+        public CommonData.HIRATA.SideGeoupEnable PRightSideEnable
+        {
+            get { return (CommonData.HIRATA.SideGeoupEnable)cv_RightSideEnable; }
+            set
+            {
+                if ((CommonData.HIRATA.SideGeoupEnable)cv_RightSideEnable != value)
+                {
+                    if (OnSystemDataChange != null)
+                    {
+                        OnSystemDataChange();
+                    }
+                }
+            }
+        }
+        public CommonData.HIRATA.SideGeoupEnable PLeftSideEnable
+        {
+            get { return (CommonData.HIRATA.SideGeoupEnable)cv_LeftSideEnable; }
+            set
+            {
+                if ((CommonData.HIRATA.SideGeoupEnable)cv_LeftSideEnable != value)
+                {
+                    if (OnSystemDataChange != null)
+                    {
+                        OnSystemDataChange();
+                    }
+                }
+            }
+        }
+
+
         public int cv_SystemStatus = 0;
         public CommonData.HIRATA.EquipmentStatus PSystemStatus
         {
@@ -183,6 +217,7 @@ namespace CommonData.HIRATA
         }
 
         public int cv_OperationModeLeft = 0;
+        public int cv_OperationModeRight = 0;
         public CommonData.HIRATA.OperationMode POperationModeLeft
         {
             get { return (CommonData.HIRATA.OperationMode)cv_OperationModeLeft; }
@@ -200,6 +235,52 @@ namespace CommonData.HIRATA
                         OnSystemDataChange();
                     }
                 }
+            }
+        }
+        public CommonData.HIRATA.OperationMode POperationModeRight
+        {
+            get { return (CommonData.HIRATA.OperationMode)cv_OperationModeRight; }
+            set
+            {
+                if ((CommonData.HIRATA.OperationMode)cv_OperationModeRight != value)
+                {
+                    cv_OperationModeRight = (int)value;
+                    if (OnOperationModeChangeRight != null)
+                    {
+                        OnOperationModeChangeRight();
+                    }
+                    if (OnSystemDataChange != null)
+                    {
+                        OnSystemDataChange();
+                    }
+                }
+            }
+        }
+        public CommonData.HIRATA.OperationMode POperationMode
+        {
+            get 
+            {
+                OperationMode rtn = OperationMode.Manual;
+                if(PLeftSideEnable == SideGeoupEnable.Enable & PRightSideEnable == SideGeoupEnable.Enable)
+                {
+                    if(POperationModeLeft == OperationMode.Auto && POperationModeRight == OperationMode.Auto)
+                    {
+                        rtn = OperationMode.Auto;
+                    }
+                    else if(POperationModeLeft == OperationMode.Manual && POperationModeRight == OperationMode.Manual)
+                    {
+                        rtn = OperationMode.Manual;
+                    }
+                }
+                else if(PLeftSideEnable == SideGeoupEnable.Enable)
+                {
+                    rtn = POperationModeLeft;
+                }
+                else if(PRightSideEnable == SideGeoupEnable.Enable)
+                {
+                    rtn = POperationModeRight;
+                }
+                return rtn; 
             }
         }
 
@@ -246,18 +327,19 @@ namespace CommonData.HIRATA
             }
         }
 
-        public int cv_OperationModeRight = 0;
-        public CommonData.HIRATA.OperationMode POperationModeRight
+        public int cv_OcrMode1 = 0;
+        public int cv_OcrMode2 = 0;
+        public CommonData.HIRATA.OCRMode POcrMode1
         {
-            get { return (CommonData.HIRATA.OperationMode)cv_OperationModeRight; }
+            get { return (CommonData.HIRATA.OCRMode)cv_OcrMode1; }
             set
             {
-                if ((CommonData.HIRATA.OperationMode)cv_OperationModeRight != value)
+                if ((CommonData.HIRATA.OCRMode)cv_OcrMode1 != value)
                 {
-                    cv_OperationModeRight = (int)value;
-                    if(OnOperationModeChangeRight != null)
+                    cv_OcrMode1 = (int)value;
+                    if (cv_IsAutoSave)
                     {
-                        OnOperationModeChangeRight();
+                        SaveToFile();
                     }
                     if (OnSystemDataChange != null)
                     {
@@ -266,16 +348,14 @@ namespace CommonData.HIRATA
                 }
             }
         }
-
-        public int cv_OcrMode = 0;
-        public CommonData.HIRATA.OCRMode POcrMode
+        public CommonData.HIRATA.OCRMode POcrMode2
         {
-            get { return (CommonData.HIRATA.OCRMode)cv_OcrMode; }
+            get { return (CommonData.HIRATA.OCRMode)cv_OcrMode2; }
             set
             {
-                if ((CommonData.HIRATA.OCRMode)cv_OcrMode != value)
+                if ((CommonData.HIRATA.OCRMode)cv_OcrMode2 != value)
                 {
-                    cv_OcrMode = (int)value;
+                    cv_OcrMode2 = (int)value;
                     if (cv_IsAutoSave)
                     {
                         SaveToFile();
@@ -496,23 +576,23 @@ namespace CommonData.HIRATA
         }
 
         public int cv_DataCheckRule = 0;
-        public bool IsCheckRecipe
+        public bool IsCheckId
         {
             get { return (cv_DataCheckRule & 0x1) == 1 ? true : false; }
             set { PDataCheckRule = (cv_DataCheckRule & 0xFFFE) + Convert.ToInt16(value); }
         }
-        public bool IsCheckId
+        public bool IsCheckSlot
         {
             get { return ((cv_DataCheckRule & 0x2) >> 1) == 1 ? true : false; }
             set { PDataCheckRule = (cv_DataCheckRule & 0xFFFD) + (Convert.ToInt16(value) << 1); }
 
         }
-        public bool IsCheckSlot
+        public bool IsCheckSeq
         {
             get { return ((cv_DataCheckRule & 0x4) >> 2) == 1 ? true : false; }
             set { PDataCheckRule = (cv_DataCheckRule & 0xFFFB) + (Convert.ToInt16(value) << 2); }
         }
-        public bool IsCheckSeq
+        public bool IsCheckRecipe
         {
             get { return ((cv_DataCheckRule & 0x8) >> 3) == 1 ? true : false; }
             set { PDataCheckRule = (cv_DataCheckRule & 0xFFF7) + (Convert.ToInt16(value) << 3); }
@@ -544,7 +624,7 @@ namespace CommonData.HIRATA
             cv_SystemOnlineMode = m_OtherData.cv_SystemOnlineMode;
             cv_OperationModeLeft = m_OtherData.cv_OperationModeLeft;
             cv_OperationModeRight = m_OtherData.cv_OperationModeRight;
-            cv_OcrMode = m_OtherData.cv_OcrMode;
+            cv_OcrMode1 = m_OtherData.cv_OcrMode1;
             cv_IsPlcConnect = m_OtherData.cv_IsPlcConnect;
             cv_IsBcAlive = m_OtherData.cv_IsBcAlive;
             cv_apiVersion = m_OtherData.cv_apiVersion;

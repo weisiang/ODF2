@@ -44,7 +44,7 @@ namespace CIM
             cv_Value = cv_MemoryIoClient.GetPortValue(cv_Port);
             AssignRunningStepEventFunction(STEP_ID_BcDateTimeCalibration, OnRunning_BcDateTimeCalibration);
             //AssignEnterStepEventFunction(STEP_ID_BcDateTimeCalibration, OnEnter_BcDateTimeCalibration);
-            BcSec = cv_MemoryIoClient.GetPortValue(0x03) ;
+            BcSec = cv_MemoryIoClient.GetPortValue(0x02) ;
             KDateTime cv_Date = SysUtils.Now();
         }
 
@@ -68,7 +68,7 @@ namespace CIM
                 tmp2[5] = Convert.ToByte((Convert.ToInt32(min_sec, 16) & 0xff00) >> 8);
                 tmp2[6] = Convert.ToByte(Convert.ToInt32(week, 16) & 0x00ff);
                 tmp2[7] = 0;
-                cv_MemoryIoClient.SetBinaryLengthData(0x3440, tmp2, 4, false);
+                cv_MemoryIoClient.SetBinaryLengthData(0x4240, tmp2, 4, false);
 
                 int tmp3 = cv_MemoryIoClient.GetPortValue(0x02);
                 if (tmp3 != BcSec)

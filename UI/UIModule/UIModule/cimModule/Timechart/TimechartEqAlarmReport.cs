@@ -110,7 +110,7 @@ namespace CIM
                     }
                 }
                 CimModule.WriteLog(CommonData.HIRATA.LogLevelType.Detail, log);
-                cv_MemoryIoClient.SetBinaryLengthData(0x3454, container, 10, false);
+                cv_MemoryIoClient.SetBinaryLengthData(0x4254, container, 10, false);
                 cv_Timechart.SetTimeLock(this.cv_TimechartId, STEP_ID_WaitTm, cv_Tm);
             }
             catch (Exception ex)
@@ -134,7 +134,7 @@ namespace CIM
             CimModule.WriteLog(CommonData.HIRATA.LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
             try
             {
-                uint index = (uint)cv_MemoryIoClient.GetPortValue(0x345E);
+                uint index = (uint)cv_MemoryIoClient.GetPortValue(0x425E);
                 if (index == 0xffff)
                 {
                     index = 1;
@@ -143,7 +143,7 @@ namespace CIM
                 {
                     index += 1;
                 }
-                cv_MemoryIoClient.SetPortValue(0x345E, (int)index);
+                cv_MemoryIoClient.SetPortValue(0x425E, (int)index);
                 cv_Timechart.SetTimeLock(this.cv_TimechartId, STEP_ID_WaitInterval, cv_IndexDelay);
             }
             catch (Exception ex)

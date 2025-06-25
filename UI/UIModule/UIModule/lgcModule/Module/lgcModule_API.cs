@@ -765,7 +765,7 @@ namespace LGC
                             //report BC ocr read.
                             g_eventController.SendWorkDataUpdateReport(aligner.cv_Data.GlassDataMap[1]);
 
-                            if (lgcBase.PSystemData.POperationModeLeft == OperationMode.Auto && lgcBase.PSystemData.POcrMode == OCRMode.ErrorHold)
+                            if (lgcBase.PSystemData.POperationModeLeft == OperationMode.Auto && lgcBase.PSystemData.POcrMode1 == OCRMode.ErrorHold)
                             {
                                 g_eventController.SendShowOcrDecide();
                             }

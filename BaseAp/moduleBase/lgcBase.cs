@@ -147,13 +147,13 @@ namespace BaseAp
         protected virtual void OnSystemDataChange()
         {
         }
+        protected virtual void OnSystemStatusChange()
+        {
+        }
         protected virtual void OnRobot1StatusChange()
         {
         }
         protected virtual void OnRobot2StatusChange()
-        {
-        }
-        protected virtual void OnSystemStatusChange()
         {
         }
         protected virtual void OnApiConnected()
@@ -162,10 +162,10 @@ namespace BaseAp
         protected virtual void OnApiDisconnected()
         {
         }
-        protected virtual void  OnOperationModeChangeRight()
+        protected virtual void  OnOperationModeChangeLeft()
         {
         }
-        protected virtual void  OnOperationModeChangeLeft()
+        protected virtual void  OnOperationModeChangeRight()
         {
         }
         protected virtual void  OnPlcConnected()

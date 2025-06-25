@@ -167,10 +167,10 @@ namespace LGC
         public override void addSubScription()
         {
             base.addSubScription();
-            #region system data change request
-            subscriptionMap.Add(typeof(CommonData.HIRATA.AlarmData).Name, ProcessAlarmChange);  //from UI do initial action.
-            subscriptionMap.Add(typeof(CommonData.HIRATA.MDInitial).Name, ProcessInitialize);  //from UI do initial action.
 
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDApiCommand).Name, ProcessApiCommand); //ok
+            #region system data change request
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDInitial).Name, ProcessInitialize);  
             subscriptionMap.Add(typeof(CommonData.HIRATA.MDOnlineRequest).Name, ProcessOnlineReq); 
             subscriptionMap.Add(typeof(CommonData.HIRATA.MDRobotInlineChange).Name, ProcessRobotInlineChange); 
             subscriptionMap.Add(typeof(CommonData.HIRATA.MDOperationModeChangeRight).Name, ProcessOperatorModeChangeRight); 
@@ -182,18 +182,15 @@ namespace LGC
             #endregion
 
             #region from cim
-            subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCTimeAdjust).Name, ProcessBcTimeAdjust); //time adjust
-            //subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCMsg).Name, obj);        // show bc msg.
-            subscriptionMap.Add(typeof(CommonData.HIRATA.PortData).Name, ProcessPortData); // data download.
-            subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCIdleDelayTime).Name, ProcessBcIdleTime); // bc set idle interval.
-            subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCIndexInterval).Name, ProcessBcIntervalTime);  // bc set index interval.
-            subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCPortCommand).Name, ProcessBcPortCommand);    //bc set port command.
-            subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCRecipeBodyQuery).Name, ProcessRecipeBodyReq); // bc recipe body query.
-            subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCRecipeExist).Name, ProcessRecipeExist); // bc recipe exist.
-            subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCDataRequest).Name, ProcessData); // bc reply data demand.
-            subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCAlarmReportToLGC).Name, ProcessBcAlarm); //report alarm to other modules.
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCTimeAdjust).Name, ProcessBcTimeAdjust); //ok
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCAlarmReportToLGC).Name, ProcessBcAlarm); //ok
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCRecipeExist).Name, ProcessRecipeExist);//ok
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCRecipeBodyQuery).Name, ProcessRecipeBodyReq); //ok
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCPortCommand).Name, ProcessBcPortCommand); //ok
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCIndexInterval).Name, ProcessBcIntervalTime); //ok
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCIdleDelayTime).Name, ProcessBcIdleTime); //ok 
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCDataRequest).Name, ProcessData); //ok
             #endregion
-
          }
 
         protected void ProcessOperatorModeChangeLeft(FdModule m_SourceModule, string m_MessageId, Object m_Object)
@@ -309,8 +306,8 @@ namespace LGC
         protected void ProcessOcrMode(FdModule m_SourceModule, string m_MessageId, Object m_Object)
         {
             CommonData.HIRATA.MDOcrMode obj = m_Object as CommonData.HIRATA.MDOcrMode;
-            lgcBase.PSystemData.POcrMode = obj.POcrMode;
-            LgcModule.PMio.SetPortValue(0x344d, (int)lgcBase.PSystemData.POcrMode + (1 << 4));
+            lgcBase.PSystemData.POcrMode1 = obj.POcrMode;
+            LgcModule.PMio.SetPortValue(0x344d, (int)lgcBase.PSystemData.POcrMode1 + (1 << 4));
         }
         protected void ProcessGlassCheck(FdModule m_SourceModule, string m_MessageId, Object m_Object)
         {
@@ -320,34 +317,33 @@ namespace LGC
             lgcBase.PSystemData.IsCheckRecipe = obj.PCheckRecipeNo;
             lgcBase.PSystemData.IsCheckId = obj.PCheckWorkId;
         }
-        protected void ProcessBcAlarm(FdModule m_SourceModule,string m_MessageId, Object m_Object)
-        {
-            CommonData.HIRATA.MDBCAlarmReportToLGC obj = m_Object as CommonData.HIRATA.MDBCAlarmReportToLGC;
-            LgcModule.EditAlarm(obj.AlarmItem);
-        }
         protected void ProcessApiCommand(FdModule m_SourceModule, string m_MessageId, Object m_Object)
         {
             //WriteIn
+            if (lgcBase.PSystemData.POperationMode != OperationMode.Manual)
+            {
+                LgcModule.ShowMsg("Please change to manual mode.", true, false);
+                return;
+            }
+
             CommonData.HIRATA.MDApiCommand obj = m_Object as CommonData.HIRATA.MDApiCommand;
-            //SendMmfReplyObject(typeof(CommonData.HIRATA.MDApiCommand).Name, obj, m_Ticket, typeof(CommonData.HIRATA.MDApiCommand).Name, KParseObjToXmlPropertyType.Field);
-            int port_id = obj.CommandData.cv_DeviceId;
-            Port port = LgcModule.GetPortById(port_id);
+
             if(obj.CommandData.PCommandType == APIEnum.CommandType.Common && obj.CommandData.PCommonCommand == APIEnum.CommonCommand.Home &&
                 obj.CommandData.PCommandDevice == APIEnum.CommnadDevice.P) //sForce)
             {
-                if(lgcBase.PSystemData.PSystemOnlineMode == OnlineMode.Control)
+                int port_id = obj.CommandData.cv_DeviceId;
+                Port port = LgcModule.GetPortById(port_id);
+                if (lgcBase.PSystemData.PSystemOnlineMode == OnlineMode.Control)
                 {
                     if (port.PLotStatus == LotStatus.Process)
                     {
                         port.cv_Data.cv_IsWaitAbort = true;
-                        //port.PLotStatus = LotStatus.Abort;
                     }
                     else
                     {
                         port.cv_Data.cv_IsWaitAbort = true;
-                        //port.PLotStatus = LotStatus.Cancel;
                     }
-                    LgcModule.ShowMsg("[CIM ON] Chnage to auto after manual unload!!!" , false , false);
+                    LgcModule.ShowMsg("[CIM ON] If in manual mode , please change to auto after press manual unload!!!" , false , false);
                     return;
                 }
                 else
@@ -360,12 +356,10 @@ namespace LGC
 
                     if (port.PLotStatus == LotStatus.Process)
                     {
-                        //port.cv_Data.cv_IsWaitAbort = true;
                         port.PLotStatus = LotStatus.Abort;
                     }
                     else
                     {
-                        //port.cv_Data.cv_IsWaitAbort = true;
                         port.PLotStatus = LotStatus.Cancel;
                     }
                     port.PPortStatus = PortStaus.UDRQ;
@@ -373,32 +367,25 @@ namespace LGC
             }
             else if(obj.CommandData.PCommandType == APIEnum.CommandType.Robot && obj.CommandData.PRobotCommand == APIEnum.RobotCommand.SetRobotSpeed )
             {
-                if (lgcBase.PSystemData.POperationModeLeft != OperationMode.Manual)
+                if (lgcBase.PSystemData.POperationMode != OperationMode.Manual)
                 {
                     LgcModule.ShowMsg("Please change to manual mode.", true, false);
                     return;
                 }
-                LgcModule.GetRobotById(1).cv_WaitRobotSpeed = Convert.ToInt16(obj.CommandData.cv_ParaList[0]);
+                LgcModule.GetRobotById(obj.CommandData.cv_DeviceId).cv_WaitRobotSpeed = Convert.ToInt16(obj.CommandData.cv_ParaList[0]);
             }
             else if(obj.CommandData.PCommandType == APIEnum.CommandType.IO && obj.CommandData.PIoCommand == APIEnum.IoCommand.SetFFUVoltage )
             {
-                if (lgcBase.PSystemData.POperationModeLeft != OperationMode.Manual)
+                if (lgcBase.PSystemData.POperationMode != OperationMode.Manual)
                 {
                     LgcModule.ShowMsg("Please change to manual mode.", true, false);
                     return;
                 }
-                LgcModule.GetRobotById(1).cv_WaitFfuSpeed = Convert.ToInt16(obj.CommandData.cv_ParaList[0]);
+                lgcBase.PSystemData.cv_WaitFfuSpeed = Convert.ToInt16(obj.CommandData.cv_ParaList[0]);
             }
-            if (lgcBase.PSystemData.POperationModeLeft != OperationMode.Manual)
-            {
-                LgcModule.ShowMsg("Please change to manual mode.", true, false);
-                return;
-            }
-            //LgcForm.GetRobotById(1).cv_Comm.SetRobotCommonAction(obj.CommandData);
             LgcModule.SetRobotCommonAction(obj.CommandData);
             //WriteOut
         }
-
 
         #region base
         protected override void ProcessRobotAction(Object m_Object)
@@ -574,7 +561,7 @@ namespace LGC
             base.ProcessChangePortSlotType(m_Object);
             MDShowOcrDecideReply obj = m_Object as MDShowOcrDecideReply;
             Aligner aligner = LgcModule.GetAlignerById(1);
-            if(lgcBase.PSystemData.POcrMode == OCRMode.ErrorHold)
+            if(lgcBase.PSystemData.POcrMode1 == OCRMode.ErrorHold)
             {
                 if(obj.POcrDecide == OCRMode.SkipRead)
                 {
@@ -586,13 +573,31 @@ namespace LGC
         }
         #endregion
 
-        #region Process BC msg
+        #region Process receive CIM msg
+        void ProcessBcTimeAdjust(FdModule m_SourceModule, string m_MessageId, Object m_Object)
+        {
+            //WriteIn
+            CommonData.HIRATA.MDBCTimeAdjust obj = m_Object as CommonData.HIRATA.MDBCTimeAdjust;
+            BaseAp.SYSTEMTIME time = new BaseAp.SYSTEMTIME();
+            time.wYear = (ushort)obj.PYear;
+            time.wMonth = (ushort)obj.PMon;
+            time.wDay = (ushort)obj.PDay;
+            time.wHour = (ushort)obj.PHour;
+            time.wMinute = (ushort)obj.PMin;
+            time.wSecond = (ushort)obj.PSec;
+            BaseAp.Global.SystemTimeAdjust(obj.PYear, obj.PMon, obj.PDay, obj.PHour, obj.PMin, obj.PSec);
+            //WriteOut
+        }
+        protected void ProcessBcAlarm(FdModule m_SourceModule,string m_MessageId, Object m_Object)
+        {
+            CommonData.HIRATA.MDBCAlarmReportToLGC obj = m_Object as CommonData.HIRATA.MDBCAlarmReportToLGC;
+            LgcModule.EditAlarm(obj.AlarmItem);
+        }
         void ProcessRecipeExist(FdModule m_SourceModule, string m_MessageId, Object m_Object)
         {
-            /*
             //WriteIn
             CommonData.HIRATA.MDBCRecipeExist obj = m_Object as CommonData.HIRATA.MDBCRecipeExist;
-            Port job_port = LgcForm.GetPortById(obj.PPortId);
+            //Port job_port = LgcForm.GetPortById(obj.PPortId);
 
             CommonData.HIRATA.MDBCRecipeExistReply report = new MDBCRecipeExistReply();
             report.PNode = 2;
@@ -600,40 +605,37 @@ namespace LGC
             for (int i = 0; i < obj.cv_Recipes.Count; i++)
             {
                 bool is_exist = true;
-                if (!LgcForm.cv_Recipes.cv_RecipeList.Exists(x => int.Parse(x.cv_Id) == obj.cv_Recipes[i]) && obj.cv_Recipes[i] != 0)
+                if (!lgcBase.cv_Recipes.cv_RecipeList.Exists(x => int.Parse(x.cv_Id) == obj.cv_Recipes[i]) && obj.cv_Recipes[i] != 0)
                 {
                     is_exist = false;
                 }
                 report.cv_RecipesExist.Add(is_exist);
             }
-            SendMmfNotifyObject(typeof(CommonData.HIRATA.MDBCRecipeExistReply).Name, report, KParseObjToXmlPropertyType.Field);
+            triggerLgcEvent(typeof(CommonData.HIRATA.MDBCRecipeExistReply).Name, report);
 
             //WriteOut
-            */
         }
         void ProcessRecipeBodyReq(FdModule m_SourceModule, string m_MessageId, Object m_Object)
         {
-            /*
             //WriteIn
             CommonData.HIRATA.MDBCRecipeBodyQuery obj = m_Object as CommonData.HIRATA.MDBCRecipeBodyQuery;
             int recipe_no = obj.PRecipeId;
-            int index = LgcForm.cv_Recipes.cv_RecipeList.FindIndex(x => int.Parse(x.cv_Id) == recipe_no);
+            int index = lgcBase.cv_Recipes.cv_RecipeList.FindIndex(x => int.Parse(x.cv_Id) == recipe_no);
             if (-1 != index)
             {
-                RecipeItem report_recipe = LgcForm.cv_Recipes.cv_RecipeList[index];
+                RecipeItem report_recipe = lgcBase.cv_Recipes.cv_RecipeList[index];
                 CommonData.HIRATA.MDBCRecipeBodyReport report = new MDBCRecipeBodyReport();
                 report.PAction = RecipeBodyReportType.Query;
                 report.PUnit = 0;
                 report.PRecipe = report_recipe;
                 report.PFlowNo = (int)report_recipe.PFlow;
-                SendMmfNotifyObject(typeof(CommonData.HIRATA.MDBCRecipeBodyReport).Name, report, KParseObjToXmlPropertyType.Field);
+                LGCController.triggerLgcEvent(typeof(CommonData.HIRATA.MDBCRecipeBodyReport).Name, report);
             }
             else
             {
-                LgcForm.ShowMsg("BC Query recipe : " + recipe_no.ToString() + " , not exist !!!", true, false);
+                LgcModule.ShowMsg("BC Query recipe : " + recipe_no.ToString() + " , not exist !!!", true, false);
             }
             //WriteOut
-            */
         }
         void ProcessBcPortCommand(FdModule m_SourceModule, string m_MessageId, Object m_Object)
         {
@@ -864,263 +866,116 @@ namespace LGC
             lgcBase.cv_TimeoutData.PIdleDelayTime = obj.PIdleDelayTime * 1000;
             //WriteOut
         }
-        void ProcessBcTimeAdjust(FdModule m_SourceModule, string m_MessageId, Object m_Object)
-        {
-            //WriteIn
-            CommonData.HIRATA.MDBCTimeAdjust obj = m_Object as CommonData.HIRATA.MDBCTimeAdjust;
-            BaseAp.SYSTEMTIME time = new BaseAp.SYSTEMTIME();
-            time.wYear = (ushort)obj.PYear;
-            time.wMonth = (ushort)obj.PMon;
-            time.wDay = (ushort)obj.PDay;
-            time.wHour = (ushort)obj.PHour;
-            time.wMinute = (ushort)obj.PMin;
-            time.wSecond = (ushort)obj.PSec;
-            BaseAp.Global.SystemTimeAdjust(obj.PYear, obj.PMon, obj.PDay, obj.PHour, obj.PMin, obj.PSec);
-            //WriteOut
+        void ProcessData(FdModule m_SourceModule, string m_MessageId,  Object m_Object)
+        {//MDBCDataRequest
+            CommonData.HIRATA.MDBCDataRequest obj = m_Object as CommonData.HIRATA.MDBCDataRequest;
+            if (m_SourceModule == FdModule.UI)
+            {
+            }
+            else if (m_SourceModule == FdModule.CIM)
+            {
+                if (obj.PResult == Result.NG)
+                {
+                    AlarmItem alarm = new AlarmItem();
+                    alarm.PCode = CommonData.HIRATA.Alarmtable.BcHsDataRequestReplyNG.ToString();
+                    alarm.PLevel = AlarmLevele.Light;
+                    alarm.PMainDescription = "Data Request , BC reply NG";
+                    alarm.PStatus = AlarmStatus.Occur;
+                    alarm.PUnit = 0;
+                    LgcModule.EditAlarm(alarm);
+                }
+                else if (obj.PResult == Result.OK)
+                {
+                    switch (obj.Source.PTarget)
+                    {
+                        case CommonData.HIRATA.ActionTarget.Port:
+                            LgcModule.GetPortById(obj.Source.Id).cv_Data.GlassDataMap[obj.Source.Slot] = obj.GlassData;
+                            LgcModule.GetPortById(obj.Source.Id).cv_Data.GlassDataMap[obj.Source.Slot].PSlotInEq = (uint)obj.Source.Slot;
+                            LgcModule.GetPortById(obj.Source.Id).cv_Data.GlassDataMap[obj.Source.Slot].PHasSensor = true;
+                            LgcModule.GetPortById(obj.Source.Id).cv_Data.GlassDataMap = LgcModule.GetPortById(obj.Source.Id).cv_Data.GlassDataMap;
+                            obj.GlassData = null;
+                            LgcModule.GetPortById(obj.Source.Id).SendDataViaMmf();
+                            obj = null;
+                            break;
+                        case CommonData.HIRATA.ActionTarget.Aligner:
+                            LgcModule.GetAlignerById(obj.Source.Id).cv_Data.GlassDataMap[obj.Source.Slot] = obj.GlassData;
+                            LgcModule.GetAlignerById(obj.Source.Id).cv_Data.GlassDataMap[obj.Source.Slot].PSlotInEq = (uint)obj.Source.Slot;
+                            LgcModule.GetAlignerById(obj.Source.Id).cv_Data.GlassDataMap[obj.Source.Slot].PHasSensor = true;
+                            LgcModule.GetAlignerById(obj.Source.Id).cv_Data.GlassDataMap = LgcModule.GetAlignerById(obj.Source.Id).cv_Data.GlassDataMap;
+                            LgcModule.GetAlignerById(obj.Source.Id).SendDataViaMmf();
+                            obj = null;
+                            break;
+                        case CommonData.HIRATA.ActionTarget.Buffer:
+                            LgcModule.GetBufferById(obj.Source.Id).cv_Data.GlassDataMap[obj.Source.Slot] = obj.GlassData;
+                            LgcModule.GetBufferById(obj.Source.Id).cv_Data.GlassDataMap[obj.Source.Slot].PSlotInEq = (uint)obj.Source.Slot;
+                            LgcModule.GetBufferById(obj.Source.Id).cv_Data.GlassDataMap[obj.Source.Slot].PHasSensor = true;
+                            LgcModule.GetBufferById(obj.Source.Id).cv_Data.GlassDataMap = LgcModule.GetBufferById(obj.Source.Id).cv_Data.GlassDataMap;
+                            LgcModule.GetBufferById(obj.Source.Id).SendDataViaMmf();
+                            obj = null;
+                            break;
+                        case CommonData.HIRATA.ActionTarget.Robot:
+                            LgcModule.GetRobotById(obj.Source.Id).cv_Data.GlassDataMap[obj.Source.Slot] = obj.GlassData;
+                            LgcModule.GetRobotById(obj.Source.Id).cv_Data.GlassDataMap[obj.Source.Slot].PSlotInEq = (uint)obj.Source.Slot;
+                            LgcModule.GetRobotById(obj.Source.Id).cv_Data.GlassDataMap[obj.Source.Slot].PHasSensor = true;
+                            LgcModule.GetRobotById(obj.Source.Id).cv_Data.GlassDataMap = LgcModule.GetRobotById(obj.Source.Id).cv_Data.GlassDataMap;
+                            LgcModule.GetRobotById(obj.Source.Id).SendDataViaMmf();
+                            obj = null;
+                            break;
+                    };
+                    LgcModule.ShowMsg("Data Request Successful. Please re-open data screen to check.", false, false);
+                }
+            }
         }
         #endregion
 
+        #region Process send CIM msg
+        public void SendBcOcrReport(GlassData m_Data , string m_OcrString)
+        {
+            MDBCOcrReadReport obj = new MDBCOcrReadReport();
+            obj.PGlass = m_Data;
+            obj.PMatch = true;
+            if(m_Data.POcrResult != OCRResult.OK)
+            {
+                obj.PMatch = false;
+            }
+            obj.POcrMode = lgcBase.PSystemData.POcrMode1;
+            obj.PReadFromOCR = m_OcrString;
+            triggerLgcEvent(typeof(CommonData.HIRATA.MDBCOcrReadReport).Name, obj);
+        }
+        public void SendBcLastSubstrateReport(GlassData m_Data , int m_Port, int m_Slot)
+        {
+            MDBCLastProcessStartReport obj = new MDBCLastProcessStartReport();
+            obj.PGlass = m_Data;
+            obj.PPortNo = m_Port;
+            obj.PSlotNo = m_Slot;
+            triggerLgcEvent(typeof(CommonData.HIRATA.MDBCLastProcessStartReport).Name, obj);
+        }
+        public void SendBcTreansferReport(DataFlowAction m_Action , GlassData m_Data , int m_Port = 0 , int m_Slot=0)
+        {
+            CommonData.HIRATA.MDBCWorkTransferReport obj = new MDBCWorkTransferReport();
+            obj.PAction = m_Action;
+            obj.PGlassData = m_Data;
+            obj.PPortNo = m_Port;
+            obj.PSlotNo = m_Slot;
+            obj.PUnitNo = 0;
+            obj.PType = MmfEventClientEventType.etNotify;
+            triggerLgcEvent(typeof(CommonData.HIRATA.MDBCWorkTransferReport).Name, obj);
+        }
+        public void SendWorkDataUpdateReport(GlassData m_Data)
+        {
+            CommonData.HIRATA.MDBCWorkDataUpdateReport report_bc = new MDBCWorkDataUpdateReport();
+            report_bc.PGlass = m_Data;
+            triggerLgcEvent(typeof(CommonData.HIRATA.MDBCWorkDataUpdateReport).Name, report_bc);
+        }
+
+
+
+
+        #endregion
+
+
         #region AssignProcessFunctions
 
-        void ProcessPortData(FdModule m_SourceModule, string m_MessageId,Object m_Object)
-        {
-            try
-            {
-                WriteLog(CommonData.HIRATA.LogLevelType.TimerFunction, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
-                string log = "";
-                if (m_SourceModule == FdModule.UI)
-                {
-                    log = "[Recv Port data form UI]\n";
-                    CommonData.HIRATA.PortData obj = m_Object as CommonData.HIRATA.PortData;
-                    CommonData.HIRATA.PortData tmp = LgcModule.cv_PortContainer[(int)obj.PId].cv_Data;
-                    tmp.GlassDataMap = tmp.GlassDataMap;
-                }
-                else if (m_SourceModule == FdModule.CIM)
-                {
-                    log = "[Recv Port data form CIM]\n";
-                    CommonData.HIRATA.PortData obj = m_Object as CommonData.HIRATA.PortData;
-                    Port job_port = LgcModule.GetPortById((int)obj.PId);
-                    if (job_port != null)
-                    {
-                        log += job_port.cv_Data.GetPortStatusStringForLogUse() + "\n";
-                        if (job_port.PLotStatus == LotStatus.MappingEnd)
-                        {
-                            job_port.cv_Data.PWorkCount = obj.PWorkCount;
-                            job_port.cv_Data.PFoupSeq = obj.PFoupSeq;
-                            job_port.cv_Data.PLotId = obj.PLotId;
-                            log += "recv PWorkCount : " + obj.PWorkCount + "\n";
-                            log += "recv PFoupSeq : " + obj.PFoupSeq + "\n";
-                            log += "recv PLotId : " + obj.PLotId + "\n";
-                            Dictionary<int, GlassData> recv_glass = new Dictionary<int, GlassData>();
-                            foreach (GlassData data in obj.cv_GlassDataList)
-                            {
-                                recv_glass[Convert.ToInt16(data.PSlotInEq)] = data;
-                                log += "Recv Slot : " + data.PSlotInEq + "\n";
-                            }
-
-                            bool error = false;
-                            int sum = 0;
-                            for (int i = 1; i <= job_port.cv_SlotCount; i++)
-                            {
-                                if (job_port.cv_Data.GlassDataMap[i].PHasSensor)
-                                {
-                                    if (!recv_glass[i].PHasData)
-                                    {
-                                        LgcModule.ShowMsg("[Foup Data ERROR] : Slot " + i.ToString() + "hasn't data , but has sensor", false, false);
-                                        log += "Data unmatch : Slot " + i.ToString() + "hasn't data , but has sensor\n";
-                                        error = true;
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        recv_glass[i].POcrResult = OCRResult.None;
-                                        recv_glass[i].PPortProductionCategory = job_port
-                                            .cv_Data.PProductionType;
-                                        recv_glass[i].PSourcePort = (uint)job_port.cv_Id;
-                                        if (recv_glass[i].PProductionCategory != ProductCategory.Glass && recv_glass[i].PProductionCategory != ProductCategory.Wafer)
-                                        {
-                                            LgcModule.ShowMsg("[Foup Data ERROR] : BC data  but Production Category errro : " + recv_glass[i].PProductionCategory.ToString(), false, false);
-                                            log += "BC data  but Production Category errro : Slot : " + i.ToString() + " ," + recv_glass[i].PProductionCategory.ToString() + "\n";
-                                            error = true;
-                                            break;
-                                        }
-                                        sum++;
-                                    }
-                                }
-                                else
-                                {
-                                    if (recv_glass[i].PHasData)
-                                    {
-                                        LgcModule.ShowMsg("[Foup Data ERROR] : Slot " + i.ToString() + "hasn't sensor , but has data", false, false);
-                                        log += "Slot " + i.ToString() + "hasn't sensor , but has data\n";
-                                        error = true;
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if (!error)
-                            {
-                                lgcBase.cv_GlassCountData.PHistoryCount += sum;
-                            }
-                            else
-                            {
-                                AlarmItem alarm = new AlarmItem();
-                                alarm.PCode = Alarmtable.BcFoupDataError.ToString();
-                                alarm.PLevel = AlarmLevele.Light;
-                                alarm.PMainDescription = "Bc Foup Data Error";
-                                alarm.PStatus = AlarmStatus.Occur;
-                                LgcModule.EditAlarm(alarm);
-                                job_port.cv_Data.cv_IsWaitCancel = true;
-                                return;
-                            }
-                            //check every slot recipe is the same for node 2.
-                            int tmp_recipe = -1;
-                            for (int i = 1; i <= job_port.cv_Data.cv_SlotCount; i++)
-                            {
-                                if (job_port.cv_Data.GlassDataMap[i].PHasSensor && job_port.cv_Data.GlassDataMap[i].PProcessFlag == ProcessFlag.Need)
-                                {
-                                    int node = job_port.cv_Data.GlassDataMap[i].cv_Nods.FindIndex(x => x.cv_NodeId == 2);
-                                    GlassDataNodeItem item = job_port.cv_Data.GlassDataMap[i].cv_Nods[node];
-                                    if(tmp_recipe == -1)
-                                    {
-                                        tmp_recipe = item.cv_Recipe;
-                                    }
-                                    else
-                                    {
-                                        if(tmp_recipe != item.cv_Recipe)
-                                        {
-                                            log += "Slot " + i.ToString() + ". Recipe No. not the same\n";
-                                            error = true;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            if (error)
-                            {
-                                AlarmItem alarm = new AlarmItem();
-                                alarm.PCode = Alarmtable.FoupDataContainsOverOneRecipe.ToString();
-                                alarm.PLevel = AlarmLevele.Light;
-                                alarm.PMainDescription = "Foup Data Contains Over One Recipe";
-                                alarm.PStatus = AlarmStatus.Occur;
-                                LgcModule.EditAlarm(alarm);
-                                LgcModule.ShowMsg(alarm.PMainDescription, false, false);
-                                job_port.cv_Data.cv_IsWaitCancel = true;
-                                return;
-                            }
-
-                            bool need_change_recipe = false;
-                            int want_change_recipe = -1;
-                            log += "change recipe : " + tmp_recipe + " Cur recipe : " + lgcBase.cv_Recipes.PCurRecipeId + "\n";
-                            if (tmp_recipe != Convert.ToInt32(lgcBase.cv_Recipes.PCurRecipeId))
-                            {
-                                need_change_recipe = true;
-                                want_change_recipe = tmp_recipe;
-                                bool can_change_recipe = true;
-                                Robot rb = LgcModule.GetRobotById(1);
-                                Robot rb2 = LgcModule.GetRobotById(2);
-                                Aligner aligner = LgcModule.GetAlignerById(1);
-                                Aligner aligner2 = LgcModule.GetAlignerById(2);
-                                Buffer buffer = LgcModule.GetBufferById(1);
-                                Buffer buffer2 = LgcModule.GetBufferById(2);
-                                for (int j = 1; j <= CommonData.HIRATA.CommonStaticData.g_PortNumber; j++)
-                                {
-                                    if (j == job_port.cv_Data.PId) continue;
-                                    Port port = LgcModule.GetPortById(j);
-                                    log += "port : " + port.cv_Data.PId + " status : " + port.PPortStatus + " foup status : " + port.PLotStatus + "\n";
-                                    if (port.PPortStatus != PortStaus.LDRQ && port.PPortStatus != PortStaus.UDCM && port.PPortStatus != PortStaus.UDRQ &&
-                                        port.cv_Data.PPortMode != PortMode.Unloader)
-                                    {
-                                        if (port.IsHasAnyDataAndSensor())
-                                        {
-                                            can_change_recipe = false;
-                                            string tmp3 = "Port : " + port.cv_Data.PId + " has data or sensor set can_change_recipe false\n";
-                                            LgcModule.ShowMsg(tmp3, true, false);
-                                            log += tmp3;
-                                            break;
-                                        }
-                                    }
-                                }
-                                if (can_change_recipe)
-                                {
-                                    if (rb.IsBusy || aligner.IsHasAnyDataAndSensor() || buffer.IsHasAnyDataAndSensor() || rb.IsHasAnyDataAndSensor() ||
-                                        rb2.IsBusy || aligner2.IsHasAnyDataAndSensor() || buffer2.IsHasAnyDataAndSensor() || rb2.IsHasAnyDataAndSensor() 
-                                        )
-                                    {
-                                        can_change_recipe = false;
-                                        string tmp4 = "Robot busy : " + rb.IsBusy + "\n";
-                                        tmp4 += "Robot busy : " + rb.IsBusy + "\n";
-                                        tmp4 += "aligner IsHasAnyDataAndSensor : " + aligner.IsHasAnyDataAndSensor() + "\n";
-                                        tmp4 += "buffer IsHasAnyDataAndSensor : " + buffer.IsHasAnyDataAndSensor() + "\n";
-                                        tmp4 += "rb IsHasAnyDataAndSensor : " + rb.IsHasAnyDataAndSensor() + "\n";
-                                        tmp4 += "set can_change_recipe false\n";
-                                        LgcModule.ShowMsg(tmp4, true, false);
-                                        log += tmp4;
-                                    }
-                                }
-                                if (!can_change_recipe)
-                                {
-                                    AlarmItem alarm = new AlarmItem();
-                                    alarm.PCode = Alarmtable.BcDataDownLoadRecipeERROR.ToString();
-                                    alarm.PLevel = AlarmLevele.Light;
-                                    alarm.PMainDescription = "Bc DataDownLoad Recipe ERROR";
-                                    alarm.PSubDescription = "Main S/W has substrate data or robot is busy.";
-                                    alarm.PStatus = AlarmStatus.Occur;
-                                    LgcModule.EditAlarm(alarm);
-                                    LgcModule.ShowMsg("Data download : Recipe unmatch : Cur is " + lgcBase.cv_Recipes.PCurRecipeId.ToString() +
-                                        " Recv : " + tmp_recipe.ToString(), true, false);
-                                    job_port.cv_Data.cv_IsWaitCancel = true;
-                                    error = true;
-                                }
-                            }
-                            if (!error)
-                            {
-                                if (need_change_recipe)
-                                {
-                                    if (lgcBase.cv_Recipes.IsRecipeExist(want_change_recipe.ToString()))
-                                    {
-                                        lgcBase.cv_Recipes.SetCurRecipe(want_change_recipe.ToString());
-                                        job_port.cv_Data.PCurPPID = LgcModule.FindHightestPriorityPPID(job_port.cv_Id);
-                                        job_port.PLotStatus = LotStatus.WaitReserve;
-                                        log += "Set Port : " + job_port.cv_Id + " WaitReserve\n";
-                                    }
-                                    else
-                                    {
-                                        AlarmItem alarm = new AlarmItem();
-                                        alarm.PCode = Alarmtable.FoupDataRecipeEFEMNotHas.ToString();
-                                        alarm.PLevel = AlarmLevele.Light;
-                                        alarm.PMainDescription = "Foup Data Recipe EFEM Not Has";
-                                        alarm.PStatus = AlarmStatus.Occur;
-                                        LgcModule.EditAlarm(alarm);
-                                        LgcModule.ShowMsg("Data download : Recipe unmatch : Cur is " + lgcBase.cv_Recipes.PCurRecipeId.ToString(), false, false);
-                                        job_port.cv_Data.cv_IsWaitCancel = true;
-                                        error = true;
-                                    }
-                                }
-                                else
-                                {
-                                    job_port.cv_Data.PCurPPID = LgcModule.FindHightestPriorityPPID(job_port.cv_Id);
-                                    job_port.PLotStatus = LotStatus.WaitReserve;
-                                    log += "Set Port : " + job_port.cv_Id + " WaitReserve\n";
-                                }
-                            }
-                        }
-                        else
-                        {
-                            LgcModule.ShowMsg("Recv BC Foup Data Download , But Port Status not in Mapping End", true, false);
-                            log += "Recv BC Foup Data Download , But Port Status not in Mapping End\n";
-                        }
-                    }
-                }
-                WriteLog(LogLevelType.Detail, log);
-                WriteLog(CommonData.HIRATA.LogLevelType.TimerFunction, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
-            }
-            catch (Exception e)
-            {
-                WriteLog(LogLevelType.Error, e.StackTrace.ToString());
-            }
-        }
         void ProcessEqData(FdModule m_SourceModule, int m_Type, string m_MessageId, string m_RequestNotifyMessageId, uint m_Ticket, Object m_Object)
         {
             /*
@@ -1410,66 +1265,6 @@ namespace LGC
             //WriteOut
             */
         }
-        void ProcessData(FdModule m_SourceModule, string m_MessageId,  Object m_Object)
-        {//MDBCDataRequest
-            CommonData.HIRATA.MDBCDataRequest obj = m_Object as CommonData.HIRATA.MDBCDataRequest;
-            if (m_SourceModule == FdModule.UI)
-            {
-            }
-            else if (m_SourceModule == FdModule.CIM)
-            {
-                if (obj.PResult == Result.NG)
-                {
-                    AlarmItem alarm = new AlarmItem();
-                    alarm.PCode = CommonData.HIRATA.Alarmtable.BcHsDataRequestReplyNG.ToString();
-                    alarm.PLevel = AlarmLevele.Light;
-                    alarm.PMainDescription = "Data Request , BC reply NG";
-                    alarm.PStatus = AlarmStatus.Occur;
-                    alarm.PUnit = 0;
-                    LgcModule.EditAlarm(alarm);
-                }
-                else if (obj.PResult == Result.OK)
-                {
-                    switch (obj.Source.PTarget)
-                    {
-                        case CommonData.HIRATA.ActionTarget.Port:
-                            LgcModule.GetPortById(obj.Source.Id).cv_Data.GlassDataMap[obj.Source.Slot] = obj.GlassData;
-                            LgcModule.GetPortById(obj.Source.Id).cv_Data.GlassDataMap[obj.Source.Slot].PSlotInEq = (uint)obj.Source.Slot;
-                            LgcModule.GetPortById(obj.Source.Id).cv_Data.GlassDataMap[obj.Source.Slot].PHasSensor = true;
-                            LgcModule.GetPortById(obj.Source.Id).cv_Data.GlassDataMap = LgcModule.GetPortById(obj.Source.Id).cv_Data.GlassDataMap;
-                            obj.GlassData = null;
-                            LgcModule.GetPortById(obj.Source.Id).SendDataViaMmf();
-                            obj = null;
-                            break;
-                        case CommonData.HIRATA.ActionTarget.Aligner:
-                            LgcModule.GetAlignerById(obj.Source.Id).cv_Data.GlassDataMap[obj.Source.Slot] = obj.GlassData;
-                            LgcModule.GetAlignerById(obj.Source.Id).cv_Data.GlassDataMap[obj.Source.Slot].PSlotInEq = (uint)obj.Source.Slot;
-                            LgcModule.GetAlignerById(obj.Source.Id).cv_Data.GlassDataMap[obj.Source.Slot].PHasSensor = true;
-                            LgcModule.GetAlignerById(obj.Source.Id).cv_Data.GlassDataMap = LgcModule.GetAlignerById(obj.Source.Id).cv_Data.GlassDataMap;
-                            LgcModule.GetAlignerById(obj.Source.Id).SendDataViaMmf();
-                            obj = null;
-                            break;
-                        case CommonData.HIRATA.ActionTarget.Buffer:
-                            LgcModule.GetBufferById(obj.Source.Id).cv_Data.GlassDataMap[obj.Source.Slot] = obj.GlassData;
-                            LgcModule.GetBufferById(obj.Source.Id).cv_Data.GlassDataMap[obj.Source.Slot].PSlotInEq = (uint)obj.Source.Slot;
-                            LgcModule.GetBufferById(obj.Source.Id).cv_Data.GlassDataMap[obj.Source.Slot].PHasSensor = true;
-                            LgcModule.GetBufferById(obj.Source.Id).cv_Data.GlassDataMap = LgcModule.GetBufferById(obj.Source.Id).cv_Data.GlassDataMap;
-                            LgcModule.GetBufferById(obj.Source.Id).SendDataViaMmf();
-                            obj = null;
-                            break;
-                        case CommonData.HIRATA.ActionTarget.Robot:
-                            LgcModule.GetRobotById(obj.Source.Id).cv_Data.GlassDataMap[obj.Source.Slot] = obj.GlassData;
-                            LgcModule.GetRobotById(obj.Source.Id).cv_Data.GlassDataMap[obj.Source.Slot].PSlotInEq = (uint)obj.Source.Slot;
-                            LgcModule.GetRobotById(obj.Source.Id).cv_Data.GlassDataMap[obj.Source.Slot].PHasSensor = true;
-                            LgcModule.GetRobotById(obj.Source.Id).cv_Data.GlassDataMap = LgcModule.GetRobotById(obj.Source.Id).cv_Data.GlassDataMap;
-                            LgcModule.GetRobotById(obj.Source.Id).SendDataViaMmf();
-                            obj = null;
-                            break;
-                    };
-                    LgcModule.ShowMsg("Data Request Successful. Please re-open data screen to check.", false, false);
-                }
-            }
-        }
 
         #endregion
 
@@ -1747,44 +1542,6 @@ namespace LGC
         }
 
         #region ok
-        public void SendBcOcrReport(GlassData m_Data , string m_OcrString)
-        {
-            MDBCOcrReadReport obj = new MDBCOcrReadReport();
-            obj.PGlass = m_Data;
-            obj.PMatch = true;
-            if(m_Data.POcrResult != OCRResult.OK)
-            {
-                obj.PMatch = false;
-            }
-            obj.POcrMode = lgcBase.PSystemData.POcrMode;
-            obj.PReadFromOCR = m_OcrString;
-            triggerLgcEvent(typeof(CommonData.HIRATA.MDBCOcrReadReport).Name, obj);
-        }
-        public void SendBcLastSubstrateReport(GlassData m_Data , int m_Port, int m_Slot)
-        {
-            MDBCLastProcessStartReport obj = new MDBCLastProcessStartReport();
-            obj.PGlass = m_Data;
-            obj.PPortNo = m_Port;
-            obj.PSlotNo = m_Slot;
-            triggerLgcEvent(typeof(CommonData.HIRATA.MDBCLastProcessStartReport).Name, obj);
-        }
-        public void SendBcTreansferReport(DataFlowAction m_Action , GlassData m_Data , int m_Port = 0 , int m_Slot=0)
-        {
-            CommonData.HIRATA.MDBCWorkTransferReport obj = new MDBCWorkTransferReport();
-            obj.PAction = m_Action;
-            obj.PGlassData = m_Data;
-            obj.PPortNo = m_Port;
-            obj.PSlotNo = m_Slot;
-            obj.PUnitNo = 0;
-            obj.PType = MmfEventClientEventType.etNotify;
-            triggerLgcEvent(typeof(CommonData.HIRATA.MDBCWorkTransferReport).Name, obj);
-        }
-        public void SendWorkDataUpdateReport(GlassData m_Data)
-        {
-            CommonData.HIRATA.MDBCWorkDataUpdateReport report_bc = new MDBCWorkDataUpdateReport();
-            report_bc.PGlass = m_Data;
-            triggerLgcEvent(typeof(CommonData.HIRATA.MDBCWorkDataUpdateReport).Name, report_bc);
-        }
         public void SendShowOcrDecide()
         {
             MDShowOcrDecide obj = new MDShowOcrDecide();
@@ -1834,6 +1591,7 @@ namespace LGC
             return result;
         }
         #endregion
+
         #region TimeoutData
         public virtual void SendTimeoutData()
         {
@@ -1847,6 +1605,14 @@ namespace LGC
         {
             WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
             triggerLgcEvent(typeof(GlassCountData).Name, lgcBase.cv_GlassCountData);
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
+        }
+        #endregion
+        #region system data
+        public virtual void SendSystemData()
+        {
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
+            triggerLgcEvent(typeof(SystemData).Name, lgcBase.PSystemData);
             WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
         }
         #endregion

@@ -9,11 +9,12 @@ namespace CommonData.HIRATA
         NormalFunctionInOut = 8, TimerFunction = 9, StateMachine = 10, RawData = 11, };
 
     public enum SamekLogLevelType { Error = 1, Warning = 1, UI = 1, MsgName = 2, MsgArg = 3, General = 3, Detail = 4, NormalFunctionInOut = 4, TimerFunction = 5, StateMachine = 5, RawData = 6 };
-    public enum OperationMode { Manual , Auto , };
+    public enum OperationMode {None, Manual , Auto , WaitManual };
     public enum ProcessFlag {  NotNeed , Need , };
     //public enum UserPermission { None, OP = 1, Engineer, Root };
 //    public enum AlarmLevele { None, Light, Serious };
 //    public enum AlarmStatus { Occur=1, Clean=0 };
+    public enum SideGeoupEnable { None , Enable = 1 , Disable = 2};
     public enum EquipmentStatus { None , Run = 2 , Down =3 , Idle = 1 , PM =4 , WaitIdle = 5, Stop=6};
     public enum EquipmentInlineMode { None = - 1 ,WaitRemote , Remote = 1 , WaitLocal , Local ,  Offline };
     public enum EquipmentSubStatus {None, Warning = 1 , Stop, Init, Standby };

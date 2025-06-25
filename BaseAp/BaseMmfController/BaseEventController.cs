@@ -42,16 +42,37 @@ namespace BaseAp
         }
         public virtual void addSubScription()
         {
-            subscriptionMap.Add(typeof(CommonData.HIRATA.MDLgcStart).Name, ProcessLgcStart);  //from UI do initial action.
-            subscriptionMap.Add(typeof(CommonData.HIRATA.MDCimStart).Name, ProcessCimStart);  //from UI do initial action.
-            subscriptionMap.Add(typeof(CommonData.HIRATA.MDUiStart).Name, ProcessUiStart);  //from UI do initial action.
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDLgcStart).Name, ProcessLgcStart);
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDCimStart).Name, ProcessCimStart);
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDUiStart).Name, ProcessUiStart);
             if (cv_module == FdModule.UI)
             {
-                subscriptionMap.Add(typeof(CommonData.HIRATA.SystemData).Name, ProcessMmfEvent);  //from UI do initial action.
+                subscriptionMap.Add(typeof(CommonData.HIRATA.RecipeData).Name, ProcessMmfEvent);
+                subscriptionMap.Add(typeof(CommonData.HIRATA.AlarmData).Name, ProcessMmfEvent);
+                subscriptionMap.Add(typeof(CommonData.HIRATA.SystemData).Name, ProcessMmfEvent);
+                subscriptionMap.Add(typeof(CommonData.HIRATA.TimeOutData).Name, ProcessMmfEvent);
+                subscriptionMap.Add(typeof(CommonData.HIRATA.GlassCountData).Name, ProcessMmfEvent);
+                subscriptionMap.Add(typeof(CommonData.HIRATA.PortData).Name, ProcessMmfEvent);
+                subscriptionMap.Add(typeof(CommonData.HIRATA.RobotData).Name, ProcessMmfEvent);
+                subscriptionMap.Add(typeof(CommonData.HIRATA.BufferData).Name, ProcessMmfEvent);
+                subscriptionMap.Add(typeof(CommonData.HIRATA.AlignerData).Name, ProcessMmfEvent);
+                subscriptionMap.Add(typeof(CommonData.HIRATA.EqData).Name, ProcessMmfEvent);
+                subscriptionMap.Add(typeof(CommonData.HIRATA.MDAlarmAction).Name, ProcessMmfEvent);
             }
             else
             {
-                subscriptionMap.Add(typeof(CommonData.HIRATA.SystemData).Name, ProcessSystemData);  //from UI do initial action.
+                subscriptionMap.Add(typeof(CommonData.HIRATA.RecipeData).Name, ProcessRecipeChange);
+                subscriptionMap.Add(typeof(CommonData.HIRATA.AlarmData).Name, ProcessAlarmChange);
+                subscriptionMap.Add(typeof(CommonData.HIRATA.SystemData).Name, ProcessSystemData);
+                subscriptionMap.Add(typeof(CommonData.HIRATA.TimeOutData).Name, ProcessTimeoutData);
+                subscriptionMap.Add(typeof(CommonData.HIRATA.GlassCountData).Name, ProcessGlassCountData);
+
+                subscriptionMap.Add(typeof(CommonData.HIRATA.PortData).Name, ProcessPortData);
+                subscriptionMap.Add(typeof(CommonData.HIRATA.RobotData).Name, ProcessRobotData);
+                subscriptionMap.Add(typeof(CommonData.HIRATA.BufferData).Name, ProcessBufferData);
+                subscriptionMap.Add(typeof(CommonData.HIRATA.AlignerData).Name, ProcessAlignerData);
+                subscriptionMap.Add(typeof(CommonData.HIRATA.EqData).Name, ProcessEqData);
+                subscriptionMap.Add(typeof(CommonData.HIRATA.MDAlarmAction).Name, ProcessAlarmAction);
             }
         }
 
@@ -127,6 +148,96 @@ namespace BaseAp
         }
         #endregion
 
+        #region base recipe , alarm , system , timeout , glass count.
+        protected virtual void ProcessRecipeChange(FdModule m_SourceModule, string m_MessageId, Object m_Object )
+        {
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
+            string log = "";
+            log += "Current Recipe : " + lgcBase.cv_Recipes.PCurRecipeId + Environment.NewLine;
+            log += "Recipe list : " + Environment.NewLine;
+            for (int i = 0; i < lgcBase.cv_Recipes.cv_RecipeList.Count; i++)
+            {
+                log += "Id : " + lgcBase.cv_Recipes.cv_RecipeList[i].PId;
+                log += ". Flow : " + lgcBase.cv_Recipes.cv_RecipeList[i].PFlow.ToString() + Environment.NewLine;
+            }
+            if (!string.IsNullOrEmpty(log))
+            {
+                WriteLog(LogLevelType.Detail, log);
+            }
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
+        }
+
+        protected virtual void ProcessAlarmChange(FdModule m_SourceModule, string m_MessageId, Object m_Object)
+        {
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
+            /*
+            CommonData.HIRATA.AlarmData obj = m_Object as CommonData.HIRATA.AlarmData;
+            BaseForm.cv_Alarms.Clone(obj);
+            */
+            string log = "";
+            log += "Alarm list : " + Environment.NewLine;
+            for (int i = 0; i < lgcBase.cv_Alarms.cv_AlarmList.Count; i++)
+            {
+                log += "Code : " + lgcBase.cv_Alarms.cv_AlarmList[i].PCode;
+                log += "Code : " + lgcBase.cv_Alarms.cv_AlarmList[i].PCode;
+                log += ". Level : " + lgcBase.cv_Alarms.cv_AlarmList[i].PLevel.ToString();
+                log += ". Time : " + lgcBase.cv_Alarms.cv_AlarmList[i].PTime.ToString() + Environment.NewLine;
+            }
+            if (!string.IsNullOrEmpty(log))
+            {
+                WriteLog(LogLevelType.Detail, log);
+            }
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
+        }
+
+        protected virtual void ProcessSystemData(FdModule m_SourceModule, string m_MessageId, Object m_Object)
+        {
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
+            /*
+            SystemData obj = m_Object as SystemData;
+            BaseForm.PSystemData.Clone(obj);
+            */
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
+        }
+
+        protected virtual void ProcessTimeoutData(FdModule m_SourceModule, string m_MessageId, Object m_Object)
+        {
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
+            /*
+            TimeOutData obj = m_Object as TimeOutData;
+            BaseForm.cv_TimeoutData.Clone(obj);
+            */
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
+        }
+
+        protected virtual void ProcessGlassCountData(FdModule m_SourceModule, string m_MessageId, Object m_Object)
+        {
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
+            /*
+            GlassCountData obj = m_Object as GlassCountData;
+            BaseForm.cv_GlassCountData.Clone(obj);
+            */
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
+        }
+        #endregion
+
+        #region process robot , port , aligner , buffer , eq data
+        protected virtual void ProcessPortData(FdModule m_SourceModule, string m_MessageId, Object m_Object)
+        {
+        }
+        protected virtual void ProcessRobotData(FdModule m_SourceModule, string m_MessageId, Object m_Object)
+        {
+        }
+        protected virtual void ProcessBufferData(FdModule m_SourceModule, string m_MessageId, Object m_Object)
+        {
+        }
+        protected virtual void ProcessAlignerData(FdModule m_SourceModule, string m_MessageId, Object m_Object)
+        {
+        }
+        protected virtual void ProcessEqData(FdModule m_SourceModule, string m_MessageId, Object m_Object)
+        {
+        }
+        #endregion
 
 
         #region relative log function
@@ -228,28 +339,6 @@ namespace BaseAp
             WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
             WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
         }
-        protected virtual void ProcessAlarmChange(FdModule m_SourceModule, string m_MessageId, Object m_Object)
-        {
-            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
-            /*
-            CommonData.HIRATA.AlarmData obj = m_Object as CommonData.HIRATA.AlarmData;
-            BaseForm.cv_Alarms.Clone(obj);
-            */
-            string log = "";
-            log += "Alarm list : " + Environment.NewLine;
-            for (int i = 0; i < lgcBase.cv_Alarms.cv_AlarmList.Count; i++)
-            {
-                log += "Code : " + lgcBase.cv_Alarms.cv_AlarmList[i].PCode;
-                log += "Code : " + lgcBase.cv_Alarms.cv_AlarmList[i].PCode;
-                log += ". Level : " + lgcBase.cv_Alarms.cv_AlarmList[i].PLevel.ToString();
-                log += ". Time : " + lgcBase.cv_Alarms.cv_AlarmList[i].PTime.ToString() + Environment.NewLine;
-            }
-            if (!string.IsNullOrEmpty(log))
-            {
-                WriteLog(LogLevelType.Detail, log);
-            }
-            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
-        }
         protected virtual void ProcessSetTimeOut(FdModule m_SourceModule, string m_MessageId, Object m_Object)
         {
             WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
@@ -314,7 +403,7 @@ namespace BaseAp
             }
             WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
         }
-        protected virtual void ProcessAlarmAction( Object m_Object)
+        protected virtual void ProcessAlarmAction(FdModule m_SourceModule, string m_MessageId, Object m_Object)
         {
             WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
             MDAlarmAction obj = m_Object as MDAlarmAction;
@@ -325,27 +414,6 @@ namespace BaseAp
                 log += "Code : " + lgcBase.cv_Alarms.cv_AlarmList[i].PCode;
                 log += ". Level : " + lgcBase.cv_Alarms.cv_AlarmList[i].PLevel.ToString();
                 log += ". Time : " + lgcBase.cv_Alarms.cv_AlarmList[i].PTime.ToString() + Environment.NewLine;
-            }
-            if (!string.IsNullOrEmpty(log))
-            {
-                WriteLog(LogLevelType.Detail, log);
-            }
-            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
-        }
-        protected virtual void ProcessRecipeChange(Object m_Object)
-        {
-            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
-            /*
-            RecipeData obj = m_Object as RecipeData;
-            BaseForm.cv_Recipes.Clone(obj);
-            */
-            string log = "";
-            log += "Current Recipe : " + lgcBase.cv_Recipes.PCurRecipeId + Environment.NewLine;
-            log += "Recipe list : " + Environment.NewLine;
-            for (int i = 0; i < lgcBase.cv_Recipes.cv_RecipeList.Count; i++)
-            {
-                log += "Id : " + lgcBase.cv_Recipes.cv_RecipeList[i].PId;
-                log += ". Flow : " + lgcBase.cv_Recipes.cv_RecipeList[i].PFlow.ToString() + Environment.NewLine;
             }
             if (!string.IsNullOrEmpty(log))
             {
@@ -372,24 +440,6 @@ namespace BaseAp
         {
 
         }
-        protected virtual void ProcessSystemData(FdModule module, string messageId, Object obj)
-        {
-            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
-            /*
-            SystemData obj = m_Object as SystemData;
-            BaseForm.PSystemData.Clone(obj);
-            */
-            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
-        }
-        protected virtual void ProcessTimeoutData(Object m_Object)
-        {
-            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
-            /*
-            TimeOutData obj = m_Object as TimeOutData;
-            BaseForm.cv_TimeoutData.Clone(obj);
-            */
-            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
-        }
         protected virtual void ProcessOperatorModeChange(Object m_Object)
         {
             WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
@@ -398,15 +448,6 @@ namespace BaseAp
         protected virtual void ProcessSystemDataReq(Object m_Object)
         {
             WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
-            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
-        }
-        protected virtual void ProcessGlassCountData(Object m_Object)
-        {
-            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
-            /*
-            GlassCountData obj = m_Object as GlassCountData;
-            BaseForm.cv_GlassCountData.Clone(obj);
-            */
             WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
         }
         protected virtual void ProcessGlassCountDataReq(Object m_Object)

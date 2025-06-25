@@ -10,6 +10,7 @@ using CommonData;
 using BaseAp;
 using System.Reflection;
 using System.Diagnostics;
+using CommonData.HIRATA;
 
 namespace LGC
 {
@@ -21,6 +22,7 @@ namespace LGC
             cv_Recipes.PIsAutoSave = true;
             cv_Recipes.LoadFromFile();
             cv_Recipes.SaveToFile();
+            LGCController.triggerLgcEvent(typeof(RecipeData).Name, cv_Recipes);
         }
     }
 }

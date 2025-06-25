@@ -34,7 +34,7 @@ namespace CIM
         public static int STEP_ID_BcIdleDelayCommand = 1;
 
         int cv_Value;
-        int cv_Port = 0x03D;
+        int cv_Port = 0x041;
 
         public TimechartBcIdleDelayCommand(TimechartControllerBase m_TimechartController, int m_TimechartId, Dictionary<string, int> m_VarPortMap)
             : base(m_TimechartController, m_TimechartId, m_VarPortMap)
@@ -61,7 +61,7 @@ namespace CIM
                 if (cv_Value != cv_MemoryIoClient.GetPortValue(cv_Port))
                 {
                     cv_Value = cv_MemoryIoClient.GetPortValue(cv_Port);
-                    int node = (cv_MemoryIoClient.GetPortValue(0x003C) & 0x1F00) >> 8;
+                    int node = (cv_MemoryIoClient.GetPortValue(0x0040) & 0x1F00) >> 8;
                     log += "index change to " + cv_Value.ToString() + " node : " + node.ToString();
                     if (node == 2)
                     {
@@ -94,7 +94,7 @@ namespace CIM
             try
             {
                 int time;
-                time = (cv_MemoryIoClient.GetPortValue(0x03C) & 0x00FF);
+                time = (cv_MemoryIoClient.GetPortValue(0x0040) & 0x00FF);
                 string log = "[Process][BcIdleDelayCommand] : \n";
                 log += "Download Idle delay time : " + time.ToString();
                 CimModule.WriteLog(CommonData.HIRATA.LogLevelType.Detail, log);

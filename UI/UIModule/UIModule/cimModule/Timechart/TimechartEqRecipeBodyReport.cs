@@ -85,19 +85,21 @@ namespace CIM
                 tmp[13] = Convert.ToByte((value & 0xff00) >> 8);
                 log += "Report wafer Vas Degress : " + obj.PRecipe.PWaferVASDegree.ToString() +"\n";
 
-                value = Convert.ToInt32(obj.PRecipe.PWaferIJPDegree * 10);
+                value = Convert.ToInt32(obj.PRecipe.PGlassVASDegree * 10);
                 tmp[14] = Convert.ToByte(value & 0x00ff);
                 tmp[15] = Convert.ToByte((value & 0xff00) >> 8);
-                log += "Report wafer Ijp Degress : " + obj.PRecipe.PWaferIJPDegree.ToString() + "\n";
+                log += "Report wafer Ijp Degress : " + obj.PRecipe.PGlassVASDegree.ToString() + "\n";
 
+                /*
                 value = Convert.ToInt32(obj.PRecipe.PGlassVASDegree * 10);
                 tmp[16] = Convert.ToByte(value & 0x00ff);
                 tmp[17] = Convert.ToByte((value & 0xff00) >> 8);
                 log += "Report glass vas Degress : " + obj.PRecipe.PGlassVASDegree.ToString() + "\n";
+                */
 
                 CimModule.WriteLog(CommonData.HIRATA.LogLevelType.Detail, log);
 
-                cv_MemoryIoClient.SetBinaryLengthData(0x36D0, tmp, 9, false);
+                cv_MemoryIoClient.SetBinaryLengthData(0x454C, tmp, 9, false);
                 cv_Timechart.SetTimeLock(this.cv_TimechartId, STEP_ID_WaitTm, cv_Tm);
                 JumpToStep(cv_TimechartId, STEP_ID_WaitTm);
             }
@@ -111,7 +113,7 @@ namespace CIM
         void OnEnter_WaitTm(int m_StepId)
         {
             CimModule.WriteLog(CommonData.HIRATA.LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
-            uint index = (uint)cv_MemoryIoClient.GetPortValue(0x3801);
+            uint index = (uint)cv_MemoryIoClient.GetPortValue(0x467D);
             if (index == 0xffff)
             {
                 index = 1;
@@ -120,7 +122,7 @@ namespace CIM
             {
                 index += 1;
             }
-            cv_MemoryIoClient.SetPortValue(0x3801, (int)index);
+            cv_MemoryIoClient.SetPortValue(0x467D, (int)index);
             cv_Timechart.SetTimeLock(this.cv_TimechartId, STEP_ID_WaitInterval, cv_IndexDelay);
             CimModule.WriteLog(CommonData.HIRATA.LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
         }

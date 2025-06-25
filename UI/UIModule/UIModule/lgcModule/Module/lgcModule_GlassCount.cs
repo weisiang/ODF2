@@ -22,11 +22,12 @@ namespace LGC
         {
             cv_GlassCountData.SetFilePath(CommonStaticData.g_GlassCountDataPath);
             cv_GlassCountData.PIsAutoSave = false;
+            LGCController.triggerLgcEvent(typeof(GlassCountData).Name, cv_GlassCountData);
         }
         public void ReadGlassCountValueFromPlc()
         {
-            int history = PMio.GetPortValue(0x344A);
-            history += (PMio.GetPortValue(0x344B) << 16);
+            int history = PMio.GetPortValue(0x424A);
+            history += (PMio.GetPortValue(0x424B) << 16);
             cv_GlassCountData.PHistoryCount = history;
         }
     }

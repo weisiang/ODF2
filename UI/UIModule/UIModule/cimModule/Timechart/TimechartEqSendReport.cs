@@ -80,10 +80,10 @@ namespace CIM
                 log += "Report id : " + id + "\n";
                 CimModule.WriteLog(CommonData.HIRATA.LogLevelType.Detail, log);
 
-                cv_MemoryIoClient.SetBinaryLengthData(0x3489, tmp, 13, false);
+                cv_MemoryIoClient.SetBinaryLengthData(0x4289, tmp, 13, false);
 
-                int tmp_slot = cv_MemoryIoClient.GetPortValue(0x3489) & 0xff;
-                string tmp2 = cv_MemoryIoClient.GetBinaryLengthData(0x348C, 10, false);
+                int tmp_slot = cv_MemoryIoClient.GetPortValue(0x4289) & 0xff;
+                string tmp2 = cv_MemoryIoClient.GetBinaryLengthData(0x428C, 10, false);
                 log += "PLC id : " + tmp2 +  " PLC slot : " + tmp_slot;
                 if ((tmp2.Trim() != id.Trim()) || (tmp_slot != obj.PSlotNo))
                 {
@@ -119,7 +119,7 @@ namespace CIM
             CimModule.WriteLog(CommonData.HIRATA.LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
             try
             {
-                uint index = (uint)cv_MemoryIoClient.GetPortValue(0x3496);
+                uint index = (uint)cv_MemoryIoClient.GetPortValue(0x4296);
                 if (index == 0xffff)
                 {
                     index = 1;
@@ -128,7 +128,7 @@ namespace CIM
                 {
                     index += 1;
                 }
-                cv_MemoryIoClient.SetPortValue(0x3496, (int)index);
+                cv_MemoryIoClient.SetPortValue(0x4296, (int)index);
                 cv_Timechart.SetTimeLock(this.cv_TimechartId, STEP_ID_WaitInterval, cv_IndexDelay);
             }
             catch (Exception ex)

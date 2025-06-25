@@ -24,6 +24,7 @@ namespace LGC
             cv_TimeoutData.PIsAutoSave = true;
             cv_TimeoutData.LoadFromFile();
             cv_TimeoutData.SaveToFile();
+            LGCController.triggerLgcEvent(typeof(TimeOutData).Name, cv_TimeoutData);
         }
     }
 }

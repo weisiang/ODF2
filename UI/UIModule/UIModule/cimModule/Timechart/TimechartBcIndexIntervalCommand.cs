@@ -36,7 +36,7 @@ namespace CIM
 
 
         int cv_Value;
-        int cv_Port = 0x006A;
+        int cv_Port = 0x0087;
 
         public TimechartBcIndexIntervalCommand(TimechartControllerBase m_TimechartController, int m_TimechartId, Dictionary<string, int> m_VarPortMap)
             : base(m_TimechartController, m_TimechartId, m_VarPortMap)
@@ -57,7 +57,7 @@ namespace CIM
                 if (cv_Value != cv_MemoryIoClient.GetPortValue(cv_Port))
                 {
                     cv_Value = cv_MemoryIoClient.GetPortValue(cv_Port);
-                    int node = (cv_MemoryIoClient.GetPortValue(0x0069) & 0x1F00) >> 8 ;
+                    int node = (cv_MemoryIoClient.GetPortValue(0x0086) & 0x1F00) >> 8 ;
                     log += "index change to " + cv_Value.ToString() + " node : " + node.ToString();
                     if (node == 2)
                     {
@@ -90,7 +90,7 @@ namespace CIM
             try
             {
                 int interval;
-                interval = (cv_MemoryIoClient.GetPortValue(0x0069) & 0x000F);
+                interval = (cv_MemoryIoClient.GetPortValue(0x0086) & 0x000F);
 
                 string log = "[Process][BcIndexIntervalCommand] : \n";
                 log += "Download Interval time : " + interval.ToString();
