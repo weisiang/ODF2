@@ -10,12 +10,14 @@ using BaseAp;
 namespace LGC
 {
     class Robot : Obj
-    {//RobotComm("192.168.1.1" , 48879);
+    {
+        public bool cv_IsRestartFinished;
         public int cv_WaitRobotSpeed = 0;
         public Queue<TowerCommand> cv_TowerJobQ = new Queue<TowerCommand>();
         public  Queue<bool> cv_BuzzerQ = new Queue<bool>();
         private delegate void DeleProcessCommand(CommandData m_Command);
         private Dictionary<APIEnum.CommandType, DeleProcessCommand> cv_ProcessCommandPtr = new Dictionary<APIEnum.CommandType, DeleProcessCommand>();
+
         private RobotJob cv_CurJob = null;
         public RobotJob CurJob
         {
@@ -33,6 +35,7 @@ namespace LGC
         public Robot(int m_Id, int m_SlotCount)
             : base(m_Id, m_SlotCount)
         {
+            cv_IsRestartFinished = false;
             InitData();
             InitComm();
             InitTimer();
@@ -83,108 +86,55 @@ namespace LGC
         public bool SetRobotTransferAction(CommandData m_Command, RobotJob m_Job)
         {
             bool rtn = false;
-            if (lgcBase.PSystemData.PSystemStatus != EquipmentStatus.Down)
+            if (CanDoTransfer())
             {
                 if (LgcModule.SetRobotTransferAction(m_Command))
                 {
-                    lgcBase.PSystemData.PRobot1Status = EquipmentStatus.Run;
+                    setRobotStatusRun();
                     AddRobotJob(m_Job);
                     rtn = true;
                 }
             }
-            else
-            {
-                rtn = false;
-            }
             return rtn;
         }
-        private void OnGIFTimer()
+        private bool CanDoTransfer()
         {
-            /*
-            if (CurJob != null)
+            bool rtn = false;
+            if ((lgcBase.PSystemData.POperationMode != OperationMode.Auto))
             {
-                if (CurJob.cv_Target == ActionTarget.Eq)
+                rtn = true;
+            }
+            if (rtn)
+            {
+                if (lgcBase.cv_Alarms.IsHasAlarm(this.PSideGroup))
                 {
-                    RobotJob job = CurJob;
-                    if (!job.cv_UseHs) return;
-                    Eq eq = Form1.GetEqById(job.cv_TargetId);
-                    if (job.cv_Action == RobotAction.Put)
+                    rtn = false;
+                }
+                else
+                {
+                    if (IsBusy)
                     {
-                        if (eq.GetTimeChatCurStep(job.cv_TargetSlot) == TimechartNormal.STEP_ID_LoadWaitRbCommand || eq.GetTimeChatCurStep(job.cv_TargetSlot) == TimechartNormal.STEP_ID_ExchangeWaitRbPutCommand)
-                        {
-                            List<string> para = new List<string>();
-                            para.Add(((int)job.cv_PutArm).ToString());
-                            if (job.cv_Target == CommonData.HIRATA.ActionTarget.Eq)
-                            {
-                                para.Add("Stage" + Form1.GetEqById(job.cv_TargetId).cv_Comm.cv_RobotPosition.ToString());
-                            }
-                            else if (job.cv_Target == CommonData.HIRATA.ActionTarget.Port)
-                            {
-                                para.Add("P" + job.cv_TargetId.ToString());
-                            }
-                            else if (job.cv_Target == CommonData.HIRATA.ActionTarget.Buffer)
-                            {
-                                para.Add("Buffer" + job.cv_TargetId.ToString());
-                            }
-                            else if (job.cv_Target == CommonData.HIRATA.ActionTarget.Aligner)
-                            {
-                                para.Add("Aligner" + job.cv_TargetId.ToString());
-                            }
-                            para.Add(job.cv_TargetSlot.ToString());
-                            LGCController.g_Controller.cv_TimechartController.GetTimeChartInstance(eq.cv_Comm.cv_TimeChatId + job.cv_TargetSlot - 1).SetTrigger(eq.cv_Comm.cv_TimeChatId + job.cv_TargetSlot - 1);
-                            CommandData command = new CommandData(APIEnum.CommandType.Robot, APIEnum.RobotCommand.WaferPut.ToString(), APIEnum.CommnadDevice.Robot,
-                                            0, para);
-                        }
-                        else if (eq.GetTimeChatCurStep(job.cv_TargetSlot) == TimechartNormal.STEP_ID_LoadWaitRbFinish || eq.GetTimeChatCurStep(job.cv_TargetSlot) == TimechartNormal.STEP_ID_ExchangeWaitRbPutFinish)
-                        {
-                                LGCController.g_Controller.cv_TimechartController.GetTimeChartInstance(eq.cv_Comm.cv_TimeChatId + job.cv_TargetSlot - 1).SetTrigger(eq.cv_Comm.cv_TimeChatId + job.cv_TargetSlot - 1);
-                        }
-                        else if (eq.GetTimeChatCurStep(job.cv_TargetSlot) == TimechartNormal.STEP_ID_LoadWaitEqCompleteOFF || eq.GetTimeChatCurStep(job.cv_TargetSlot) == TimechartNormal.STEP_ID_ExchangeWaitEqCompleteOFF)
-                        {
-                                LGCController.g_Controller.cv_TimechartController.GetTimeChartInstance(eq.cv_Comm.cv_TimeChatId + job.cv_TargetSlot - 1).SetTrigger(eq.cv_Comm.cv_TimeChatId + job.cv_TargetSlot - 1);
-                                eq.cv_Comm.cv_InJob = false;
-                        }
-                    }
-                    else if (job.cv_Action == RobotAction.Get)
-                    {
-                        if (eq.GetTimeChatCurStep(job.cv_TargetSlot) == TimechartNormal.STEP_ID_UnloadWaitRbCommand || eq.GetTimeChatCurStep(job.cv_TargetSlot) == TimechartNormal.STEP_ID_ExchangeWaitGetRbCommand)
-                        {
-                            List<string> para = new List<string>();
-                            para.Add(((int)job.cv_GetArm).ToString());
-                            if (job.cv_Target == CommonData.HIRATA.ActionTarget.Eq)
-                            {
-                                para.Add("Stage" + Form1.GetEqById(job.cv_TargetId).cv_Comm.cv_RobotPosition.ToString());
-                            }
-                            else if (job.cv_Target == CommonData.HIRATA.ActionTarget.Port)
-                            {
-                                para.Add("P" + job.cv_TargetId.ToString());
-                            }
-                            else if (job.cv_Target == CommonData.HIRATA.ActionTarget.Buffer)
-                            {
-                                para.Add("Buffer" + job.cv_TargetId.ToString());
-                            }
-                            else if (job.cv_Target == CommonData.HIRATA.ActionTarget.Aligner)
-                            {
-                                para.Add("Aligner" + job.cv_TargetId.ToString());
-                            }
-                            para.Add(job.cv_TargetSlot.ToString());
-                            LGCController.g_Controller.cv_TimechartController.GetTimeChartInstance(eq.cv_Comm.cv_TimeChatId + job.cv_TargetSlot - 1).SetTrigger(eq.cv_Comm.cv_TimeChatId + job.cv_TargetSlot - 1);
-                            CommandData command = new CommandData(APIEnum.CommandType.Robot, APIEnum.RobotCommand.WaferGet.ToString(), APIEnum.CommnadDevice.Robot,
-                                            0, para);
-                        }
-                        else if (eq.GetTimeChatCurStep(job.cv_TargetSlot) == TimechartNormal.STEP_ID_UnloadWaitRbFinish || eq.GetTimeChatCurStep(job.cv_TargetSlot) == TimechartNormal.STEP_ID_ExchangeWaitRbGetFinish)
-                        {
-                                LGCController.g_Controller.cv_TimechartController.GetTimeChartInstance(eq.cv_Comm.cv_TimeChatId + job.cv_TargetSlot - 1).SetTrigger(eq.cv_Comm.cv_TimeChatId + job.cv_TargetSlot - 1);
-                        }
-                        else if (eq.GetTimeChatCurStep(job.cv_TargetSlot) == TimechartNormal.STEP_ID_LoadWaitEqCompleteOFF || eq.GetTimeChatCurStep(job.cv_TargetSlot) == TimechartNormal.STEP_ID_ExchangeWaitRbGetFinish)
-                        {
-                                LGCController.g_Controller.cv_TimechartController.GetTimeChartInstance(eq.cv_Comm.cv_TimeChatId + job.cv_TargetSlot - 1).SetTrigger(eq.cv_Comm.cv_TimeChatId + job.cv_TargetSlot - 1);
-                                eq.cv_Comm.cv_InJob = false;
-                        }
+                        rtn = false;
                     }
                 }
             }
-            */
+            return rtn;
+        }
+
+        private void setRobotStatusRun()
+        {
+            if(cv_Id == 1)
+            {
+                lgcBase.PSystemData.PRobot1Status = EquipmentStatus.Run;
+            }
+            else if(cv_Id == 2)
+            {
+                lgcBase.PSystemData.PRobot2Status = EquipmentStatus.Run;
+            }
+        }
+
+        private void OnGIFTimer()
+        {
         }
         protected GlassData this[int index]
         {
@@ -208,87 +158,8 @@ namespace LGC
         }
         public override void SendDataViaMmf()
         {
-            LGCController.triggerLgcEvent(typeof(CommonData.HIRATA.BufferData).Name, this.cv_Data);
             cv_Data.SaveToFile();
-        }
-        public void SetInitilize(enSideGroup m_Side , bool m_IsForce=false )
-        {
-            lgcBase.PSystemData.PIsForceInitial = m_IsForce;
-            if(m_Side == enSideGroup.Left)
-            {
-                lgcBase.PSystemData.PInitaiizeOkLeft = false;
-                lgcBase.PSystemData.PInitaiizingLeft = true;
-
-                LgcModule.GetRobotBySide(enSideGroup.Left).PIsStatus = false;
-                LgcModule.GetRobotBySide(enSideGroup.Left).PIsHome = false;
-                LgcModule.GetRobotBySide(enSideGroup.Left).PIsResetError = false;
-
-                LgcModule.GetAlignerBySide(enSideGroup.Left).PIsStatus = false;
-                LgcModule.GetAlignerBySide(enSideGroup.Left).PIsHome = false;
-                LgcModule.GetAlignerBySide(enSideGroup.Left).PIsResetError = false;
-            }
-            else if(m_Side == enSideGroup.Right)
-            {
-                lgcBase.PSystemData.PInitaiizeOkRight = false;
-                lgcBase.PSystemData.PInitaiizingRight = true;
-                LgcModule.GetRobotBySide(enSideGroup.Right).PIsStatus = false;
-                LgcModule.GetRobotBySide(enSideGroup.Right).PIsHome = false;
-                LgcModule.GetRobotBySide(enSideGroup.Right).PIsResetError = false;
-
-                LgcModule.GetAlignerBySide(enSideGroup.Right).PIsStatus = false;
-                LgcModule.GetAlignerBySide(enSideGroup.Right).PIsHome = false;
-                LgcModule.GetAlignerBySide(enSideGroup.Right).PIsResetError = false;
-            }
-            else if(m_Side == enSideGroup.Both)
-            {
-                lgcBase.PSystemData.PInitaiizeOkRight = false;
-                lgcBase.PSystemData.PInitaiizingRight = true;
-                lgcBase.PSystemData.PInitaiizeOkLeft = false;
-                lgcBase.PSystemData.PInitaiizingLeft = true;
-
-                LgcModule.GetRobotBySide(enSideGroup.Left).PIsStatus = false;
-                LgcModule.GetRobotBySide(enSideGroup.Left).PIsHome = false;
-                LgcModule.GetRobotBySide(enSideGroup.Left).PIsResetError = false;
-                LgcModule.GetRobotBySide(enSideGroup.Right).PIsStatus = false;
-                LgcModule.GetRobotBySide(enSideGroup.Right).PIsHome = false;
-                LgcModule.GetRobotBySide(enSideGroup.Right).PIsResetError = false;
-
-                LgcModule.GetAlignerBySide(enSideGroup.Left).PIsStatus = false;
-                LgcModule.GetAlignerBySide(enSideGroup.Left).PIsHome = false;
-                LgcModule.GetAlignerBySide(enSideGroup.Left).PIsResetError = false;
-                LgcModule.GetAlignerBySide(enSideGroup.Right).PIsStatus = false;
-                LgcModule.GetAlignerBySide(enSideGroup.Right).PIsHome = false;
-                LgcModule.GetAlignerBySide(enSideGroup.Right).PIsResetError = false;
-            }
-
-            CurJob = null;
-            LgcModule.GetBufferById(1).PIsStatus = false;
-
-            for (int i = 1; i <= CommonData.HIRATA.CommonStaticData.g_PortNumber; i++)
-            {
-                Port port = LgcModule.GetPortById(i);
-                if((m_Side == port.PSideGroup) || (m_Side == enSideGroup.Both))
-                {
-                    port.PIsStatus = false;
-                    port.PIsHome = false;
-                    port.PIsResetError = false;
-                    port.PIsRemapping = false;
-                }
-            }
-            if (lgcBase.PSystemData.PapiInlineMode == EquipmentInlineMode.Local)
-            {
-                LgcModule.SetApiCommonCommand(APIEnum.APICommand.Remote);
-            }
-            else if (lgcBase.PSystemData.PapiInlineMode == EquipmentInlineMode.Remote)
-            {
-                foreach(Robot rb in LgcModule.cv_RobotContainer.Values)
-                {
-                    if(LgcModule.isInInitialationSide(rb.PSideGroup))
-                    {
-                        LgcModule.SetErrorReset(APIEnum.CommnadDevice.Robot , rb.cv_Id);
-                    }
-                }
-            }
+            LGCController.triggerLgcEvent(typeof(CommonData.HIRATA.RobotData).Name, this.cv_Data);
         }
 
         #region process robot action complete

@@ -370,25 +370,72 @@ namespace LGC
             CommonData.HIRATA.MDInitial obj = m_Object as CommonData.HIRATA.MDInitial;
             if (lgcBase.PSystemData.PapiConnect && lgcBase.PSystemData.PapiInlineMode != EquipmentInlineMode.None)
             {
+                lgcBase.PSystemData.PIsForceInitial = obj.cv_IsForce;
                 if(obj.PSide == enSideGroup.Left)
                 {
-                    LgcModule.GetRobotBySide(obj.PSide).SetInitilize(obj.PSide, obj.cv_IsForce);
+                    lgcBase.PSystemData.PInitaiizeOkLeft = false;
+                    lgcBase.PSystemData.PInitaiizingLeft = true;
+                    lgcBase.PSystemData.PInitaiizingRight = false;
+                    lgcBase.PSystemData.PInitaiizeOkRight = false;
                     LgcModule.GetAlignerBySide(obj.PSide).cv_Data.PPreAction = AlignerPreAction.None;
+
+                    LgcModule.GetRobotBySide(enSideGroup.Left).PIsStatus = false;
+                    LgcModule.GetRobotBySide(enSideGroup.Left).PIsHome = false;
+                    LgcModule.GetRobotBySide(enSideGroup.Left).PIsResetError = false;
+                    LgcModule.GetRobotBySide(enSideGroup.Left).CurJob = null;
+                    LgcModule.GetAlignerBySide(enSideGroup.Left).PIsStatus = false;
+                    LgcModule.GetAlignerBySide(enSideGroup.Left).PIsHome = false;
+                    LgcModule.GetAlignerBySide(enSideGroup.Left).PIsResetError = false;
+                    LgcModule.GetBufferBySide(enSideGroup.Left).PIsStatus = false;
+                    LgcModule.GetBufferBySide(enSideGroup.Both).PIsStatus = false;
                 }
                 else if(obj.PSide == enSideGroup.Right)
                 {
-                    LgcModule.GetRobotBySide(obj.PSide).SetInitilize(obj.PSide, obj.cv_IsForce);
+                    lgcBase.PSystemData.PInitaiizeOkRight = false;
+                    lgcBase.PSystemData.PInitaiizingRight = true;
+                    lgcBase.PSystemData.PInitaiizeOkLeft = false;
+                    lgcBase.PSystemData.PInitaiizingLeft = false;
+
                     LgcModule.GetAlignerBySide(obj.PSide).cv_Data.PPreAction = AlignerPreAction.None;
+
+                    LgcModule.GetRobotBySide(enSideGroup.Right).PIsStatus = false;
+                    LgcModule.GetRobotBySide(enSideGroup.Right).PIsHome = false;
+                    LgcModule.GetRobotBySide(enSideGroup.Right).PIsResetError = false;
+                    LgcModule.GetRobotBySide(enSideGroup.Right).CurJob = null;
+
+                    LgcModule.GetAlignerBySide(enSideGroup.Right).PIsStatus = false;
+                    LgcModule.GetAlignerBySide(enSideGroup.Right).PIsHome = false;
+                    LgcModule.GetAlignerBySide(enSideGroup.Right).PIsResetError = false;
+                    LgcModule.GetBufferBySide(enSideGroup.Both).PIsStatus = false;
                 }
                 else if(obj.PSide == enSideGroup.Both)
                 {
-                    LgcModule.GetRobotBySide(obj.PSide).SetInitilize(obj.PSide, obj.cv_IsForce);
-                    LgcModule.GetAlignerBySide(obj.PSide).cv_Data.PPreAction = AlignerPreAction.None;
-                    LgcModule.GetRobotBySide(obj.PSide).SetInitilize(obj.PSide, obj.cv_IsForce);
-                    LgcModule.GetAlignerBySide(obj.PSide).cv_Data.PPreAction = AlignerPreAction.None;
+                    LgcModule.GetAlignerBySide(enSideGroup.Left).cv_Data.PPreAction = AlignerPreAction.None;
+                    LgcModule.GetAlignerBySide(enSideGroup.Right).cv_Data.PPreAction = AlignerPreAction.None;
+
+                    lgcBase.PSystemData.PInitaiizeOkRight = false;
+                    lgcBase.PSystemData.PInitaiizingRight = true;
+                    lgcBase.PSystemData.PInitaiizeOkLeft = false;
+                    lgcBase.PSystemData.PInitaiizingLeft = true;
+
+                    LgcModule.GetRobotBySide(enSideGroup.Left).PIsStatus = false;
+                    LgcModule.GetRobotBySide(enSideGroup.Left).PIsHome = false;
+                    LgcModule.GetRobotBySide(enSideGroup.Left).PIsResetError = false;
+                    LgcModule.GetRobotBySide(enSideGroup.Left).CurJob = null;
+                    LgcModule.GetRobotBySide(enSideGroup.Right).PIsStatus = false;
+                    LgcModule.GetRobotBySide(enSideGroup.Right).PIsHome = false;
+                    LgcModule.GetRobotBySide(enSideGroup.Right).PIsResetError = false;
+                    LgcModule.GetRobotBySide(enSideGroup.Right).CurJob = null;
+
+                    LgcModule.GetAlignerBySide(enSideGroup.Left).PIsStatus = false;
+                    LgcModule.GetAlignerBySide(enSideGroup.Left).PIsHome = false;
+                    LgcModule.GetAlignerBySide(enSideGroup.Left).PIsResetError = false;
+                    LgcModule.GetAlignerBySide(enSideGroup.Right).PIsStatus = false;
+                    LgcModule.GetAlignerBySide(enSideGroup.Right).PIsHome = false;
+                    LgcModule.GetAlignerBySide(enSideGroup.Right).PIsResetError = false;
+                    LgcModule.GetBufferBySide(enSideGroup.Left).PIsStatus = false;
+                    LgcModule.GetBufferBySide(enSideGroup.Both).PIsStatus = false;
                 }
-                //LgcModule.GetRobotById(1).SetInitilize(enSideGroup.Left, obj.cv_IsForce);
-                //LgcModule.GetAlignerById(1).cv_Data.PPreAction = AlignerPreAction.None;
                 for (int i = (int)EqGifTimeChartId.TIMECHART_ID_SDP1; i <= (int)EqGifTimeChartId.TIMECHART_ID_VAS2_DOWN; i++)
                 {
                     Eq eq = LgcModule.GetEqById(i);
@@ -397,6 +444,24 @@ namespace LGC
                         cv_TimeChart.RestartTimeChart(i);
                     }
                 }
+                for (int i = 1; i <= CommonData.HIRATA.CommonStaticData.g_PortNumber; i++)
+                {
+                    Port port = LgcModule.GetPortById(i);
+                    if ((obj.PSide == port.PSideGroup) || (obj.PSide == enSideGroup.Both))
+                    {
+                        port.PIsStatus = false;
+                        port.PIsHome = false;
+                        port.PIsResetError = false;
+                        port.PIsRemapping = false;
+                    }
+                }
+
+                LgcModule.cv_ApiInitTimer.Enabled = false;
+                if (!LgcModule.cv_ApiInitTimer.Enabled)
+                {
+                    LgcModule.cv_ApiInitTimer.Enabled = true;
+                }
+                LgcModule.cv_ApiInitSeq = ApiInitSqp.None;
             }
             else
             {

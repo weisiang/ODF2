@@ -9,7 +9,7 @@ namespace CommonData.HIRATA
         NormalFunctionInOut = 8, TimerFunction = 9, StateMachine = 10, RawData = 11, };
 
     public enum SamekLogLevelType { Error = 1, Warning = 1, UI = 1, MsgName = 2, MsgArg = 3, General = 3, Detail = 4, NormalFunctionInOut = 4, TimerFunction = 5, StateMachine = 5, RawData = 6 };
-    public enum OperationMode {None, Manual , Auto , WaitManual };
+    public enum OperationMode {None, Manual , Auto };
     public enum ProcessFlag {  NotNeed , Need , };
     //public enum UserPermission { None, OP = 1, Engineer, Root };
 //    public enum AlarmLevele { None, Light, Serious };

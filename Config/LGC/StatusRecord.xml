@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <System>
     <SystemData>
+        <cv_WaitFfuSpeed>0</cv_WaitFfuSpeed>
         <cv_LeftSideEnable>0</cv_LeftSideEnable>
         <cv_RightSideEnable>0</cv_RightSideEnable>
         <cv_SystemStatus>0</cv_SystemStatus>
@@ -10,11 +11,11 @@
         <cv_apiConnect>False</cv_apiConnect>
         <cv_Robot1Status>3</cv_Robot1Status>
         <cv_Robot1Speed>0</cv_Robot1Speed>
-        <cv_OperationModeLeft>1</cv_OperationModeLeft>
-        <cv_OperationModeRight>1</cv_OperationModeRight>
+        <cv_OperationMode>1</cv_OperationMode>
         <cv_Robot2Status>3</cv_Robot2Status>
         <cv_Robot2Speed>0</cv_Robot2Speed>
-        <cv_OcrMode>1</cv_OcrMode>
+        <cv_OcrMode1>0</cv_OcrMode1>
+        <cv_OcrMode2>0</cv_OcrMode2>
         <cv_IsPlcConnect>False</cv_IsPlcConnect>
         <cv_IsBcAlive>False</cv_IsBcAlive>
         <cv_InitializeOkRight>False</cv_InitializeOkRight>

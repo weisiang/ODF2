@@ -46,7 +46,7 @@ namespace CommonData.HIRATA
             GetIDReaderDegree,
         }
         public enum IoCommand { None, SignalTower = 84, SetFFUVoltage, GetPressureDifference, Buzzer, GetEFEMInterlock, SetEFEMInterlock,
-        GetEQInterlock, ShutterDoor, GetShutterDoorStatus, GetBufferStatus , GetBufferProtrusionSensor , }
+        GetEQInterlock, ShutterDoor, GetShutterDoorStatus, GetBufferStatus1 ,GetBufferStatus2  , GetBufferProtrusionSensor , }
         public enum AlignmentCommand { None, AlignmentClamp = 90, AlignmentUnclamp, DoAlignment, GetStaticElectricityValue, }
         public enum BarcodeCommand { None, BarcodeRead = 94, }
         public enum OcrCommand { None, Read = 95, Connect };
@@ -167,7 +167,6 @@ namespace CommonData.HIRATA
                 PCommandDevice = m_Device;
                 cv_DeviceId = m_DeviceId;
                 cv_ParaList = m_ParaList;
-                cv_ParaList = m_ParaList;
             }
         }
         public CommandData(List<string> m_SplitList)
@@ -176,6 +175,57 @@ namespace CommonData.HIRATA
             if (ParseCommandType(m_SplitList))
             {
                 ParseReply(m_SplitList, this.PCommandType);
+            }
+            else
+            {
+                PCommandType = APIEnum.CommandType.Event;
+                PEventCommand = APIEnum.EventCommand.ERROR;
+                ParseReply(m_SplitList, this.PCommandType);
+                /*
+                if (m_SplitList.Count > 3)
+                {
+                    int return_code = 0;
+                    if (int.TryParse(m_SplitList[0], out return_code))
+                    {
+                        if (return_code != 0)
+                        {
+                            PCommandType = APIEnum.CommandType.Event;
+                            PEventCommand = APIEnum.EventCommand.ERROR;
+                            //this should be EFEM Device Error Event , Error code,Event,EFEM,Error Description.
+                            Match p_match = Regex.Match(m_SplitList[2], @"(P\d)", RegexOptions.IgnoreCase);
+                            Match rb_match = Regex.Match(m_SplitList[2], @"(robot\d)", RegexOptions.IgnoreCase);
+                            Match ali_match = Regex.Match(m_SplitList[2], @"(aligner\d)", RegexOptions.IgnoreCase);
+                            if (p_match.Success)
+                            {
+                                PCommandDevice = APIEnum.CommnadDevice.P;
+                                if (int.TryParse(match.Value.Substring(match.Value.Length - 1), out cv_DeviceId))
+                                {
+                                    cv_ParaList.Clear();
+                                    cv_ParaList.Add(m_SplitList[3]);
+                                }
+                            }
+                            else if (rb_match.Success)
+                            {
+                                PCommandDevice = APIEnum.CommnadDevice.Robot;
+                                if (int.TryParse(match.Value.Substring(match.Value.Length - 1), out cv_DeviceId))
+                                {
+                                    cv_ParaList.Clear();
+                                    cv_ParaList.Add(m_SplitList[3]);
+                                }
+                            }
+                            else if (ali_match.Success)
+                            {
+                                PCommandDevice = APIEnum.CommnadDevice.Aligner;
+                                if (int.TryParse(match.Value.Substring(match.Value.Length - 1), out cv_DeviceId))
+                                {
+                                    cv_ParaList.Clear();
+                                    cv_ParaList.Add(m_SplitList[3]);
+                                }
+                            }
+                        }
+                    }
+                }
+                */
             }
         }
         private bool ParseCommandType(APIEnum.CommandType m_Type, Type m_EnumType, string m_TypeStr)

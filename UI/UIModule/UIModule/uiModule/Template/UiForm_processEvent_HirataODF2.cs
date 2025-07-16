@@ -63,7 +63,7 @@ namespace UI{
 
             //by case
             cv_AppEventMap.Add(typeof(CommonData.HIRATA.MDOnlineRequest).Name, ProcessOnlineReq);
-            cv_AppEventMap.Add(typeof(CommonData.HIRATA.MDOperationModeChangeRight).Name, ProcessOperatorModeChange);
+            cv_AppEventMap.Add(typeof(CommonData.HIRATA.MDOperationModeChange).Name, ProcessOperatorModeChange);
 
             cv_AppEventMap.Add(typeof(CommonData.HIRATA.MDInitial).Name, ProcessInit);
             cv_AppEventMap.Add(typeof(CommonData.HIRATA.MDPopOpidForm).Name, ProcessPopOpidFormReq);
@@ -72,6 +72,7 @@ namespace UI{
 
             //by case 
             cv_AppEventMap.Add(typeof(CommonData.HIRATA.MDBCMsg).Name, ProcessBcMsg);//ok
+            cv_AppEventMap.Add(typeof(CommonData.HIRATA.MDShowMsg).Name, ProcessMsg);
             cv_AppEventMap.Add(typeof(CommonData.HIRATA.MDEfemStatus).Name, ProcessEfemStatus);
             cv_AppEventMap.Add(typeof(CommonData.HIRATA.MDEfemStatusSingle).Name, ProcessEfemStatusSingle);
             cv_AppEventMap.Add(typeof(CommonData.HIRATA.MDTimeChartChange).Name, ProcessTimeChartStepChange);
@@ -112,6 +113,18 @@ namespace UI{
         }
         #endregion
 
+        void ProcessMsg(string m_MessageId, object m_Object)
+        {
+            //WriteIn
+            string log = "";
+            CommonData.HIRATA.MDShowMsg obj = m_Object as CommonData.HIRATA.MDShowMsg;
+            CommonData.HIRATA.Msg msg_item = obj.Msg;
+            //CommonStaticData.PopForm(msg_item.Txt, msg_item.PAutoClean, msg_item.PUserRep, m_Ticket, msg_item.TimeOut);
+            CommonStaticData.PopForm(msg_item.Txt, msg_item.PAutoClean, msg_item.PUserRep, 0, msg_item.TimeOut);
+            WriteLog(LogLevelType.General, log);
+            //WriteOut
+        }
+
         #region process MMF Event
         void ProcessShowOcrDecide(string m_MessageId, object m_Object)
         {
@@ -146,29 +159,32 @@ namespace UI{
             {
                 CommonStaticData.PopForm("Can't change port slot type", true, false);
             }
-            if (type == 0)
+            else
             {
-                if (type == port.cv_Data.PEfemPortType)
+                if (type == 0)
                 {
-                    if (cv_PortContainer.ContainsKey(obj.PPortId))
+                    if (type == port.cv_Data.PEfemPortType)
                     {
-                        port.cv_SlotCount = 25;
-                        port.cv_Data.cv_SlotCount = 25;
-                        (port.cv_Ui as GUI.PortUI).ResetDataVier(25);
-                        (port.cv_Ui as GUI.PortUI).SetSlotButton(true);
+                        if (cv_PortContainer.ContainsKey(obj.PPortId))
+                        {
+                            port.cv_SlotCount = 25;
+                            port.cv_Data.cv_SlotCount = 25;
+                            (port.cv_Ui as GUI.PortUI).ResetDataVier(25);
+                            (port.cv_Ui as GUI.PortUI).SetSlotButton(true);
+                        }
                     }
                 }
-            }
-            else if (type == 4)
-            {
-                if (type == port.cv_Data.PEfemPortType)
+                else if (type == 4)
                 {
-                    if (cv_PortContainer.ContainsKey(obj.PPortId))
+                    if (type == port.cv_Data.PEfemPortType)
                     {
-                        port.cv_SlotCount = 13;
-                        port.cv_Data.cv_SlotCount = 13;
-                        (port.cv_Ui as GUI.PortUI).ResetDataVier(13);
-                        (port.cv_Ui as GUI.PortUI).SetSlotButton(false);
+                        if (cv_PortContainer.ContainsKey(obj.PPortId))
+                        {
+                            port.cv_SlotCount = 13;
+                            port.cv_Data.cv_SlotCount = 13;
+                            (port.cv_Ui as GUI.PortUI).ResetDataVier(13);
+                            (port.cv_Ui as GUI.PortUI).SetSlotButton(false);
+                        }
                     }
                 }
             }
@@ -231,7 +247,7 @@ namespace UI{
             log += "Bc Alive : " + obj.PBcAlive.ToString() + Environment.NewLine;
             log += "System Status : " + obj.PSystemStatus.ToString() + Environment.NewLine;
             log += "PLC connected : " + obj.PPlcConnect.ToString() + Environment.NewLine;
-            log += "Operation Mode : " + obj.POperationModeLeft.ToString() + Environment.NewLine;
+            log += "Operation Mode : " + obj.POperationMode.ToString() + Environment.NewLine;
             log += "api connect  : " + obj.PapiConnect.ToString() + Environment.NewLine;
             log += "Robot version  : " + obj.PapiVersion.ToString() + Environment.NewLine;
             log += "api remote  : " + obj.PapiInlineMode.ToString() + Environment.NewLine;
@@ -319,7 +335,7 @@ namespace UI{
 
 
             //Auto / manual button
-            if (obj.POperationModeLeft == OperationMode.Auto)
+            if (obj.POperationMode == OperationMode.Auto)
             {
                 if (cv_SystemAuto.BackColor != Color.Lime)
                 {
@@ -333,9 +349,9 @@ namespace UI{
                     cv_SystemAuto.BackColor = Color.Gray;
                 }
             }
-            if (obj.POperationModeLeft.ToString() != cv_SystemAuto.Text)
+            if (obj.POperationMode.ToString() != cv_SystemAuto.Text)
             {
-                cv_SystemAuto.Text = obj.POperationModeLeft.ToString().Trim();
+                cv_SystemAuto.Text = obj.POperationMode.ToString().Trim();
             }
 
             if (obj.PRobot1Speed.ToString() != lbl_RobotSpeed.Text.Trim())
@@ -377,8 +393,7 @@ namespace UI{
         void ProcessOperatorModeChange(string m_MessageId, object m_Object)
         {
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
-            CommonData.HIRATA.MDOperationModeChangeRight obj = m_Object as CommonData.HIRATA.MDOperationModeChangeRight;
-            if (obj.PType == MmfEventClientEventType.etReply || obj.PType == MmfEventClientEventType.etNotify)
+            CommonData.HIRATA.MDOperationModeChange obj = m_Object as CommonData.HIRATA.MDOperationModeChange;
             {
                 LockOperationButton(false);
             }

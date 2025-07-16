@@ -21,8 +21,9 @@ namespace CommonData.HIRATA
         //add
         public event SendDataViaMmf OnApiConnected;
         public event SendDataViaMmf OnApiDisconnected;
-        public event SendDataViaMmf OnOperationModeChangeLeft;
-        public event SendDataViaMmf OnOperationModeChangeRight;
+        public event SendDataViaMmf OnOperationModeChange;
+        //public event SendDataViaMmf OnOperationModeChangeLeft;
+        //public event SendDataViaMmf OnOperationModeChangeRight;
         public event SendDataViaMmf OnPlcConnected;
         public event SendDataViaMmf OnPlcDisconnected;
         public event SendDataViaMmf OnBclive;
@@ -216,6 +217,8 @@ namespace CommonData.HIRATA
             }
         }
 
+        public int cv_OperationMode = 0;
+        /*
         public int cv_OperationModeLeft = 0;
         public int cv_OperationModeRight = 0;
         public CommonData.HIRATA.OperationMode POperationModeLeft
@@ -256,31 +259,24 @@ namespace CommonData.HIRATA
                 }
             }
         }
+        */
         public CommonData.HIRATA.OperationMode POperationMode
         {
-            get 
+            get { return (CommonData.HIRATA.OperationMode)cv_OperationMode; }
+            set
             {
-                OperationMode rtn = OperationMode.Manual;
-                if(PLeftSideEnable == SideGeoupEnable.Enable & PRightSideEnable == SideGeoupEnable.Enable)
+                if ((CommonData.HIRATA.OperationMode)cv_OperationMode != value)
                 {
-                    if(POperationModeLeft == OperationMode.Auto && POperationModeRight == OperationMode.Auto)
+                    cv_OperationMode = (int)value;
+                    if (OnOperationModeChange != null)
                     {
-                        rtn = OperationMode.Auto;
+                        OnOperationModeChange();
                     }
-                    else if(POperationModeLeft == OperationMode.Manual && POperationModeRight == OperationMode.Manual)
+                    if (OnSystemDataChange != null)
                     {
-                        rtn = OperationMode.Manual;
+                        OnSystemDataChange();
                     }
                 }
-                else if(PLeftSideEnable == SideGeoupEnable.Enable)
-                {
-                    rtn = POperationModeLeft;
-                }
-                else if(PRightSideEnable == SideGeoupEnable.Enable)
-                {
-                    rtn = POperationModeRight;
-                }
-                return rtn; 
             }
         }
 
@@ -481,6 +477,10 @@ namespace CommonData.HIRATA
                 }
             }
         }
+        public bool PIsInitializeOk
+        {
+            get { return PInitaiizeOkLeft || PInitaiizeOkRight; }
+        }
 
         public bool PIsInInitialation
         {
@@ -622,8 +622,7 @@ namespace CommonData.HIRATA
         {
             cv_SystemStatus = m_OtherData.cv_SystemStatus;
             cv_SystemOnlineMode = m_OtherData.cv_SystemOnlineMode;
-            cv_OperationModeLeft = m_OtherData.cv_OperationModeLeft;
-            cv_OperationModeRight = m_OtherData.cv_OperationModeRight;
+            cv_OperationMode = m_OtherData.cv_OperationMode;
             cv_OcrMode1 = m_OtherData.cv_OcrMode1;
             cv_IsPlcConnect = m_OtherData.cv_IsPlcConnect;
             cv_IsBcAlive = m_OtherData.cv_IsBcAlive;
@@ -655,8 +654,7 @@ namespace CommonData.HIRATA
             PSystemOnlineMode = OnlineMode.Offline;
             PRobot1Status = EquipmentStatus.Down;
             PRobot2Status = EquipmentStatus.Down;
-            POperationModeLeft = OperationMode.Manual;
-            POperationModeRight = OperationMode.Manual;
+            POperationMode = OperationMode.Manual;
             PPlcConnect = false;
             PBcAlive = false;
             cv_apiVersion = "";

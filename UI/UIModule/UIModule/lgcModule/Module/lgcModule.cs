@@ -37,12 +37,14 @@ namespace LGC
         internal static bool cv_IsCycleStop = false;
         internal bool cv_CheckEqDataLocalMode = false;
         public static int cv_WaitFfuSpeed;
+        public static ApiInitSqp cv_ApiInitSeq;
         //MMF
         internal static LGCController g_eventController = null;
 
         KDateTime cv_DataTime = SysUtils.Now();
         KDateTime cv_WaitUvRecordTime = SysUtils.Now();
         KTimer cv_RobotActionTimer;
+        public static KTimer cv_ApiInitTimer;
         public LgcModule()
             : base(FdModule.LGC)
         {
@@ -148,30 +150,19 @@ namespace LGC
         {
             if (cv_Alarms.IsHasAlarm())
             {
-                PSystemData.PSystemStatus = EquipmentStatus.Down;
             }
             if (cv_Alarms.IsHasAlarm(enSideGroup.Both))
             {
-                PSystemData.POperationModeLeft = OperationMode.Manual;
-                PSystemData.POperationModeRight = OperationMode.Manual;
+                lgcBase.PSystemData.PInitaiizeOkLeft = false;
+                lgcBase.PSystemData.PInitaiizeOkRight = false;
             }
-            else if (cv_Alarms.IsHasAlarm(enSideGroup.Left))
+            if (cv_Alarms.IsHasAlarm(enSideGroup.Left))
             {
-                if (IsotherSideDoingJob(enSideGroup.Left) && (!cv_Alarms.IsHasAlarm(enSideGroup.Right)))
-                {
-                }
-                else
-                {
-                }
+                lgcBase.PSystemData.PInitaiizeOkLeft = false;
             }
-            else if (cv_Alarms.IsHasAlarm(enSideGroup.Right))
+            if (cv_Alarms.IsHasAlarm(enSideGroup.Right))
             {
-                if (IsotherSideDoingJob(enSideGroup.Right) && (!cv_Alarms.IsHasAlarm(enSideGroup.Left)))
-                {
-                }
-                else
-                {
-                }
+                lgcBase.PSystemData.PInitaiizeOkRight = false;
             }
             if (g_eventController != null)
             {
@@ -306,8 +297,7 @@ namespace LGC
         {
             if (!PSystemData.PapiConnect)
             {
-                PSystemData.POperationModeLeft = OperationMode.Manual;
-                PSystemData.POperationModeRight = OperationMode.Manual;
+                PSystemData.POperationMode = OperationMode.Manual;
                 PSystemData.PSystemStatus = EquipmentStatus.Down;
                 PSystemData.PapiInlineMode = EquipmentInlineMode.Local;
                 PSystemData.PInitaiizeOkLeft = false;
@@ -318,12 +308,6 @@ namespace LGC
                     PMio.SetPortValue(g_eventController.cv_TimechartController.GetTimeChartInstance(i).cv_RobotBitStart + (int)RobotSideBitAddressOffset.Interlock_2, 1);
                 }
             }
-        }
-        protected override void OnOperationModeChangeLeft()
-        {
-        }
-        protected override void OnOperationModeChangeRight()
-        {
         }
         protected override void OnPlcConnected()
         {
@@ -675,8 +659,296 @@ namespace LGC
                 cv_RobotActionTimer.Enabled = true;
                 cv_RobotActionTimer.OnTimer += OnRobotActionTimer;
             }
+            if (cv_ApiInitTimer == null)
+            {
+                cv_ApiInitTimer = new KTimer();
+                cv_ApiInitTimer.Interval = 200;
+                cv_ApiInitTimer.ThreadEventEnabled = false;
+                cv_ApiInitTimer.OnTimer += OnApiInitTimer;
+            }
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
         }
+        private void OnApiInitTimer()
+        {
+            enSideGroup init_side = lgcBase.PSystemData.PWhichSideInInitilation;
+            string log = "[Init timer] Side : " + init_side.ToString() + ". Status : "+ cv_ApiInitSeq.ToString();
+            WriteLog(LogLevelType.Detail, log);
+
+            if(lgcBase.cv_Alarms.IsHasAlarm(init_side))
+            {
+                cv_ApiInitTimer.Enabled = false;
+                cv_ApiInitSeq = ApiInitSqp.None;
+                SendinitCompleteFail(init_side);
+                return;
+            }
+            if (cv_ApiInitSeq == ApiInitSqp.None)
+            {
+                if (lgcBase.PSystemData.PapiInlineMode == EquipmentInlineMode.Local)
+                {
+                    LgcModule.SetApiCommonCommand(APIEnum.APICommand.Remote);
+                    cv_ApiInitSeq = ApiInitSqp.waitRemote;
+                }
+                else if (lgcBase.PSystemData.PapiInlineMode == EquipmentInlineMode.Remote)
+                {
+                    cv_ApiInitSeq = ApiInitSqp.waitRemote;
+                }
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitRemote)
+            {
+                if (lgcBase.PSystemData.PapiInlineMode == EquipmentInlineMode.Remote)
+                {
+                    cv_ApiInitSeq = ApiInitSqp.waitResetErrorRobot;
+                }
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitResetErrorRobot)
+            {
+                foreach (Robot rb in LgcModule.cv_RobotContainer.Values)
+                {
+                    if (LgcModule.isInInitialationSide(rb.PSideGroup))
+                    {
+                        LgcModule.SetErrorReset(APIEnum.CommnadDevice.Robot, rb.cv_Id);
+                    }
+                }
+                cv_ApiInitSeq = ApiInitSqp.waitResetErrorRobotFinished;
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitResetErrorRobotFinished)
+            {
+                if (CheckAllRobotResetError(init_side))
+                {
+                    cv_ApiInitSeq = ApiInitSqp.waitResetErrorPort;
+                }
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitResetErrorPort)
+            {
+                for (int i = 1; i <= CommonData.HIRATA.CommonStaticData.g_PortNumber; i++)
+                {
+                    Port port1 = GetPortById(i);
+                    if ((init_side == port1.PSideGroup) || (init_side == enSideGroup.Both))
+                    {
+                        SetErrorReset(APIEnum.CommnadDevice.P, i);
+                    }
+                }
+                cv_ApiInitSeq = ApiInitSqp.waitResetErrorPortFinished;
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitResetErrorPortFinished)
+            {
+                if (CheckAllPortResetError(init_side))
+                {
+                    cv_ApiInitSeq = ApiInitSqp.waitResetErrorAligner;
+                }
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitResetErrorAligner)
+            {
+                foreach (Aligner ali in cv_AlignerContainer.Values)
+                {
+                    if ((init_side == ali.PSideGroup) || (init_side == enSideGroup.Both))
+                    {
+                        SetErrorReset(APIEnum.CommnadDevice.Aligner, ali.cv_Id);
+                    }
+                }
+                cv_ApiInitSeq = ApiInitSqp.waitResetErrorAlignerFinished;
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitResetErrorAlignerFinished)
+            {
+                if (CheckAllAlignerResetError(init_side))
+                {
+                    cv_ApiInitSeq = ApiInitSqp.waitRobotStatus;
+                }
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitRobotStatus)
+            {
+                foreach (Robot rb1 in cv_RobotContainer.Values)
+                {
+                    if ((init_side == rb1.PSideGroup) || (init_side == enSideGroup.Both))
+                    {
+                        SetStatus(APIEnum.CommnadDevice.Robot, rb1.cv_Id);
+                    }
+                }
+                cv_ApiInitSeq = ApiInitSqp.waitRobotStatusFinished;
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitRobotStatusFinished)
+            {
+                if (CheckAllRobotStatus(init_side))
+                {
+                    cv_ApiInitSeq = ApiInitSqp.waitRobotRestart;
+                }
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitRobotRestart)
+            {
+                foreach (Robot rb1 in cv_RobotContainer.Values)
+                {
+                    if ((init_side == rb1.PSideGroup) || (init_side == enSideGroup.Both))
+                    {
+                        if (lgcBase.PSystemData.PRobot1Status == EquipmentStatus.Stop)
+                        {
+                            SetRobotRestart(rb1.cv_Id);
+                        }
+                        else
+                        {
+                            rb1.cv_IsRestartFinished = true;
+                        }
+                    }
+                }
+                cv_ApiInitSeq = ApiInitSqp.waitRobotRestartFinished;
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitRobotRestartFinished)
+            {
+                if (CheckAllRobotRestartFinished(init_side))
+                {
+                    cv_ApiInitSeq = ApiInitSqp.waitRobotHome;
+                }
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitRobotHome)
+            {
+                foreach (Robot rb1 in cv_RobotContainer.Values)
+                {
+                    if ((init_side == rb1.PSideGroup) || (init_side == enSideGroup.Both))
+                    {
+                        SetHome(APIEnum.CommnadDevice.Robot, rb1.cv_Id);
+                    }
+                }
+                cv_ApiInitSeq = ApiInitSqp.waitRobotHomeFinished;
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitRobotHomeFinished)
+            {
+                if (CheckAllRobotHome(init_side))
+                {
+                    cv_ApiInitSeq = ApiInitSqp.waitPortStatus;
+                }
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitPortStatus)
+            {
+                bool error = false;
+                foreach (Robot rb1 in cv_RobotContainer.Values)
+                {
+                    if ((init_side == rb1.PSideGroup) || (init_side == enSideGroup.Both))
+                    {
+                        if (rb1.PIsSensorUnmatch)
+                        {
+                            error = true;
+                            break;
+                        }
+                    }
+                }
+                cv_ApiInitSeq = ApiInitSqp.waitPortStatusFinished;
+                if (!error)
+                {
+                    SetAllPortStatus(init_side);
+                }
+                else
+                {
+                    SendinitCompleteFail(init_side);
+                }
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitPortStatusFinished)
+            {
+                if (CheckAllPortStatus(init_side))
+                {
+                    cv_ApiInitSeq = ApiInitSqp.waitPortHome;
+                }
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitPortHome)
+            {
+                SetAllPortHome(init_side);
+                cv_ApiInitSeq = ApiInitSqp.waitPortHomeFinished;
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitPortHomeFinished)
+            {
+                if (CheckAllPortHome(init_side))
+                {
+                    cv_ApiInitSeq = ApiInitSqp.waitAlignerStatus;
+                }
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitAlignerStatus)
+            {
+                foreach (Aligner ali in cv_AlignerContainer.Values)
+                {
+                    if ((init_side == ali.PSideGroup) || (init_side == enSideGroup.Both))
+                    {
+                        SetStatus(APIEnum.CommnadDevice.Aligner, ali.cv_Id);
+                    }
+                }
+                cv_ApiInitSeq = ApiInitSqp.waitAlignerStatusFinished;
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitAlignerStatusFinished)
+            {
+                if(CheckAllAlignerStatus(init_side))
+                {
+                    cv_ApiInitSeq = ApiInitSqp.waitAlignerHome;
+                }
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitAlignerHome)
+            {
+                cv_ApiInitSeq = ApiInitSqp.waitAlignerHomeFinished;
+                foreach (Aligner ali in cv_AlignerContainer.Values)
+                {
+                    if ((init_side == ali.PSideGroup) || (init_side == enSideGroup.Both))
+                    {
+                        SetHome(APIEnum.CommnadDevice.Aligner, ali.cv_Id);
+                    }
+                }
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitAlignerHomeFinished)
+            {
+                if(CheckAllAlignerHome(init_side))
+                {
+                    cv_ApiInitSeq = ApiInitSqp.waitBufferStatus;
+                }
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitBufferStatus)
+            {
+                foreach (Buffer bf in cv_BufferContainer.Values)
+                {
+                    //if ((bf.PSideGroup == init_side) || (bf.PSideGroup == enSideGroup.Both))
+                    {
+                        SetStatus(APIEnum.CommnadDevice.Buffer, bf.cv_Id);
+                    }
+                }
+                cv_ApiInitSeq = ApiInitSqp.waitBufferStatusFinished;
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitBufferStatusFinished)
+            {
+                if (CheckAllBufferstatus(init_side))
+                {
+                    cv_ApiInitSeq = ApiInitSqp.waitEfemStatus;
+                }
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitEfemStatus)
+            {
+                    SetStatus(APIEnum.CommnadDevice.EFEM, 0);
+                    cv_ApiInitSeq = ApiInitSqp.waitRobotSpeed;
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitRobotSpeed)
+            {
+                if (lgcBase.PSystemData.PIsInInitialation)
+                {
+                    foreach (Robot rb in cv_RobotContainer.Values)
+                    {
+                        if ((rb.PSideGroup == init_side) || (init_side == enSideGroup.Both))
+                        {
+                            if (rb.cv_Id == 1)
+                            {
+                                SetRobotSpeed(lgcBase.PSystemData.PRobot1Speed, rb.cv_Id);
+                                rb.cv_WaitRobotSpeed = lgcBase.PSystemData.PRobot1Speed;
+                            }
+                            else if (rb.cv_Id == 2)
+                            {
+                                SetRobotSpeed(lgcBase.PSystemData.PRobot2Speed, rb.cv_Id);
+                                rb.cv_WaitRobotSpeed = lgcBase.PSystemData.PRobot2Speed;
+                            }
+                        }
+                    }
+                }
+                cv_ApiInitSeq = ApiInitSqp.waitFfuSpeed;
+            }
+            else if (cv_ApiInitSeq == ApiInitSqp.waitFfuSpeed)
+            {
+                SetSetFFUVoltage(lgcBase.PSystemData.PFFUSpeed);
+                cv_WaitFfuSpeed = lgcBase.PSystemData.PFFUSpeed;
+                SendinitComplete(lgcBase.PSystemData.PWhichSideInInitilation);
+            }
+         }
+
         private void DerivedTimer()
         {
             WriteLog(LogLevelType.TimerFunction, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
@@ -773,9 +1045,40 @@ namespace LGC
                     lgcBase.PSystemData.PSystemStatus = EquipmentStatus.Down;
                     AddTowerCommand(SignalTowerColor.All, SignalTowerControl.Off);
                     AddTowerCommand(SignalTowerColor.Red, SignalTowerControl.On);
-                    if (lgcBase.PSystemData.POperationModeLeft == OperationMode.Auto)
+
+                    bool leftsidealarm = lgcBase.cv_Alarms.IsHasAlarm(enSideGroup.Left);
+                    bool rightsidealarm = lgcBase.cv_Alarms.IsHasAlarm(enSideGroup.Right);
+                    bool bothsidealarm = lgcBase.cv_Alarms.IsHasAlarm(enSideGroup.Both);
+
+                    if (lgcBase.PSystemData.POperationMode == OperationMode.Auto)
                     {
-                        lgcBase.PSystemData.POperationModeLeft = OperationMode.Manual;
+                        if (bothsidealarm)
+                        {
+                            lgcBase.PSystemData.POperationMode = OperationMode.Manual;
+                        }
+                        else
+                        {
+                            if(leftsidealarm && rightsidealarm)
+                            {
+                                lgcBase.PSystemData.POperationMode = OperationMode.Manual;
+                            }
+                            else if(leftsidealarm)
+                            {
+                                Robot rb = GetRobotBySide(enSideGroup.Right);
+                                if(!rb.IsBusy)
+                                {
+                                    lgcBase.PSystemData.POperationMode = OperationMode.Manual;
+                                }
+                            }
+                            else if(rightsidealarm)
+                            {
+                                Robot rb = GetRobotBySide(enSideGroup.Left);
+                                if(!rb.IsBusy)
+                                {
+                                    lgcBase.PSystemData.POperationMode = OperationMode.Manual;
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -802,9 +1105,9 @@ namespace LGC
                 else if (PSystemData.PSystemStatus != EquipmentStatus.Down)
                 {
                     PSystemData.PSystemStatus = EquipmentStatus.Down;
-                    if (PSystemData.POperationModeLeft == OperationMode.Auto)
+                    if (PSystemData.POperationMode == OperationMode.Auto)
                     {
-                        PSystemData.POperationModeLeft = OperationMode.Manual;
+                        PSystemData.POperationMode = OperationMode.Manual;
                     }
                 }
             }
@@ -834,7 +1137,7 @@ namespace LGC
         private void DoCstUnload()
         {
             Port job_port = null;
-            if (lgcBase.PSystemData.POperationModeLeft != OperationMode.Auto)
+            if (lgcBase.PSystemData.POperationMode != OperationMode.Auto)
             {
                 return;
             }
@@ -1747,37 +2050,206 @@ namespace LGC
             msg_obj.TimeOut = (uint)m_Timeout;
             msg_obj.Txt = m_Txt;
             obj.Msg = msg_obj;
-            LGCController.triggerLgcEvent(typeof(CommonData.HIRATA.MDShowMsg).Name, msg_obj);
+            LGCController.triggerLgcEvent(typeof(CommonData.HIRATA.MDShowMsg).Name, obj);
             WriteLog(LogLevelType.NormalFunctionInOut, CommonData.HIRATA.CommonStaticData.__FUN(), FunInOut.Leave);
         }
 
         public static void CheckSystemStatus()
         {
         }
-        public static bool CheckAllPortResetError()
+        public static bool CheckAllRobotResetError(enSideGroup m_Side)
+        {
+            bool rtn = true;
+            for (int i = 1; i <= CommonData.HIRATA.CommonStaticData.g_RobotNumber; i++)
+            {
+                Robot rb = GetRobotById(i);
+                if ((rb.PSideGroup == m_Side) || (m_Side == enSideGroup.Both))
+                {
+                    if (!rb.PIsResetError)
+                    {
+                        rtn = false;
+                        break;
+                    }
+                }
+            }
+            return rtn;
+        }
+        public static bool CheckAllPortStatus(enSideGroup m_Side)
         {
             bool rtn = true;
             Port port = null;
             for (int i = 1; i <= CommonData.HIRATA.CommonStaticData.g_PortNumber; i++)
             {
-                port = GetPortById(i); 
-                if (!port.PIsResetError)
+                port = GetPortById(i);
+                if ((port.PSideGroup == m_Side) || (m_Side == enSideGroup.Both))
                 {
-                    return false;
+                    if (!port.PIsStatus)
+                    {
+                        rtn = false;
+                        break;
+                    }
                 }
             }
             return rtn;
         }
-        public static bool CheckAllPortHome()
+
+        public static bool CheckAllRobotHome(enSideGroup m_Side)
+        {
+            bool rtn = true;
+            for (int i = 1; i <= CommonData.HIRATA.CommonStaticData.g_RobotNumber; i++)
+            {
+                Robot rb = GetRobotById(i);
+                if ((rb.PSideGroup == m_Side) || (m_Side == enSideGroup.Both))
+                {
+                    if (!rb.PIsHome)
+                    {
+                        rtn = false;
+                        break;
+                    }
+                }
+            }
+            return rtn;
+        }
+        public static bool CheckAllPortResetError(enSideGroup m_Side)
+        {
+            bool rtn = true;
+            Port port = null;
+            for (int i = 1; i <= CommonData.HIRATA.CommonStaticData.g_PortNumber; i++)
+            {
+                port = GetPortById(i);
+                if ((port.PSideGroup == m_Side) || (m_Side == enSideGroup.Both))
+                {
+                    if (!port.PIsResetError)
+                    {
+                        rtn = false;
+                        break;
+                    }
+                }
+            }
+            return rtn;
+        }
+        public static bool CheckAllAlignerResetError(enSideGroup m_Side)
+        {
+            bool rtn = true;
+            for (int i = 1; i <= CommonData.HIRATA.CommonStaticData.g_AlignerNumber; i++)
+            {
+                Aligner ali = GetAlignerById(i);
+                if ((ali.PSideGroup == m_Side) || (m_Side == enSideGroup.Both))
+                {
+                    if (!ali.PIsResetError)
+                    {
+                        rtn = false;
+                        break;
+                    }
+                }
+            }
+            return rtn;
+        }
+
+        public static bool CheckAllAlignerStatus(enSideGroup m_Side)
+        {
+            bool rtn = true;
+            for (int i = 1; i <= CommonData.HIRATA.CommonStaticData.g_AlignerNumber; i++)
+            {
+                Aligner ali = GetAlignerById(i);
+                if ((ali.PSideGroup == m_Side) || (m_Side == enSideGroup.Both))
+                {
+                    if (!ali.PIsStatus)
+                    {
+                        rtn = false;
+                        break;
+                    }
+                }
+            }
+            return rtn;
+        }
+
+        public static bool CheckAllBufferstatus(enSideGroup m_Side)
+        {
+            bool rtn = true;
+            for (int i = 1; i <= CommonData.HIRATA.CommonStaticData.g_BufferNumber; i++)
+            {
+                Buffer bf = GetBufferById(i);
+                if ((bf.PSideGroup == m_Side) || (bf.PSideGroup == enSideGroup.Both))
+                {
+                    if (!bf.PIsStatus)
+                    {
+                        rtn = false;
+                        break;
+                    }
+                }
+            }
+            return rtn;
+        }
+
+        public static bool CheckAllAlignerHome(enSideGroup m_Side)
+        {
+            bool rtn = true;
+            for (int i = 1; i <= CommonData.HIRATA.CommonStaticData.g_AlignerNumber; i++)
+            {
+                Aligner ali = GetAlignerById(i);
+                if ((ali.PSideGroup == m_Side) || (m_Side == enSideGroup.Both))
+                {
+                    if (!ali.PIsHome)
+                    {
+                        rtn = false;
+                        break;
+                    }
+                }
+            }
+            return rtn;
+        }
+        public static bool CheckAllPortHome(enSideGroup m_Side)
         {
             bool rtn = true;
             Port port = null;
             for (int i = 1; i <= CommonData.HIRATA.CommonStaticData.g_PortNumber; i++)
             {
                  port = GetPortById(i);
-                if (port.cv_Data.PPortHasCst == PortHasCst.Has)
+                if ((port.PSideGroup == m_Side) || (m_Side == enSideGroup.Both))
                 {
-                    if (!GetPortById(i).PIsHome)
+                    if (port.cv_Data.PPortHasCst == PortHasCst.Has)
+                    {
+                        if (!GetPortById(i).PIsHome)
+                        {
+                            rtn = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            return rtn;
+        }
+        public static bool CheckAllRobotRestartFinished(enSideGroup m_Side)
+        {
+            bool rtn = true;
+            Robot rb = null;
+            for (int i = 1; i <= CommonData.HIRATA.CommonStaticData.g_RobotNumber; i++)
+            {
+                rb = GetRobotById(i);
+                if ((rb.PSideGroup == m_Side) || (m_Side == enSideGroup.Both))
+                {
+                    rb = GetRobotById(i);
+                    if (!rb.cv_IsRestartFinished)
+                    {
+                        rtn = false;
+                        break;
+                    }
+                }
+            }
+            return rtn;
+        }
+        public static bool CheckAllRobotStatus(enSideGroup m_Side)
+        {
+            bool rtn = true;
+            Robot rb = null;
+            for (int i = 1; i <= CommonData.HIRATA.CommonStaticData.g_RobotNumber; i++)
+            {
+                rb = GetRobotById(i);
+                if ((rb.PSideGroup == m_Side) || (m_Side == enSideGroup.Both))
+                {
+                    rb = GetRobotById(i);
+                    if (!rb.PIsStatus)
                     {
                         return false;
                     }
@@ -1785,26 +2257,16 @@ namespace LGC
             }
             return rtn;
         }
-        public static bool CheckAllPortStatus()
-        {
-            bool rtn = true;
-            Port port = null;
-            for (int i = 1; i <= CommonData.HIRATA.CommonStaticData.g_PortNumber; i++)
-            {
-                port = GetPortById(i);
-                if (!port.PIsStatus)
-                {
-                    return false;
-                }
-            }
-            return rtn;
-        }
         public static void SendinitComplete(enSideGroup m_Side)
         {
+            cv_ApiInitTimer.Enabled = false;
+            cv_ApiInitSeq = ApiInitSqp.None;
             if(m_Side == enSideGroup.Both)
             {
-                lgcBase.PSystemData.PInitaiizeOkLeft = true;
+                lgcBase.PSystemData.PInitaiizeOkRight = true;
                 lgcBase.PSystemData.PInitaiizingRight = false;
+                lgcBase.PSystemData.PInitaiizeOkLeft = true;
+                lgcBase.PSystemData.PInitaiizingLeft = false;
             }
             else if(m_Side == enSideGroup.Right)
             {
@@ -1813,10 +2275,8 @@ namespace LGC
             }
             else if(m_Side == enSideGroup.Left)
             {
-                lgcBase.PSystemData.PInitaiizeOkRight = true;
-                lgcBase.PSystemData.PInitaiizingRight = false;
                 lgcBase.PSystemData.PInitaiizeOkLeft = true;
-                lgcBase.PSystemData.PInitaiizingRight = false;
+                lgcBase.PSystemData.PInitaiizingLeft = false;
             }
             //cv_MmfController.SendInitialize(InitialAction.Complete, MmfEventClientEventType.etNotify, false);
             for (int i = 1; i <= CommonData.HIRATA.CommonStaticData.g_PortNumber; i++)
@@ -1850,6 +2310,8 @@ namespace LGC
         }
         public static void SendinitCompleteFail(enSideGroup m_Side)
         {
+            cv_ApiInitTimer.Enabled = false;
+            cv_ApiInitSeq = ApiInitSqp.None;
             if (m_Side == enSideGroup.Both)
             {
                 lgcBase.PSystemData.PInitaiizeOkRight = false;
@@ -1865,9 +2327,11 @@ namespace LGC
                 rb_left.PIsStatus = false;
                 rb_left.PIsHome = false;
                 rb_left.PIsResetError = false;
+                rb_left.cv_IsRestartFinished = false;
                 rb_right.PIsStatus = false;
                 rb_right.PIsHome = false;
                 rb_right.PIsResetError = false;
+                rb_right.cv_IsRestartFinished = false;
                 al_right.PIsStatus = false;
                 al_right.PIsHome = false;
                 al_right.PIsResetError = false;
@@ -1887,15 +2351,16 @@ namespace LGC
                 lgcBase.PSystemData.PInitaiizingRight = false;
                 Robot rb_right = GetRobotBySide(enSideGroup.Right);
                 Aligner al_right = GetAlignerBySide(enSideGroup.Right);
-                //Buffer bf_right = GetBufferBySide(enSideGroup.Both);
+                Buffer bf_both = GetBufferBySide(enSideGroup.Both);
                 rb_right.PIsStatus = false;
                 rb_right.PIsHome = false;
                 rb_right.PIsResetError = false;
+                rb_right.cv_IsRestartFinished = false;
                 al_right.PIsStatus = false;
                 al_right.PIsHome = false;
                 al_right.PIsResetError = false;
-                //bf_both.PIsStatus = false;
-                //bf_both.PIsHome = false;
+                bf_both.PIsStatus = false;
+                bf_both.PIsHome = false;
             }
             else if (m_Side == enSideGroup.Left)
             {
@@ -1903,15 +2368,16 @@ namespace LGC
                 lgcBase.PSystemData.PInitaiizingLeft = false;
                 Robot rb_left = GetRobotBySide(enSideGroup.Left);
                 Aligner al_left = GetAlignerBySide(enSideGroup.Left);
-                //Buffer bf_both = GetBufferBySide(enSideGroup.Both);
+                Buffer bf_both = GetBufferBySide(enSideGroup.Both);
                 rb_left.PIsStatus = false;
                 rb_left.PIsHome = false;
                 rb_left.PIsResetError = false;
+                rb_left.cv_IsRestartFinished = false;
                 al_left.PIsStatus = false;
                 al_left.PIsHome = false;
                 al_left.PIsResetError = false;
-                //bf_both.PIsStatus = false;
-                //bf_both.PIsHome = false;
+                bf_both.PIsStatus = false;
+                bf_both.PIsHome = false;
             }
 
             for (int i = 1; i <= CommonData.HIRATA.CommonStaticData.g_PortNumber; i++)

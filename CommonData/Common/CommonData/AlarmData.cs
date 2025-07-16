@@ -115,7 +115,9 @@ namespace CommonData.HIRATA
         public List<AlarmItem> cv_AlarmList = new List<AlarmItem>();
         public bool IsHasAlarm(enSideGroup m_Side)
         {
-            return  cv_AlarmList.Exists(x => (x.PLevel == AlarmLevele.Serious) && (x.PSide == m_Side)) ;
+            bool side_alarm = cv_AlarmList.Exists(x => (x.PLevel == AlarmLevele.Serious) && ( x.PSide == m_Side));
+            bool both_side_alarm = cv_AlarmList.Exists(x => (x.PLevel == AlarmLevele.Serious) && ( x.PSide == enSideGroup.Both));
+            return (side_alarm | both_side_alarm);
         }
         public bool IsHasAlarm()
         {

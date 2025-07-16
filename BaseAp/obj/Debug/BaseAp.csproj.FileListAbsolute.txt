@@ -11,3 +11,16 @@ F:\work\Seeya\ODF2\ODF_2_code\BaseAp\obj\Debug\BaseAp.csproj.CoreCompileInputs.c
 F:\work\Seeya\ODF2\ODF_2_code\BaseAp\obj\Debug\BaseAp.csproj.CopyComplete
 F:\work\Seeya\ODF2\ODF_2_code\BaseAp\obj\Debug\BaseAp.exe
 F:\work\Seeya\ODF2\ODF_2_code\BaseAp\obj\Debug\BaseAp.pdb
+F:\work\Project\Seeya\ODF2\ODF_2_code\BaseAp\bin\Debug\BaseAp.exe.config
+F:\work\Project\Seeya\ODF2\ODF_2_code\BaseAp\bin\Debug\BaseAp.exe
+F:\work\Project\Seeya\ODF2\ODF_2_code\BaseAp\bin\Debug\BaseAp.pdb
+F:\work\Project\Seeya\ODF2\ODF_2_code\BaseAp\bin\Debug\CommonData.dll
+F:\work\Project\Seeya\ODF2\ODF_2_code\BaseAp\bin\Debug\CommonData.pdb
+F:\work\Project\Seeya\ODF2\ODF_2_code\BaseAp\obj\Debug\BaseAp.csproj.AssemblyReference.cache
+F:\work\Project\Seeya\ODF2\ODF_2_code\BaseAp\obj\Debug\BaseAp.BaseForm.resources
+F:\work\Project\Seeya\ODF2\ODF_2_code\BaseAp\obj\Debug\BaseAp.Properties.Resources.resources
+F:\work\Project\Seeya\ODF2\ODF_2_code\BaseAp\obj\Debug\BaseAp.csproj.GenerateResource.cache
+F:\work\Project\Seeya\ODF2\ODF_2_code\BaseAp\obj\Debug\BaseAp.csproj.CoreCompileInputs.cache
+F:\work\Project\Seeya\ODF2\ODF_2_code\BaseAp\obj\Debug\BaseAp.csproj.CopyComplete
+F:\work\Project\Seeya\ODF2\ODF_2_code\BaseAp\obj\Debug\BaseAp.exe
+F:\work\Project\Seeya\ODF2\ODF_2_code\BaseAp\obj\Debug\BaseAp.pdb

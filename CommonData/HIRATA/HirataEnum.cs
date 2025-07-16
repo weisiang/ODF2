@@ -5,6 +5,13 @@ using System.Text;
 
 namespace CommonData.HIRATA
 {
+    public enum ApiInitSqp { None , waitRemote , waitResetErrorRobot , waitResetErrorRobotFinished , waitResetErrorPort ,waitResetErrorPortFinished,
+        waitResetErrorAligner, waitResetErrorAlignerFinished , waitRobotStatus , waitRobotStatusFinished,
+        waitRobotRestart , waitRobotRestartFinished,  waitRobotHome , waitRobotHomeFinished, 
+        waitPortStatus , waitPortStatusFinished, waitPortHome , waitPortHomeFinished,
+        waitAlignerStatus, waitAlignerStatusFinished, waitAlignerHome , waitAlignerHomeFinished, waitBufferStatus , waitBufferStatusFinished,
+        waitEfemStatus , waitRobotSpeed,  waitFfuSpeed,
+    }
     public enum enSideGroup { None , Right , Left , Both };
     public enum AlignerPreAction { None, WaitHome, AlignerHome , SetToAngle, VuccumOff1 , PutAligner, VuccumOn,
         WaitVuccumOn, FindNotch, WaitFindNotch , OcrConnect , WaitConnect , ReadOcr, WaitReadOct , ToAngle , 

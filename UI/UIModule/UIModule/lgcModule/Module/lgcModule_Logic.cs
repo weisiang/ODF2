@@ -20,7 +20,41 @@ namespace LGC
     {
         private void OnRobotActionTimer()
         {
-            PortData port1 = GetPortById(1).cv_Data;
+            DerivedTimer();
+            CalculateSystemStatus();
+            DoLeftSideFindJob();
+            DoLeftSideJob();
+            DoRightSideFindJob();
+            DoRightSideJob();
+        }
+        private void DoLeftSideFindJob( enSideGroup m_Side = enSideGroup.Left)
+        {
+        }
+        private void DoRightSideFindJob( enSideGroup m_Side = enSideGroup.Left)
+        {
+        }
+        private void DoLeftSideJob( enSideGroup m_Side = enSideGroup.Left)
+        {
+            Robot side_robot = GetRobotBySide(m_Side) ;
+            bool sidealarm = cv_Alarms.IsHasAlarm(m_Side);
+            bool bothalarm = cv_Alarms.IsHasAlarm(enSideGroup.Both);
+            bool sideinit = lgcBase.PSystemData.PInitaiizeOkLeft;
+            if (!sideinit) return;
+            if (sidealarm || bothalarm) return; 
+            if(cv_IsCycleStop)
+            {
+                if(!side_robot.IsBusy)
+                {
+                    return;
+                }
+            }
+        }
+        private void DoRightSideJob(enSideGroup m_Side = enSideGroup.Right)
+        {
+            Robot side_robot = GetRobotBySide(m_Side) ;
+            bool sidealarm = cv_Alarms.IsHasAlarm(m_Side);
+            bool bothalarm = cv_Alarms.IsHasAlarm(enSideGroup.Both);
+            bool sideinit = lgcBase.PSystemData.PInitaiizeOkRight;
         }
         #region Do Robot Action for each Eqp.
         private void ProcessPortGetPutJob(RobotAction m_Type)

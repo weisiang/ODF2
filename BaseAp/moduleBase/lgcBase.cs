@@ -70,8 +70,7 @@ namespace BaseAp
                 cv_SystemData.OnSystemStatusChange += OnSystemStatusChange;
                 cv_SystemData.OnApiConnected += OnApiConnected;
                 cv_SystemData.OnApiDisconnected += OnApiDisconnected;
-                cv_SystemData.OnOperationModeChangeLeft += OnOperationModeChangeLeft;
-                cv_SystemData.OnOperationModeChangeRight += OnOperationModeChangeRight;
+                cv_SystemData.OnOperationModeChange += OnOperationModeChange;
                 cv_SystemData.OnPlcConnected += OnPlcConnected ;
                 cv_SystemData.OnPlcDisconnected += OnPlcDisconnected ;
                 cv_SystemData.OnBclive +=  OnBclive;
@@ -162,10 +161,7 @@ namespace BaseAp
         protected virtual void OnApiDisconnected()
         {
         }
-        protected virtual void  OnOperationModeChangeLeft()
-        {
-        }
-        protected virtual void  OnOperationModeChangeRight()
+        protected virtual void  OnOperationModeChange()
         {
         }
         protected virtual void  OnPlcConnected()

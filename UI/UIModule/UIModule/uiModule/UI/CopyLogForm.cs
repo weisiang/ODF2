@@ -42,7 +42,7 @@ namespace UI
 
         private void cv_BtCopy_Click(object sender, EventArgs e)
         {
-            if(lgcBase.PSystemData.POperationModeLeft != CommonData.HIRATA.OperationMode.Manual)
+            if(lgcBase.PSystemData.POperationMode != CommonData.HIRATA.OperationMode.Manual)
             {
                 CommonStaticData.PopForm("Please change to mnaual mode.", true
                     , false);

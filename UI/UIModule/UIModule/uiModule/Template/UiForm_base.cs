@@ -1019,12 +1019,24 @@ cb_PortActionSlotType
         }
         private void CheckInitializeColor()
         {
-            if (lgcBase.PSystemData.PInitaiizeOkRight)
+            if (!lgcBase.PSystemData.PIsInInitialation)
             {
-                if (btn_ReIni.BackColor != Color.Lime)
-                    btn_ReIni.BackColor = Color.Lime;
+                if (lgcBase.PSystemData.PIsInitializeOk)
+                {
+                    if (btn_ReIni.BackColor != Color.Lime)
+                    {
+                        btn_ReIni.BackColor = Color.Lime;
+                    }
+                }
+                else
+                {
+                    if (btn_ReIni.BackColor != Color.Red)
+                    {
+                        btn_ReIni.BackColor = Color.Red;
+                    }
+                }
             }
-            else if (lgcBase.PSystemData.PInitaiizingRight)
+            else if (lgcBase.PSystemData.PIsInInitialation)
             {
                 long diff = SysUtils.MilliSecondsBetween(SysUtils.Now(), cv_InitialButtonFlashTime);
                 if (diff < 0)
@@ -1136,7 +1148,7 @@ cb_PortActionSlotType
                 return;
             }
 
-            if (lgcBase.PSystemData.PapiConnect)
+            if (!lgcBase.PSystemData.PapiConnect)
             {
                 CommonStaticData.PopForm("Can't initialize because API disconnected!!!", false, false);
                 return;
@@ -1146,19 +1158,9 @@ cb_PortActionSlotType
                 CommonStaticData.PopForm("Can't initialize because API inline mode Error , maybe re-start program can solve!!!", false, false);
                 return;
             }
-            if (m_Side == enSideGroup.Left && lgcBase.PSystemData.POperationModeLeft != OperationMode.Manual)
+            if (m_Side == enSideGroup.Left && lgcBase.PSystemData.POperationMode != OperationMode.Manual)
             {
-                CommonStaticData.PopForm("Can't initialize because " + side + " not at manual mode!!!", false, false);
-                return;
-            }
-            if (m_Side == enSideGroup.Right && lgcBase.PSystemData.POperationModeRight != OperationMode.Manual)
-            {
-                CommonStaticData.PopForm("Can't initialize because " + side + " not at manual mode!!!", false, false);
-                return;
-            }
-            if (m_Side == enSideGroup.Both && (lgcBase.PSystemData.POperationModeRight != OperationMode.Manual || lgcBase.PSystemData.POperationModeLeft != OperationMode.Manual))
-            {
-                CommonStaticData.PopForm("Can't initialize because " + side + " not at manual mode!!!", false, false);
+                CommonStaticData.PopForm("Can't initialize because  not at manual mode!!!", false, false);
                 return;
             }
             string log = "User Initialize " + Environment.NewLine;
@@ -1820,7 +1822,7 @@ cb_PortActionSlotType
         {
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
             string log = "[User press Operation(auto/manual) Button]" + Environment.NewLine;
-            if (lgcBase.PSystemData.POperationModeLeft == OperationMode.Auto)
+            if (lgcBase.PSystemData.POperationMode == OperationMode.Auto)
             {
                 bool is_force = false;
                 if (Control.ModifierKeys == Keys.Control)
@@ -1828,18 +1830,16 @@ cb_PortActionSlotType
                     log += "Use Force Change to Manual Mode. ";
                     is_force = true;
                 }
-
-               // cv_MmfController.SendOperationMode(is_force, OperationMode.Manual, MmfEventClientEventType.etRequest, true);
                 LockOperationButton(true);
+                g_eventController.SendOperationMode(is_force, OperationMode.Manual);
                 log += "Change to Manual";
             }
             else
             {
-                if (!lgcBase.PSystemData.PInitaiizeOkRight)
+                if (!lgcBase.PSystemData.PIsInitializeOk)
                 {
                     log += "Can't change Auto buz not initialize., Please initial first";
                     CommonStaticData.PopForm("Can't change Auto buz not initialize., Please initial first", true, false);
-
                 }
                 else if (lgcBase.PSystemData.PSystemStatus == EquipmentStatus.Down)
                 {
@@ -1852,26 +1852,40 @@ cb_PortActionSlotType
                     {
                         if (lgcBase.cv_Alarms.IsHasAlarm())
                         {
-                            log += "Can't change Auto buz has alarm";
-                            CommonStaticData.PopForm("System has alarm!!", true, false);
+                            bool canchagnetoauto = true;
+                            if(lgcBase.PSystemData.PIsInitializeOk)
+                            {
+                                if(lgcBase.PSystemData.PInitaiizeOkLeft)
+                                {
+                                    if( (lgcBase.cv_Alarms.IsHasAlarm(enSideGroup.Left)) || (lgcBase.cv_Alarms.IsHasAlarm(enSideGroup.Both)))
+                                    {
+                                        canchagnetoauto = false;
+                                    }
+                                }
+                                else if(lgcBase.PSystemData.PInitaiizeOkRight)
+                                {
+                                    if( (lgcBase.cv_Alarms.IsHasAlarm(enSideGroup.Right)) || (lgcBase.cv_Alarms.IsHasAlarm(enSideGroup.Both)))
+                                    {
+                                        canchagnetoauto = false;
+                                    }
+                                }
+                            }
+                            if (!canchagnetoauto)
+                            {
+                                log += "Can't change Auto buz has alarm";
+                                CommonStaticData.PopForm("System has alarm!!", true, false);
+                            }
+                            else
+                            {
+                                g_eventController.SendOperationMode(false, OperationMode.Auto);
+                            }
                         }
                         else
                         {
                             if (MessageBox.Show("Do you want change to Auto mode ?", "Warning", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
                             {
                                 LockOperationButton(true);
-                                /*
-                                if (cv_MmfController.SendOperationMode(false, OperationMode.Auto, MmfEventClientEventType.etRequest, true))
-                                {
-                                    log += "Change to Auto";
-                                    //LockOperationButton(false);
-                                }
-                                else
-                                {
-                                    log += "Change to Auto fail , buz LGC time out";
-                                    LockOperationButton(false);
-                                }
-                                */
+                                g_eventController.SendOperationMode(false, OperationMode.Auto);
                             }
                         }
                     }
@@ -2061,8 +2075,12 @@ cb_IoFfu
                     paras.Add(lamp + control);
                     command_obj = new CommandData(APIEnum.CommandType.IO, command.ToString(), APIEnum.CommnadDevice.IO, 0, paras);
                     break;
-                case APIEnum.IoCommand.GetBufferStatus:
-                    paras.Add("Buffer1");
+                case APIEnum.IoCommand.GetBufferStatus1:
+                    //paras.Add("Buffer1");
+                    command_obj = new CommandData(APIEnum.CommandType.IO, command.ToString(), APIEnum.CommnadDevice.IO, 0, paras);
+                    break;
+                case APIEnum.IoCommand.GetBufferStatus2:
+                    //paras.Add("Buffer1");
                     command_obj = new CommandData(APIEnum.CommandType.IO, command.ToString(), APIEnum.CommnadDevice.IO, 0, paras);
                     break;
 

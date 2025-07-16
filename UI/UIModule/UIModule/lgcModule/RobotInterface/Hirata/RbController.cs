@@ -40,7 +40,6 @@ namespace LGC
         private List<CommandData> cv_Commands = null;
         HIRATADevice cv_Client = null;
 
-        public bool cv_IsReturnNotFoundExeEvent = false;
         public bool Connected
         {
             get { return cv_Client.ConnectStatus; }
@@ -58,7 +57,6 @@ namespace LGC
                 Environment.Exit(-12);
             }
             cv_Commands = new List<CommandData>();
-            cv_IsReturnNotFoundExeEvent = true;
             cv_Client = new HIRATADevice(m_Ip, m_Port);
             EventLink();
             cv_Client.ClientOpenConnect();
@@ -329,6 +327,7 @@ namespace LGC
                             command.PCommandDevice = (APIEnum.CommnadDevice)Enum.Parse(typeof(APIEnum.CommnadDevice), match.Value);
                         }
                     }
+                    command.cv_ReplyParaList.Clear();
                     command.cv_ReplyParaList.AddRange(tmp.GetRange(3, tmp.Count - 3));
 
                     if (OnRecvEvent != null)

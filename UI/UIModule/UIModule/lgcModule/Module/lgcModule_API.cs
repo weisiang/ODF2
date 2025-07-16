@@ -25,6 +25,8 @@ namespace LGC
             if (cv_ApiController == null)
             {
                 cv_ApiController = new RBController(ip, socket_port);
+                AssignFunciton();
+                LinkEvent();
                 cv_ApiController.Open();
             }
         }
@@ -126,7 +128,8 @@ namespace LGC
                 AlarmItem tmp_alarm = list.ElementAt(i);
                 if (tmp_alarm.PCommandDevice == m_Command.PCommandDevice)
                 {
-                    if (tmp_alarm.cv_ResCode.Trim() == m_Command.cv_ReplyParaList[0].Trim())
+                    //if (tmp_alarm.cv_ResCode.Trim() == m_Command.cv_ReplyParaList[0].Trim())
+                    if (tmp_alarm.PCode.Trim() == m_Command.cv_ReplyParaList[0].Trim())
                     {
                         alarm = list.ElementAt(i);
                         is_find = true;
@@ -134,35 +137,170 @@ namespace LGC
                     }
                 }
             }
-            ShowMsg("Command Reply Abnormal : " + m_Command.GetCommandStr(), true, false);
+
+            enSideGroup side = getApiAbonormalReplySide(m_Command);
+
+            ShowMsg("Command Reply Abnormal[" + side.ToString() +"] : " + m_Command.GetCommandStr() , true, false);
             if (is_find)
             {
                 log += "Fined the alarm in Alarm List and report";
                 alarm.PStatus = AlarmStatus.Occur;
+                alarm.PSide = side;
                 EditAlarm(alarm);
             }
             else
             {
+                alarm.PCode = Alarmtable.RobotApiErrorEvent.ToString();
+                alarm.PMainDescription = "API_ERROR_EVENT";
+                alarm.PSubDescription = string.Join(",", m_Command.cv_ReplyParaList);//m_Command.cv_ReplyParaList.ToString();
+                alarm.PUnit = 0;
+                alarm.PLevel = AlarmLevele.Serious;
+                alarm.PStatus = AlarmStatus.Occur;
+                alarm.PSide = side;
+                alarm.PTime = DateTime.Now.ToString("yyyyMMDDHHmmss");
+                EditAlarm(alarm);
                 log += "Can't fine the alarm in Alarm List";
-                //LgcForm.ShowMsg(log, true, false);
             }
             log += "--------------------------------";
             WriteLog(LogLevelType.General, log, FunInOut.None);
-            /*
-            alarm.PCode = m_Command.GetAlarmCode().ToString();
-            alarm.PLevel = AlarmLevele.Serious;
-            //alarm.PMainDescription = "Command Reply Abnormal : " + m_Command.GetCommandStr();
-            alarm.PMainDescription = "Reply Abnormal : " + m_Command.cv_ReturnCode + "," + m_Command.cv_ReplyParaList[0] + " , " + m_Command.cv_ReplyParaList[1];
-            if(m_Command.cv_ReplyParaList.Count>2)
-            {
-                alarm.PMainDescription += "," + m_Command.cv_ReplyParaList[2];
-            }
-            alarm.PStatus = AlarmStatus.Occur;
-            LgcForm.ShowMsg("Command Reply Abnormal : " + m_Command.GetCommandStr(), true, false);
-            LgcForm.EditAlarm(alarm);
-            */
         }
 
+        private static enSideGroup getApiAbonormalReplySide(CommandData m_Command)
+        {
+            enSideGroup side = enSideGroup.Both;
+            if (m_Command.PCommandType == APIEnum.CommandType.API)
+            {
+            }
+            else if (m_Command.PCommandType == APIEnum.CommandType.Common)
+            {
+                if (m_Command.PCommandDevice == CommonData.HIRATA.APIEnum.CommnadDevice.Robot)
+                {
+                    Robot rb = GetRobotById(m_Command.cv_DeviceId);
+                    side = rb.PSideGroup;
+                }
+                else if (m_Command.PCommandDevice == CommonData.HIRATA.APIEnum.CommnadDevice.Aligner)
+                {
+                    Aligner ali = GetAlignerById(m_Command.cv_DeviceId);
+                    side = ali.PSideGroup;
+                }
+                else if (m_Command.PCommandDevice == CommonData.HIRATA.APIEnum.CommnadDevice.P)
+                {
+                    Port port = GetPortById(m_Command.cv_DeviceId);
+                    side = port.PSideGroup;
+                }
+            }
+            else if (m_Command.PCommandType == APIEnum.CommandType.RFID)
+            {
+                Port port = GetPortById(m_Command.cv_DeviceId);
+                side = port.PSideGroup;
+            }
+            else if (m_Command.PCommandType == APIEnum.CommandType.LoadPort)
+            {
+                Port port = GetPortById(m_Command.cv_DeviceId);
+                side = port.PSideGroup;
+            }
+            else if (m_Command.PCommandType == APIEnum.CommandType.E84)
+            {
+                //cv_ProcessCommandPtr[APIEnum.CommandType.E84](m_Command);
+            }
+            else if (m_Command.PCommandType == APIEnum.CommandType.Robot)
+            {
+                Robot rb = GetRobotById(m_Command.cv_DeviceId);
+                side = rb.PSideGroup;
+            }
+            else if (m_Command.PCommandType == APIEnum.CommandType.Aligner)
+            {
+                Aligner ali = GetAlignerById(m_Command.cv_DeviceId);
+                side = ali.PSideGroup;
+            }
+            else if (m_Command.PCommandType == APIEnum.CommandType.IO)
+            {
+                if (m_Command.PIoCommand == APIEnum.IoCommand.GetBufferStatus1)
+                {
+                    Buffer bf = GetBufferById(1);
+                    side = bf.PSideGroup;
+                }
+                else if (m_Command.PIoCommand == APIEnum.IoCommand.GetBufferStatus2)
+                {
+                    Buffer bf = GetBufferById(2);
+                    side = bf.PSideGroup;
+                }
+            }
+            else if (m_Command.PCommandType == APIEnum.CommandType.Alignment)
+            {
+            }
+            else if (m_Command.PCommandType == APIEnum.CommandType.Barcode)
+            {
+            }
+            else if (m_Command.PCommandType == APIEnum.CommandType.OCR)
+            {
+                Aligner ali = GetAlignerById(m_Command.cv_DeviceId);
+                side = ali.PSideGroup;
+            }
+            else if (m_Command.PCommandType == APIEnum.CommandType.Event)
+            {
+                if (m_Command.PEventCommand == APIEnum.EventCommand.FoupPlace)
+                {
+                    Port port = GetPortById(m_Command.cv_DeviceId);
+                    side = port.PSideGroup;
+                }
+                else if (m_Command.PEventCommand == APIEnum.EventCommand.FoupRemove)
+                {
+                    Port port = GetPortById(m_Command.cv_DeviceId);
+                    side = port.PSideGroup;
+                }
+                else if (m_Command.PEventCommand == APIEnum.EventCommand.FoupPresence)
+                {
+                    Port port = GetPortById(m_Command.cv_DeviceId);
+                    side = port.PSideGroup;
+                }
+                else if (m_Command.PEventCommand == APIEnum.EventCommand.OperatorAccessButtonClick)
+                {
+                    Port port = GetPortById(m_Command.cv_DeviceId);
+                    side = port.PSideGroup;
+                }
+                else if (m_Command.PEventCommand == APIEnum.EventCommand.OperatorAccessButton2Click)
+                {
+                    Port port = GetPortById(m_Command.cv_DeviceId);
+                    side = port.PSideGroup;
+                }
+                else if (m_Command.PEventCommand == APIEnum.EventCommand.VasTopPutEnd)
+                {
+                    side = enSideGroup.Right;
+                }
+                else if (m_Command.PEventCommand == APIEnum.EventCommand.GetStatus)
+                {
+                    // i'm not sure this status event can use in ODF2.
+                    int deviceid = m_Command.cv_DeviceId;
+                    Robot robot = GetRobotById(deviceid);
+                    side = robot.PSideGroup;
+                }
+                else if (m_Command.PEventCommand == APIEnum.EventCommand.ERROR)
+                {
+                    if(m_Command.PCommandDevice == APIEnum.CommnadDevice.P)
+                    {
+                        Port port = GetPortById(m_Command.cv_DeviceId);
+                        side = port.PSideGroup;
+                    }
+                    else if(m_Command.PCommandDevice == APIEnum.CommnadDevice.Robot)
+                    {
+                        Robot robot = GetRobotById(m_Command.cv_DeviceId);
+                        side = robot.PSideGroup;
+                    }
+                    else if(m_Command.PCommandDevice == APIEnum.CommnadDevice.Aligner)
+                    {
+                        Aligner ali = GetAlignerById(m_Command.cv_DeviceId);
+                        side = ali.PSideGroup;
+                    }
+                }
+                else if ((int)m_Command.PEventCommand >= (int)APIEnum.EventCommand.Pressure &&
+                     (int)m_Command.PEventCommand <= (int)APIEnum.EventCommand.GetStatus)
+                {
+                    side = enSideGroup.Both;
+                }
+            }
+            return side;
+        }
         #region On Event
         private void OnRecvCommandReply(CommandData m_Command)
         {
@@ -170,7 +308,7 @@ namespace LGC
             {
                 if (m_Command.PCommandType != APIEnum.CommandType.Event && m_Command.PEventCommand != APIEnum.EventCommand.ERROR)
                 {
-                    if ((!lgcBase.PSystemData.PInitaiizingRight) || (!lgcBase.PSystemData.PInitaiizingLeft))
+                    if (!lgcBase.PSystemData.PIsInInitialation)
                     {
                         ApiReplyAbnormal(m_Command);
                         return;
@@ -181,7 +319,7 @@ namespace LGC
                             (m_Command.PCommandType == APIEnum.CommandType.Common && m_Command.PCommonCommand == APIEnum.CommonCommand.GetStatus) ||
                             (m_Command.PCommandType == APIEnum.CommandType.Common && m_Command.PCommonCommand == APIEnum.CommonCommand.Home))
                         {
-                            SendinitCompleteFail(lgcBase.PSystemData.PWhichSideInInitilation);
+                            SendinitCompleteFail(enSideGroup.Both);
                             ShowMsg("At Initial , Command :" + m_Command.PCommonCommand.ToString() + "failure!!! Please check and re-initilize", false, false);
                             ApiReplyAbnormal(m_Command);
                             return;
@@ -194,6 +332,10 @@ namespace LGC
                             return;
                         }
                     }
+                }
+                else
+                {
+                    ApiReplyAbnormal(m_Command);
                 }
             }
             if (m_Command.PCommandType == APIEnum.CommandType.API)
@@ -319,16 +461,6 @@ namespace LGC
             {
                 SetApiCommonCommand(APIEnum.APICommand.Version);
                 lgcBase.PSystemData.PapiInlineMode = EquipmentInlineMode.Remote;
-                if (lgcBase.PSystemData.PIsInInitialation)
-                {
-                    foreach (Robot rb in cv_RobotContainer.Values)
-                    {
-                        if (lgcBase.PSystemData.PWhichSideInInitilation == rb.PSideGroup || lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both)
-                        {
-                            SetErrorReset(APIEnum.CommnadDevice.Robot, rb.cv_Id);
-                        }
-                    }
-                }
             }
             else if (m_Command.PApiCommand == APIEnum.APICommand.Local)
             {
@@ -504,7 +636,7 @@ namespace LGC
                             if ((lgcBase.PSystemData.PWhichSideInInitilation == job_port.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
                             {
                                 job_port.PIsRemapping = true;
-                                GetPortById(job_port.cv_Id).PIsRemapping = true;
+                                //GetPortById(job_port.cv_Id).PIsRemapping = true;
                                 SetStatus(APIEnum.CommnadDevice.P, job_port.cv_Id);
                             }
                         }
@@ -621,11 +753,7 @@ namespace LGC
             }
             else if (m_Command.PRobotCommand == APIEnum.RobotCommand.ReStart)
             {
-                //if (!cv_HadInit && cv_Initilizing)
-                if ((lgcBase.PSystemData.PWhichSideInInitilation == rb.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
-                {
-                    SetHome(APIEnum.CommnadDevice.Robot, rb.cv_Id);
-                }
+                rb.cv_IsRestartFinished = true;
             }
             else if (m_Command.PRobotCommand == APIEnum.RobotCommand.SetRobotSpeed)
             {
@@ -637,11 +765,13 @@ namespace LGC
                 {
                     lgcBase.PSystemData.PRobot2Speed = rb.cv_WaitRobotSpeed;
                 }
+                /*
                 if (lgcBase.PSystemData.PIsInInitialation)
                 {
                     SetSetFFUVoltage(lgcBase.PSystemData.PFFUSpeed);
                     cv_WaitFfuSpeed = lgcBase.PSystemData.PFFUSpeed;
                 }
+                */
             }
             /*
             CommonData.HIRATA.MDRobotAction obj = new CommonData.HIRATA.MDRobotAction();
@@ -704,8 +834,14 @@ namespace LGC
         }
         private void ProcessIOCommand(CommandData m_Command)
         {
-            if (m_Command.PIoCommand == APIEnum.IoCommand.GetBufferStatus)
+            if (m_Command.PIoCommand == APIEnum.IoCommand.GetBufferStatus1)
             {
+                m_Command.cv_DeviceId = 1;
+                ProcessBufferStatus(m_Command);
+            }
+            else if (m_Command.PIoCommand == APIEnum.IoCommand.GetBufferStatus2)
+            {
+                m_Command.cv_DeviceId = 2;
                 ProcessBufferStatus(m_Command);
             }
             else if (m_Command.PIoCommand == APIEnum.IoCommand.SignalTower)
@@ -719,10 +855,12 @@ namespace LGC
             else if (m_Command.PIoCommand == APIEnum.IoCommand.SetFFUVoltage)
             {
                 lgcBase.PSystemData.PFFUSpeed = cv_WaitFfuSpeed;
+                /*
                 if (lgcBase.PSystemData.PIsInInitialation)
                 {
                     SendinitComplete(lgcBase.PSystemData.PWhichSideInInitilation);
                 }
+                */
             }
         }
         private void ProcessOCRCommand(CommandData m_Command)
@@ -758,6 +896,7 @@ namespace LGC
                             alarm.PUnit = 0;
                             alarm.PLevel = AlarmLevele.Light;
                             alarm.PStatus = AlarmStatus.Occur;
+                            alarm.PSide = alarm.PSide;
                             alarm.PTime = DateTime.Now.ToString("yyyyMMDDHHmmss");
                             EditAlarm(alarm);
                             ShowMsg("OCR read Error!!!", true, false);
@@ -765,7 +904,7 @@ namespace LGC
                             //report BC ocr read.
                             g_eventController.SendWorkDataUpdateReport(aligner.cv_Data.GlassDataMap[1]);
 
-                            if (lgcBase.PSystemData.POperationModeLeft == OperationMode.Auto && lgcBase.PSystemData.POcrMode1 == OCRMode.ErrorHold)
+                            if (lgcBase.PSystemData.POperationMode == OperationMode.Auto && lgcBase.PSystemData.POcrMode1 == OCRMode.ErrorHold)
                             {
                                 g_eventController.SendShowOcrDecide();
                             }
@@ -792,6 +931,7 @@ namespace LGC
                         alarm.PUnit = 0;
                         alarm.PLevel = AlarmLevele.Light;
                         alarm.PStatus = AlarmStatus.Occur;
+                        alarm.PSide = aligner.PSideGroup;
                         alarm.PTime = DateTime.Now.ToString("yyyyMMDDHHmmss");
                         EditAlarm(alarm);
                     }
@@ -827,6 +967,7 @@ namespace LGC
             }
             else if (m_Command.PEventCommand == APIEnum.EventCommand.ERROR)
             {
+                /*
                 CommonData.HIRATA.AlarmItem alarm = new AlarmItem();
                 alarm.PCode = Alarmtable.RobotApiErrorEvent.ToString();
                 alarm.PMainDescription = "Robot_API_ERROR_EVENT";
@@ -836,6 +977,7 @@ namespace LGC
                 alarm.PStatus = AlarmStatus.Occur;
                 alarm.PTime = DateTime.Now.ToString("yyyyMMDDHHmmss");
                 EditAlarm(alarm);
+                */
                 //BaseForm.PSystemData.POperationModeLeft = OperationMode.Manual;
             }
             else if (m_Command.PEventCommand == APIEnum.EventCommand.FoupPresence)
@@ -863,57 +1005,58 @@ namespace LGC
             }
             else if (m_Command.PEventCommand == APIEnum.EventCommand.GetStatus)
             {
-                /* i'm not sure this status event can use in ODF2.
-                Robot robot = GetRobotById(1);
-                WriteLog(LogLevelType.General, "[Recv] Robot Sensor event S", FunInOut.None);
+                // i'm not sure this status event can use in ODF2.
+                int deviceid = m_Command.cv_DeviceId;
+                Robot robot = GetRobotById(deviceid);
+                WriteLog(LogLevelType.General, "[Recv] Robot Sensor event Status", FunInOut.None);
                 if (m_Command.cv_ReplyParaList[1].Trim() == "1")
                 {
-                    cv_Data.GlassDataMap[(int)RobotArm.rbaDown].PHasSensor = true;
+                    robot.cv_Data.GlassDataMap[(int)RobotArm.rbaDown].PHasSensor = true;
                     //                    LgcForm.WriteLog(LogLevelType.General, "[Recv] Robot Sensor event", FunInOut.None);
                 }
                 else if (m_Command.cv_ReplyParaList[1].Trim() == "0")
                 {
-                    cv_Data.GlassDataMap[(int)RobotArm.rbaDown].PHasSensor = false;
+                    robot.cv_Data.GlassDataMap[(int)RobotArm.rbaDown].PHasSensor = false;
                     //                  LgcForm.WriteLog(LogLevelType.General, "[Recv] Robot Sensor event", FunInOut.None);
                 }
                 else
                 {
-                    LgcForm.ShowMsg("Command Robot status reply error : " + m_Command.cv_ReplyParaList.ToString(), true, false);
+                    LgcModule.ShowMsg("Command Robot status reply error : " + m_Command.cv_ReplyParaList.ToString(), true, false);
                     CommonData.HIRATA.AlarmItem alarm = new AlarmItem();
                     alarm.PCode = CommonData.HIRATA.Alarmtable.RobotApiRobotStatusError.ToString();
                     alarm.PLevel = AlarmLevele.Serious;
                     alarm.PMainDescription = "RobotApi Robot Status Error";
                     alarm.PUnit = 0;
                     alarm.PStatus = AlarmStatus.Occur;
-                    LgcForm.EditAlarm(alarm);
+                    alarm.PSide = robot.PSideGroup;
+                    LgcModule.EditAlarm(alarm);
                 }
 
                 if (m_Command.cv_ReplyParaList[2].Trim() == "1")
                 {
-                    cv_Data.GlassDataMap[(int)RobotArm.rbaUp].PHasSensor = true;
+                    robot.cv_Data.GlassDataMap[(int)RobotArm.rbaUp].PHasSensor = true;
                     //                LgcForm.WriteLog(LogLevelType.General, "[Recv] Robot Sensor event", FunInOut.None);
                 }
 
                 else if (m_Command.cv_ReplyParaList[2].Trim() == "0")
                 {
-                    cv_Data.GlassDataMap[(int)RobotArm.rbaUp].PHasSensor = false;
+                    robot.cv_Data.GlassDataMap[(int)RobotArm.rbaUp].PHasSensor = false;
                     //              LgcForm.WriteLog(LogLevelType.General, "[Recv] Robot Sensor event", FunInOut.None);
                 }
                 else
                 {
-                    LgcForm.ShowMsg("Command Robot status reply error : " + m_Command.cv_ReplyParaList.ToString(), true, false);
+                    LgcModule.ShowMsg("Command Robot status reply error : " + m_Command.cv_ReplyParaList.ToString(), true, false);
                     CommonData.HIRATA.AlarmItem alarm = new AlarmItem();
                     alarm.PCode = CommonData.HIRATA.Alarmtable.RobotApiRobotStatusError.ToString();
                     alarm.PLevel = AlarmLevele.Serious;
                     alarm.PMainDescription = "RobotApi Robot Status Error";
                     alarm.PUnit = 0;
                     alarm.PStatus = AlarmStatus.Occur;
-                    LgcForm.EditAlarm(alarm);
+                    alarm.PSide = robot.PSideGroup;
+                    LgcModule.EditAlarm(alarm);
                 }
                 robot.SendDataViaMmf();
-                robot.cv_Data.SaveToFile();
-                LgcForm.WriteLog(LogLevelType.General, "[Recv] Robot Sensor event E", FunInOut.None);
-                */
+                LgcModule.WriteLog(LogLevelType.General, "[Recv] Robot Sensor event E", FunInOut.None);
             }
             else if ((int)m_Command.PEventCommand >= (int)APIEnum.EventCommand.Pressure &&
                  (int)m_Command.PEventCommand <= (int)APIEnum.EventCommand.GetStatus)
@@ -954,17 +1097,7 @@ namespace LGC
             {
                 rb.PIsHome = true;
                 //if (!cv_HadInit && cv_Initilizing)
-                if ((lgcBase.PSystemData.PWhichSideInInitilation == rb.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
-                {
-                    if (!rb.PIsSensorUnmatch)
-                    {
-                        SetAllPortStatus();
-                    }
-                    else
-                    {
-                        SendinitCompleteFail(lgcBase.PSystemData.PWhichSideInInitilation);
-                    }
-                }
+
                 rtn = true;
             }
             return rtn;
@@ -976,13 +1109,7 @@ namespace LGC
             aligner.PIsHome = true;
             if ((lgcBase.PSystemData.PWhichSideInInitilation == aligner.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
             {
-                foreach (Buffer bf in cv_BufferContainer.Values)
-                {
-                    if ((bf.PSideGroup == lgcBase.PSystemData.PWhichSideInInitilation) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
-                    {
-                        SetStatus(APIEnum.CommnadDevice.Buffer, bf.cv_Id);
-                    }
-                }
+
             }
             else if (aligner.cv_Data.PPreAction == AlignerPreAction.WaitHome)
             {
@@ -1006,19 +1133,6 @@ namespace LGC
             port.PPortStatus = PortStaus.UDRQ;
             port.PClamp = PortClamp.Unclamp;
             port.cv_Data.SaveToFile();
-            if ((lgcBase.PSystemData.PWhichSideInInitilation == port.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
-            {
-                if (CheckAllPortHome())
-                {
-                    foreach (Aligner al in cv_AlignerContainer.Values)
-                    {
-                        if ((lgcBase.PSystemData.PWhichSideInInitilation == al.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
-                        {
-                            SetStatus(APIEnum.CommnadDevice.Aligner, al.cv_Id);
-                        }
-                    }
-                }
-            }
             return rtn;
         }
         #endregion
@@ -1032,53 +1146,16 @@ namespace LGC
                 case APIEnum.CommnadDevice.Robot:
                     Robot rb = GetRobotById(m_Command.cv_DeviceId);
                     rb.PIsResetError = true;
-
-                    if ((lgcBase.PSystemData.PWhichSideInInitilation == rb.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
-                    {
-                        for (int i = 1; i <= CommonData.HIRATA.CommonStaticData.g_PortNumber; i++)
-                        {
-                            Port port1 = GetPortById(i);
-                            if ((lgcBase.PSystemData.PWhichSideInInitilation == port1.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
-                            {
-                                SetErrorReset(APIEnum.CommnadDevice.P, i);
-                            }
-                        }
-                    }
                     break;
                 case APIEnum.CommnadDevice.P:
                     Port port = GetPortById(m_Command.cv_DeviceId);
                     port.PIsResetError = true;
-                    if ((lgcBase.PSystemData.PWhichSideInInitilation == port.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
-                    {
-                        if (CheckAllPortResetError())
-                        {
-                            foreach (Aligner al1 in cv_AlignerContainer.Values)
-                            {
-                                if ((lgcBase.PSystemData.PWhichSideInInitilation == al1.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
-                                {
-                                    SetErrorReset(APIEnum.CommnadDevice.Aligner, 1);
-                                }
-                            }
-                        }
-                    }
+
                     break;
                 case APIEnum.CommnadDevice.Aligner:
                     Aligner al = GetAlignerById(m_Command.cv_DeviceId);
                     al.PIsResetError = true;
-                    if ((lgcBase.PSystemData.PWhichSideInInitilation == al.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
-                    {
-                        foreach (Robot rb1 in cv_RobotContainer.Values)
-                        {
-                            if ((lgcBase.PSystemData.PWhichSideInInitilation == rb1.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
-                            {
-                                SetStatus(APIEnum.CommnadDevice.Robot, rb1.cv_Id);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        SetStatus(APIEnum.CommnadDevice.Aligner, m_Command.cv_DeviceId);
-                    }
+                    //SetStatus(APIEnum.CommnadDevice.Aligner, m_Command.cv_DeviceId);
                     break;
             };
             return rtn;
@@ -1143,6 +1220,7 @@ namespace LGC
                 alarm.PMainDescription = "RobotApi Robot Status Error";
                 alarm.PUnit = 0;
                 alarm.PStatus = AlarmStatus.Occur;
+                alarm.PSide = rb.PSideGroup;
                 EditAlarm(alarm);
                 ok = false;
             }
@@ -1165,6 +1243,7 @@ namespace LGC
                 alarm.PMainDescription = "RobotApi Robot Status Error";
                 alarm.PUnit = 0;
                 alarm.PStatus = AlarmStatus.Occur;
+                alarm.PSide = rb.PSideGroup;
                 EditAlarm(alarm);
                 ok = false;
             }
@@ -1211,6 +1290,7 @@ namespace LGC
                 alarm.PMainDescription = "RobotApi Robot Status Error";
                 alarm.PUnit = 0;
                 alarm.PStatus = AlarmStatus.Occur;
+                alarm.PSide = rb.PSideGroup;
                 EditAlarm(alarm);
                 ok = false;
             }
@@ -1230,34 +1310,9 @@ namespace LGC
                         alarm.PMainDescription = "At Initialize Robot Sensor Unmatch";
                         alarm.PUnit = 0;
                         alarm.PStatus = AlarmStatus.Occur;
+                        alarm.PSide = rb.PSideGroup;
                         EditAlarm(alarm);
                         rb.PIsSensorUnmatch = true;
-                    }
-                    //else
-                    {
-                        //if(m_Command.cv_ReplyParaList[0].Trim() == "0621")
-                        if (rb.cv_Id == 1)
-                        {
-                            if (lgcBase.PSystemData.PRobot1Status == EquipmentStatus.Stop)
-                            {
-                                SetRobotRestart(rb.cv_Id);
-                            }
-                            else
-                            {
-                                SetHome(APIEnum.CommnadDevice.Robot, rb.cv_Id);
-                            }
-                        }
-                        else if (rb.cv_Id == 2)
-                        {
-                            if (lgcBase.PSystemData.PRobot2Status == EquipmentStatus.Stop)
-                            {
-                                SetRobotRestart(rb.cv_Id);
-                            }
-                            else
-                            {
-                                SetHome(APIEnum.CommnadDevice.Robot, rb.cv_Id);
-                            }
-                        }
                     }
                 }
             }
@@ -1291,6 +1346,7 @@ namespace LGC
                 alarm.PMainDescription = "RobotApi Aligner Status Error";
                 alarm.PUnit = 0;
                 alarm.PStatus = AlarmStatus.Occur;
+                alarm.PSide = aligner.PSideGroup;
                 EditAlarm(alarm);
                 ok = false;
             }
@@ -1302,6 +1358,7 @@ namespace LGC
                 alarm.PMainDescription = "RobotApi Aligner Offline";
                 alarm.PUnit = 0;
                 alarm.PStatus = AlarmStatus.Occur;
+                alarm.PSide = aligner.PSideGroup;
                 EditAlarm(alarm);
             }
             if (ok)
@@ -1310,10 +1367,7 @@ namespace LGC
                 if (aligner.cv_Data.IsSensorDataMatch(out tmp))
                 {
                     aligner.PIsStatus = true;
-                    if(isInInitialationSide(aligner.PSideGroup))
-                    {
-                        SetHome(APIEnum.CommnadDevice.Aligner, aligner.cv_Id);
-                    }
+
                 }
                 else
                 {
@@ -1324,6 +1378,7 @@ namespace LGC
                     alarm.PMainDescription = "At Initialize Aligner Sensor Unmatch";
                     alarm.PUnit = 0;
                     alarm.PStatus = AlarmStatus.Occur;
+                    alarm.PSide = aligner.PSideGroup;
                     EditAlarm(alarm);
                     if(isInInitialationSide(aligner.PSideGroup))
                     {
@@ -1368,6 +1423,7 @@ namespace LGC
                 alarm.PMainDescription = "RobotApi Port Not In Online";
                 alarm.PUnit = 0;
                 alarm.PStatus = AlarmStatus.Occur;
+                alarm.PSide = port.PSideGroup;
                 EditAlarm(alarm);
                 ok = false;
             }
@@ -1379,6 +1435,7 @@ namespace LGC
                 alarm.PMainDescription = "RobotApi Port Error";
                 alarm.PUnit = 0;
                 alarm.PStatus = AlarmStatus.Occur;
+                alarm.PSide = port.PSideGroup;
                 EditAlarm(alarm);
                 ok = false;
             }
@@ -1398,6 +1455,7 @@ namespace LGC
                 alarm.PMainDescription = "RobotApi Port Foup sensor error";
                 alarm.PUnit = 0;
                 alarm.PStatus = AlarmStatus.Occur;
+                alarm.PSide = port.PSideGroup;
                 EditAlarm(alarm);
                 ok = false;
             }
@@ -1417,6 +1475,7 @@ namespace LGC
                 alarm.PMainDescription = "RobotApi Port Foup clamp sensor error";
                 alarm.PUnit = 0;
                 alarm.PStatus = AlarmStatus.Occur;
+                alarm.PSide = port.PSideGroup;
                 EditAlarm(alarm);
                 ok = false;
             }
@@ -1431,6 +1490,7 @@ namespace LGC
                     alarm.PMainDescription = "Port type value over range , please re-set";
                     alarm.PUnit = 0;
                     alarm.PStatus = AlarmStatus.Occur;
+                    alarm.PSide = port.PSideGroup;
                     EditAlarm(alarm);
                     ok = false;
                 }
@@ -1459,6 +1519,7 @@ namespace LGC
                     alarm.PMainDescription = "Efem Port Type Error";
                     alarm.PUnit = 0;
                     alarm.PStatus = AlarmStatus.Occur;
+                    alarm.PSide = port.PSideGroup;
                     EditAlarm(alarm);
                     ok = false;
                     //}
@@ -1488,6 +1549,7 @@ namespace LGC
                         alarm.PMainDescription = "Port Type Slot Number Error , please contact vendor";
                         alarm.PUnit = 0;
                         alarm.PStatus = AlarmStatus.Occur;
+                        alarm.PSide = port.PSideGroup;
                         EditAlarm(alarm);
                         ok = false;
                     }
@@ -1501,6 +1563,7 @@ namespace LGC
                 alarm.PMainDescription = "RobotApi Port Door error";
                 alarm.PUnit = 0;
                 alarm.PStatus = AlarmStatus.Occur;
+                alarm.PSide = port.PSideGroup;
                 EditAlarm(alarm);
                 ok = false;
             }
@@ -1520,6 +1583,7 @@ namespace LGC
                 alarm.PMainDescription = "RobotApi Port Door error";
                 alarm.PUnit = 0;
                 alarm.PStatus = AlarmStatus.Occur;
+                alarm.PSide = port.PSideGroup;
                 EditAlarm(alarm);
                 ok = false;
             }
@@ -1533,6 +1597,7 @@ namespace LGC
                     alarm.PMainDescription = "Port Clamp But Door Close Or No Foup";
                     alarm.PUnit = 0;
                     alarm.PStatus = AlarmStatus.Occur;
+                    alarm.PSide = port.PSideGroup;
                     EditAlarm(alarm);
                     ok = false;
                 }
@@ -1551,6 +1616,7 @@ namespace LGC
                     alarm.PMainDescription = "Port UnClamp But Door Open";
                     alarm.PUnit = 0;
                     alarm.PStatus = AlarmStatus.Occur;
+                    alarm.PSide = port.PSideGroup;
                     EditAlarm(alarm);
                     ok = false;
                 }
@@ -1596,6 +1662,7 @@ namespace LGC
                                     alarm.PMainDescription = "At Initialize Port Sensor Unmatch";
                                     alarm.PUnit = 0;
                                     alarm.PStatus = AlarmStatus.Occur;
+                                    alarm.PSide = port.PSideGroup;
                                     EditAlarm(alarm);
                                     if (isInInitialationSide(port.PSideGroup))
                                     {
@@ -1645,23 +1712,6 @@ namespace LGC
             if (ok)
             {
                 GetPortById(m_Command.cv_DeviceId).PIsStatus = true;
-
-                if(isInInitialationSide(port.PSideGroup))
-                {
-                    if (CheckAllPortStatus())
-                    {
-                        if (!SetAllPortHome())
-                        {
-                            foreach (Aligner al in cv_AlignerContainer.Values)
-                            {
-                                if (isInInitialationSide(al.PSideGroup))
-                                {
-                                    SetStatus(APIEnum.CommnadDevice.Aligner, al.cv_Id);
-                                }
-                            }
-                        }
-                    }
-                }
             }
             GetPortById(port_id).SendDataViaMmf();
             return ok;
@@ -1674,30 +1724,28 @@ namespace LGC
             {
                 for (int i = 0; i < m_Command.cv_ReplyParaList.Count; i++)
                 {
-                    if (i < LgcModule.GetBufferById(1).cv_SlotCount)
+                    if (Regex.Match(m_Command.cv_ReplyParaList[i], @"1", RegexOptions.IgnoreCase).Success)
                     {
-                        if (Regex.Match(m_Command.cv_ReplyParaList[i], @"1", RegexOptions.IgnoreCase).Success)
-                        {
-                            buffer.cv_Data.GlassDataMap[i + 1].PHasSensor = true;
-                        }
-                        else if (Regex.Match(m_Command.cv_ReplyParaList[i], @"0", RegexOptions.IgnoreCase).Success)
-                        {
-                            buffer.cv_Data.GlassDataMap[i + 1].PHasSensor = false;
-                        }
-                        else
-                        {
-                            LgcModule.ShowMsg("Command reply error (mapping data abnormal) : " +
-                                string.Join(",", m_Command.cv_ReplyParaList.ToString()), true, false);
-                            ok = false;
-                            CommonData.HIRATA.AlarmItem alarm = new AlarmItem();
-                            alarm.PCode = CommonData.HIRATA.Alarmtable.RobotApiBufferStatusError.ToString();
-                            alarm.PMainDescription = "Robot API Buffer sensor Error";
-                            alarm.PUnit = 0;
-                            alarm.PLevel = AlarmLevele.Serious;
-                            alarm.PStatus = AlarmStatus.Occur;
-                            alarm.PTime = DateTime.Now.ToString("yyyyMMDDHHmmss");
-                            LgcModule.EditAlarm(alarm);
-                        }
+                        buffer.cv_Data.GlassDataMap[i + 1].PHasSensor = true;
+                    }
+                    else if (Regex.Match(m_Command.cv_ReplyParaList[i], @"0", RegexOptions.IgnoreCase).Success)
+                    {
+                        buffer.cv_Data.GlassDataMap[i + 1].PHasSensor = false;
+                    }
+                    else
+                    {
+                        LgcModule.ShowMsg("Command reply error (mapping data abnormal) : " +
+                            string.Join(",", m_Command.cv_ReplyParaList.ToString()), true, false);
+                        ok = false;
+                        CommonData.HIRATA.AlarmItem alarm = new AlarmItem();
+                        alarm.PCode = CommonData.HIRATA.Alarmtable.RobotApiBufferStatusError.ToString();
+                        alarm.PMainDescription = "Robot API Buffer sensor Error";
+                        alarm.PUnit = 0;
+                        alarm.PLevel = AlarmLevele.Serious;
+                        alarm.PStatus = AlarmStatus.Occur;
+                        alarm.PTime = DateTime.Now.ToString("yyyyMMDDHHmmss");
+                        alarm.PSide = buffer.PSideGroup;
+                        LgcModule.EditAlarm(alarm);
                     }
                 }
             }
@@ -1711,6 +1759,7 @@ namespace LGC
                 alarm.PLevel = AlarmLevele.Serious;
                 alarm.PStatus = AlarmStatus.Occur;
                 alarm.PTime = DateTime.Now.ToString("yyyyMMDDHHmmss");
+                alarm.PSide = buffer.PSideGroup;
                 LgcModule.EditAlarm(alarm);
             }
             if (ok)
@@ -1718,10 +1767,7 @@ namespace LGC
                 List<int> tmp = new List<int>();
                 if (buffer.cv_Data.IsSensorDataMatch(out tmp))
                 {
-                    if(isInInitialationSide(buffer.PSideGroup))
-                    {
-                        SetStatus(APIEnum.CommnadDevice.EFEM, 0);
-                    }
+                    buffer.PIsStatus = true;
                 }
                 else
                 {
@@ -1733,7 +1779,8 @@ namespace LGC
                     alarm.PUnit = 0;
                     alarm.PLevel = AlarmLevele.Serious;
                     alarm.PStatus = AlarmStatus.Occur;
-                    alarm.PTime = DateTime.Now.ToString("yyyyMMDDHHmmss");
+                    alarm.PTime = DateTime.Now.ToString("yyyyMMDDHHmmss");                                                        
+                    alarm.PSide = buffer.PSideGroup;
                     LgcModule.EditAlarm(alarm);
                     if(isInInitialationSide(buffer.PSideGroup))
                     {
@@ -1808,6 +1855,7 @@ FFU2, FFU3, FFU4, FFU5, FFU6, FFU7, FFU8, FFU9, FFU10, FFU11,Robot Mode, Robot E
                             alarm.PLevel = AlarmLevele.Serious;
                             alarm.PStatus = AlarmStatus.Occur;
                             alarm.PTime = DateTime.Now.ToString("yyyyMMDDHHmmss");
+                            alarm.PSide = enSideGroup.Both;
                             EditAlarm(alarm);
                             if(lgcBase.PSystemData.PIsInInitialation)
                             {
@@ -1827,6 +1875,7 @@ FFU2, FFU3, FFU4, FFU5, FFU6, FFU7, FFU8, FFU9, FFU10, FFU11,Robot Mode, Robot E
                 alarm.PLevel = AlarmLevele.Serious;
                 alarm.PStatus = AlarmStatus.Occur;
                 alarm.PTime = DateTime.Now.ToString("yyyyMMDDHHmmss");
+                alarm.PSide = enSideGroup.Both;
                 EditAlarm(alarm);
                 if(lgcBase.PSystemData.PIsInInitialation)
                 {
@@ -1835,6 +1884,7 @@ FFU2, FFU3, FFU4, FFU5, FFU6, FFU7, FFU8, FFU9, FFU10, FFU11,Robot Mode, Robot E
             }
             if (ok)
             {
+                /*
                 if(lgcBase.PSystemData.PIsInInitialation)
                 {
                     foreach(Robot rb in cv_RobotContainer.Values)
@@ -1854,6 +1904,7 @@ FFU2, FFU3, FFU4, FFU5, FFU6, FFU7, FFU8, FFU9, FFU10, FFU11,Robot Mode, Robot E
                         }
                     }
                 }
+                */
             }
             return ok;
         }
@@ -2136,11 +2187,16 @@ FFU2, FFU3, FFU4, FFU5, FFU6, FFU7, FFU8, FFU9, FFU10, FFU11,Robot Mode, Robot E
         #endregion
 
         #region Common
-        public static bool SetAllPortStatus()
+        public static bool SetAllPortStatus(enSideGroup m_Side)
         {
+            Port port = null;
             for (int i = 1; i <= CommonData.HIRATA.CommonStaticData.g_PortNumber; i++)
             {
-                SetStatus(APIEnum.CommnadDevice.P, i);
+                port = GetPortById(i);
+                if (port.PSideGroup == m_Side || m_Side == enSideGroup.Both)
+                {
+                    SetStatus(APIEnum.CommnadDevice.P, i);
+                }
             }
             return true;
         }
@@ -2159,8 +2215,16 @@ FFU2, FFU3, FFU4, FFU5, FFU6, FFU7, FFU8, FFU9, FFU10, FFU11,Robot Mode, Robot E
                         CommonData.HIRATA.APIEnum.CommnadDevice.P, id);
                     break;
                 case APIEnum.CommnadDevice.Buffer:
-                    command = new CommonData.HIRATA.CommandData(APIEnum.CommandType.IO, APIEnum.IoCommand.GetBufferStatus.ToString(),
-                        CommonData.HIRATA.APIEnum.CommnadDevice.IO, id);
+                    if (m_PoerId == 1)
+                    {
+                        command = new CommonData.HIRATA.CommandData(APIEnum.CommandType.IO, APIEnum.IoCommand.GetBufferStatus1.ToString(),
+                            CommonData.HIRATA.APIEnum.CommnadDevice.IO, 0);
+                    }
+                    else if (m_PoerId == 2)
+                    {
+                        command = new CommonData.HIRATA.CommandData(APIEnum.CommandType.IO, APIEnum.IoCommand.GetBufferStatus2.ToString(),
+                            CommonData.HIRATA.APIEnum.CommnadDevice.IO, 0);
+                    }
                     break;
                 case APIEnum.CommnadDevice.EFEM:
                     command = new CommonData.HIRATA.CommandData(APIEnum.CommandType.Common, APIEnum.CommonCommand.GetStatus.ToString(),
@@ -2197,36 +2261,39 @@ FFU2, FFU3, FFU4, FFU5, FFU6, FFU7, FFU8, FFU9, FFU10, FFU11,Robot Mode, Robot E
                 SetRobotCommonAction(command);
             }
         }
-        public static bool SetAllPortHome()
+        public static bool SetAllPortHome(enSideGroup m_Side)
         {
             bool is_need = false;
             for (int i = 1; i <= CommonData.HIRATA.CommonStaticData.g_PortNumber; i++)
             {
                 Port port = LgcModule.GetPortById(i);
-                //tmp don't check data.
-                if ((port.cv_Data.PPortHasCst == PortHasCst.Has))//) && (port.PPortStatus != PortStaus.LDCM))
+                if (port.PSideGroup == m_Side)
                 {
-                    if (!lgcBase.PSystemData.PIsForceInitial)
+                    //tmp don't check data.
+                    if ((port.cv_Data.PPortHasCst == PortHasCst.Has))//) && (port.PPortStatus != PortStaus.LDCM))
                     {
-                        if (port.PPortStatus != PortStaus.LDCM)
+                        if (!lgcBase.PSystemData.PIsForceInitial)
+                        {
+                            if (port.PPortStatus != PortStaus.LDCM)
+                            {
+                                SetHome(APIEnum.CommnadDevice.P, i);
+                                is_need = true;
+                            }
+                            else
+                            {
+                                port.cv_IsHome = true;
+                            }
+                        }
+                        else
                         {
                             SetHome(APIEnum.CommnadDevice.P, i);
                             is_need = true;
                         }
-                        else
-                        {
-                            port.cv_IsHome = true;
-                        }
                     }
                     else
                     {
-                        SetHome(APIEnum.CommnadDevice.P, i);
-                        is_need = true;
+                        port.cv_IsHome = true;
                     }
-                }
-                else
-                {
-                    port.cv_IsHome = true;
                 }
             }
             return is_need;

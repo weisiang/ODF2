@@ -192,32 +192,18 @@ namespace UI.GUI
         private void button2_Click(object sender, EventArgs e)
         {
             Port port = UiForm.GetPort(cv_Id);
-            bool result = false;
             if (port.cv_Data.PEfemPortType != 4)
             {
-                /*
-                result = UiForm.cv_mmfController.SendPortSlotTypeChange(cv_Id, 4, MmfEventClientEventType.etRequest, true);
-                if (!result)
-                {
-                    CommonStaticData.PopForm("Port slot type change time out , please retry!!", true, false);
-                }
-                */
+                setPortType(4);
             }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
             Port port = UiForm.GetPort(cv_Id);
-            bool result = false;
             if (port.cv_Data.PEfemPortType != 0)
             {
-                /*
-                result = UiForm.cv_mmfController.SendPortSlotTypeChange(cv_Id, 0, MmfEventClientEventType.etRequest, true);
-                if (!result)
-                {
-                    CommonStaticData.PopForm("Port slot type change time out , please retry!!", true, false);
-                }
-                */
+                setPortType(0);
             }
         }
 
@@ -242,7 +228,13 @@ namespace UI.GUI
                 CommonStaticData.PopForm("Manual Port cancel time out!!", true, false);
             }
             */
-
+        }
+        private void setPortType(int m_PortType)
+        {
+            CommonData.HIRATA.MDChangePortSlotType obj = new MDChangePortSlotType();
+            obj.PPortId = cv_Id;
+            obj.PSlotType = m_PortType;
+            UIController.triggerUiEvent(typeof(MDChangePortSlotType).Name, obj);
         }
     }
 }

@@ -15,12 +15,12 @@
         <cv_WorkCount>0</cv_WorkCount>
         <cv_WaitUnload>False</cv_WaitUnload>
         <cv_ProductionType>1</cv_ProductionType>
-        <cv_EfemPortType>4</cv_EfemPortType>
+        <cv_EfemPortType>0</cv_EfemPortType>
         <cv_IsWaitCancel>False</cv_IsWaitCancel>
         <cv_IsWaitAbort>False</cv_IsWaitAbort>
         <cv_Id>2</cv_Id>
-        <cv_SlotCount>13</cv_SlotCount>
-        <cv_FilePath>F:\work\Seeya\ODF2\ODF_2_code\bat\\..\config\LGC\Work\PortData2</cv_FilePath>
+        <cv_SlotCount>25</cv_SlotCount>
+        <cv_FilePath>F:\work\Project\Seeya\ODF2\ODF_2_code\bat\\..\config\LGC\Work\PortData2</cv_FilePath>
         <cv_GlassDataList>
             <GlassData>
                 <cv_EnterBufferTime/>

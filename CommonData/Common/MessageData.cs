@@ -112,7 +112,29 @@ namespace CommonData.HIRATA
 
     #endregion
 
-
+    #region Operation mode change ( auto , manual )
+    public class MDOperationModeChange : MessageBase
+    {
+        public bool cv_IsForce;
+        public int cv_ChangeOperationMode;
+        public int Result;
+        public OperationMode PChangeOperationMode
+        {
+            get { return (OperationMode)cv_ChangeOperationMode; }
+            set { cv_ChangeOperationMode = (int)value; }
+        }
+        public Result PResult
+        {
+            get { return (Result)Result; }
+            set { Result = (int)value; }
+        }
+        public bool PIsForce
+        {
+            get { return cv_IsForce; }
+            set { cv_IsForce = value; }
+        }
+    }
+#endregion
     //base end
 
     #region RobotAction
@@ -272,50 +294,6 @@ namespace CommonData.HIRATA
 
     #endregion
 
-    #region Operation mode change ( auto , manual )
-    public class MDOperationModeChangeRight : MessageBase
-    {
-        public bool cv_IsForce;
-        public int cv_ChangeOperationModeRight;
-        public int Result;
-        public OperationMode PChangeOperationModeRight
-        {
-            get { return (OperationMode)cv_ChangeOperationModeRight; }
-            set { cv_ChangeOperationModeRight = (int)value; }
-        }
-        public Result PResult
-        {
-            get { return (Result)Result; }
-            set { Result = (int)value; }
-        }
-        public bool PIsForce
-        {
-            get { return cv_IsForce; }
-            set { cv_IsForce = value; }
-        }
-    }
-    public class MDOperationModeChangeLeft : MessageBase
-    {
-        public bool cv_IsForce;
-        public int cv_ChangeOperationModeLeft;
-        public int Result;
-        public OperationMode PChangeOperationModeLeft
-        {
-            get { return (OperationMode)cv_ChangeOperationModeLeft; }
-            set { cv_ChangeOperationModeLeft = (int)value; }
-        }
-        public Result PResult
-        {
-            get { return (Result)Result; }
-            set { Result = (int)value; }
-        }
-        public bool PIsForce
-        {
-            get { return cv_IsForce; }
-            set { cv_IsForce = value; }
-        }
-    }
-    #endregion
 
     #region OnLineRequest
     public class MDOnlineRequest : MessageBase

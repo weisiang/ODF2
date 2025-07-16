@@ -17,14 +17,14 @@ using CIM;
 
 namespace UI
 {
-    public partial class  UIController : BaseEventController
+    public partial class UIController : BaseEventController
     {
         public static event deleSubscription eventUi;
 
         public delegate void DeleAppEvent(string m_MessageId, object m_Object);
         public static event DeleAppEvent EventAppEvent;
 
-        public UIController() : base (FdModule.UI)
+        public UIController() : base(FdModule.UI)
         {
         }
         ~UIController()
@@ -55,24 +55,18 @@ namespace UI
                 UIController.eventUi += receiveSubcription;
             }
         }
-        /*
-        protected override void ProcessLgcStart(FdModule m_SourceModule, string m_MessageId, Object m_Object)
-        {
-            g_eventController.LinkCommonDataEvent(lgcBase.cv_Alarms, BaseForm.cv_AccountData, lgcBase.cv_Recipes,
-                lgcBase.cv_TimeoutData, lgcBase.cv_GlassCountData, lgcBase.PSystemData);
-        }
-        */
 
         public override void addSubScription()
         {
             base.addSubScription();
             subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCMsg).Name, ProcessMmfEvent); //ok
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDChangePortSlotType).Name, ProcessMmfEvent); //ok
 
             subscriptionMap.Add(typeof(CommonData.HIRATA.MDTimeChartChange).Name, ProcessMmfEvent);
-            subscriptionMap.Add( typeof(CommonData.HIRATA.MDShowMsg).Name , ProcessMmfEvent);
-            subscriptionMap.Add(typeof(CommonData.HIRATA.MDInitial).Name, ProcessMsg);        // show bc msg.
-            subscriptionMap.Add(typeof(CommonData.HIRATA.MDPopMonitorForm).Name, ProcessMsg);        // show bc msg.
-            subscriptionMap.Add(typeof(CommonData.HIRATA.MDShowOcrDecide).Name, ProcessMsg);        // show bc msg.
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDShowMsg).Name, ProcessMmfEvent);
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDInitial).Name, ProcessMmfEvent);        // show bc msg.
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDPopMonitorForm).Name, ProcessMmfEvent);        // show bc msg.
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDShowOcrDecide).Name, ProcessMmfEvent);        // show bc msg.
             //subscriptionMap.Add(typeof(CommonData.HIRATA.PortData).Name, ProcessPortData); // data download.
             //subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCIdleDelayTime).Name, ProcessBcIdleTime); // bc set idle interval.
             //subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCIndexInterval).Name, ProcessBcIntervalTime);  // bc set index interval.
@@ -109,17 +103,7 @@ namespace UI
             WriteLog(LogLevelType.General, log);
             //WriteOut
         }
-        void ProcessMsg(FdModule m_SourceModule, string m_MessageId, Object m_Object)
-        {
-            //WriteIn
-            string log = "";
-            CommonData.HIRATA.MDShowMsg obj = m_Object as CommonData.HIRATA.MDShowMsg;
-            CommonData.HIRATA.Msg msg_item = obj.Msg;
-            //CommonStaticData.PopForm(msg_item.Txt, msg_item.PAutoClean, msg_item.PUserRep, m_Ticket, msg_item.TimeOut);
-            CommonStaticData.PopForm(msg_item.Txt, msg_item.PAutoClean, msg_item.PUserRep, 0 , msg_item.TimeOut);
-            WriteLog(LogLevelType.General, log);
-            //WriteOut
-        }
+
         public static void SendOpidReply(CommonData.HIRATA.Result m_Result, int m_PortId, string m_Opid, string m_CstSeq, uint m_ticket)
         {
             //WriteIn
@@ -130,7 +114,7 @@ namespace UI
             rtn.CstSeq = m_CstSeq;
             rtn.OpId = m_Opid;
             obj.Reply = rtn;
-           //SendMmfReplyObject(typeof(CommonData.HIRATA.MDPopOpidForm).Name, obj, 100, typeof(CommonData.HIRATA.MDPopOpidForm).Name, KParseObjToXmlPropertyType.Field);
+            //SendMmfReplyObject(typeof(CommonData.HIRATA.MDPopOpidForm).Name, obj, 100, typeof(CommonData.HIRATA.MDPopOpidForm).Name, KParseObjToXmlPropertyType.Field);
             //WriteOut
         }
         public static void SendMonitorReply(int m_PortId, CommonData.HIRATA.Result m_Result)
@@ -145,7 +129,7 @@ namespace UI
             //SendMmfReplyObject(typeof(CommonData.HIRATA.MDPopMonitorFormRep).Name, obj, 100, typeof(CommonData.HIRATA.MDPopMonitorFormRep).Name, KParseObjToXmlPropertyType.Field);
             //WriteOut
         }
-        public void SendRobotActionReq(int m_RobotId, CommonData.HIRATA.RobotAction m_Action, CommonData.HIRATA.RobotArm m_Arm, CommonData.HIRATA.ActionTarget m_Target, int m_TargetId, int m_TargetSlot, bool m_UseHS = false , bool m_IsAlignerExch=false , string m_AlignerDeg="")
+        public void SendRobotActionReq(int m_RobotId, CommonData.HIRATA.RobotAction m_Action, CommonData.HIRATA.RobotArm m_Arm, CommonData.HIRATA.ActionTarget m_Target, int m_TargetId, int m_TargetSlot, bool m_UseHS = false, bool m_IsAlignerExch = false, string m_AlignerDeg = "")
         {
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
             string log = "";
@@ -164,6 +148,15 @@ namespace UI
 
             triggerUiEvent(typeof(CommonData.HIRATA.MDRobotAction).Name, obj);
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
+        }
+
+        public void SendOperationMode(bool m_IsForce, OperationMode m_Mode)
+        {
+            WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
+            CommonData.HIRATA.MDOperationModeChange obj = new CommonData.HIRATA.MDOperationModeChange();
+            obj.PIsForce = m_IsForce;
+            obj.PChangeOperationMode = m_Mode;
+            triggerUiEvent(typeof(CommonData.HIRATA.MDOperationModeChange).Name, obj);
         }
     }
 }

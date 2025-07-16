@@ -169,12 +169,12 @@ namespace LGC
             base.addSubScription();
 
             subscriptionMap.Add(typeof(CommonData.HIRATA.MDApiCommand).Name, ProcessApiCommand); //ok
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDChangePortSlotType).Name, ProcessChangePortSlotType); //ok
             #region system data change request
             subscriptionMap.Add(typeof(CommonData.HIRATA.MDInitial).Name, ProcessInitialize);  
             subscriptionMap.Add(typeof(CommonData.HIRATA.MDOnlineRequest).Name, ProcessOnlineReq); 
             subscriptionMap.Add(typeof(CommonData.HIRATA.MDRobotInlineChange).Name, ProcessRobotInlineChange); 
-            subscriptionMap.Add(typeof(CommonData.HIRATA.MDOperationModeChangeRight).Name, ProcessOperatorModeChangeRight); 
-            subscriptionMap.Add(typeof(CommonData.HIRATA.MDOperationModeChangeLeft).Name, ProcessOperatorModeChangeLeft); 
+            subscriptionMap.Add(typeof(CommonData.HIRATA.MDOperationModeChange).Name, ProcessOperatorModeChange); 
             subscriptionMap.Add(typeof(CommonData.HIRATA.MDOcrMode).Name, ProcessOcrMode); 
             subscriptionMap.Add(typeof(CommonData.HIRATA.MDOntMode).Name, ProcessOntMode); 
             subscriptionMap.Add(typeof(CommonData.HIRATA.MDGlassDataCheck).Name, ProcessGlassCheck); 
@@ -192,110 +192,71 @@ namespace LGC
             subscriptionMap.Add(typeof(CommonData.HIRATA.MDBCDataRequest).Name, ProcessData); //ok
             #endregion
          }
+        protected void ProcessOperatorModeChange(FdModule m_SourceModule, string m_MessageId, Object m_Object)
+        {
+            WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
+            string log = "[Recv Operator Mode Change]" + Environment.NewLine;
+            CommonData.HIRATA.MDOperationModeChange obj = m_Object as CommonData.HIRATA.MDOperationModeChange;
+            log += "Cur Operation mode :" + lgcBase.cv_SystemData.POperationMode.ToString() + " Change Mode : " + obj.PChangeOperationMode.ToString() + Environment.NewLine;
+            log += "Change Mode use force feature : " + obj.PIsForce.ToString() + Environment.NewLine;
+            bool leftalarm = lgcBase.cv_Alarms.IsHasAlarm(enSideGroup.Left);
+            bool rightalarm = lgcBase.cv_Alarms.IsHasAlarm(enSideGroup.Right);
+            bool bothalarm = lgcBase.cv_Alarms.IsHasAlarm(enSideGroup.Both);
+            Robot leftrobot = LgcModule.GetRobotBySide(enSideGroup.Left);
+            Robot rightrobot = LgcModule.GetRobotBySide(enSideGroup.Right);
+            if (lgcBase.PSystemData.PapiInlineMode == EquipmentInlineMode.Remote)
+            {
+                if (obj.PChangeOperationMode == OperationMode.Manual)
+                {
+                    if(!leftrobot.IsBusy && !rightrobot.IsBusy)
+                    {
+                        lgcBase.PSystemData.POperationMode = OperationMode.Manual;
+                    }
+                    else
+                    {
+                        if(obj.PIsForce)
+                        {
+                            lgcBase.PSystemData.POperationMode = OperationMode.Manual;
+                        }
+                        else
+                        {
+                            LgcModule.cv_IsCycleStop = true;
+                        }
+                    }
+                }
+                else
+                {
+                    if(lgcBase.PSystemData.PIsInitializeOk)
+                    {
+                        bool canauto = false;
+                        if(lgcBase.PSystemData.PInitaiizeOkLeft && !leftalarm && !bothalarm)
+                        {
+                            canauto = true;
+                        }
+                        else if(lgcBase.PSystemData.PInitaiizeOkRight && !rightalarm && !bothalarm)
+                        {
+                            canauto = true;
+                        }
+                        if (canauto)
+                        {
+                            lgcBase.PSystemData.POperationMode = OperationMode.Auto;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                SendMsgToUi(true, false, 10000, "Can't change Operation mode ( check alarm and Robot status)!!!");
+            }
+            SendOperationModeChange(obj);
+            WriteLog(LogLevelType.General, log);
+            WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
+        }
+        private void SendOperationModeChange(CommonData.HIRATA.MDOperationModeChange m_obj)
+        {
+            triggerLgcEvent(typeof(CommonData.HIRATA.MDOperationModeChange).Name, m_obj);
+        }
 
-        protected void ProcessOperatorModeChangeLeft(FdModule m_SourceModule, string m_MessageId, Object m_Object)
-        {
-            /*
-            WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
-            base.ProcessOperatorModeChange(m_Object);
-            string log = "[Recv Operator Mode Change]" + Environment.NewLine;
-            CommonData.HIRATA.MDOperationModeChangeRight obj = m_Object as CommonData.HIRATA.MDOperationModeChangeRight;
-            log += "Cur Operation mode :" + LgcForm.PSystemData.POperationModeRight.ToString() + " Change Mode : " + obj.PChangeOperationMode.ToString() + Environment.NewLine;
-            log += "Change Mode use force feature : " +obj.PIsForce.ToString() +  Environment.NewLine;
-            if (obj.PType == CommonData.HIRATA.MmfEventClientEventType.etRequest)
-            {
-                if (!LgcForm.cv_Alarms.IsHasAlarm() && LgcForm.PSystemData.PRobotInline == EquipmentInlineMode.Remote)
-                {
-                    if ( (LgcForm.cv_RobotManaulJobPath.Count > 0) && obj.PChangeOperationMode == OperationMode.Auto )
-                    {
-                        LgcForm.cv_RobotManaulJobPath.Clear();
-                        SendMsgToUi(true, false, 10000, "System auto clear robot manual job.");
-                    }
-                    //LgcForm.PSystemData.POperationMode = obj.PChangeOperationMode;
-                    if(obj.PChangeOperationMode == OperationMode.Manual)
-                    {
-                        if(LgcForm.cv_RobotJobPath.Count > 0)
-                        {
-                            if(!obj.PIsForce)
-                            {
-                            LgcForm.cv_IsCycleStop = true;
-                        }
-                        else
-                        {
-                                LgcForm.cv_IsCycleStop = false;
-                                LgcForm.PSystemData.POperationMode = OperationMode.Manual;
-                            }
-                        }
-                        else
-                        {
-                            LgcForm.PSystemData.POperationMode = OperationMode.Manual;
-                        }
-                    }
-                    else
-                    {
-                        LgcForm.PSystemData.POperationMode = OperationMode.Auto;
-                    }
-                    //SendOperationMode(false , LgcForm.PSystemData.POperationMode, MmfEventClientEventType.etReply, false, m_Ticket);
-                }
-                else
-                {
-                    SendMsgToUi(true, false, 10000, "Can't change Operation mode ( check alarm and Robot status)!!!");
-                    //SendOperationMode(false , LgcForm.PSystemData.POperationMode, MmfEventClientEventType.etReply, false, m_Ticket);
-                }
-            }
-            WriteLog(LogLevelType.General, log);
-            WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
-            */
-        }
-        protected void ProcessOperatorModeChangeRight(FdModule m_SourceModule, string m_MessageId, Object m_Object)
-        {
-            /*
-            WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
-            base.ProcessOperatorModeChange(m_Object);
-            string log = "[Recv Operator Mode Change]" + Environment.NewLine;
-            CommonData.HIRATA.MDOperationModeChangeRight obj = m_Object as CommonData.HIRATA.MDOperationModeChangeRight;
-            log += "Cur Operation mode :" + LgcForm.PSystemData.POperationModeRight.ToString() + " Change Mode : " + obj.PChangeOperationModeRight.ToString() + Environment.NewLine;
-            log += "Change Mode use force feature : " +obj.PIsForce.ToString() +  Environment.NewLine;
-            if (obj.PType == CommonData.HIRATA.MmfEventClientEventType.etRequest)
-            {
-                if (!LgcForm.cv_Alarms.IsHasAlarm() && LgcForm.PSystemData.PapiInlineMode == EquipmentInlineMode.Remote)
-                {
-                    //LgcForm.PSystemData.POperationMode = obj.PChangeOperationMode;
-                    if(obj.PChangeOperationModeRight == OperationMode.Manual)
-                    {
-                        if(LgcForm.cv_RobotJobPath.Count > 0)
-                        {
-                            if(!obj.PIsForce)
-                            {
-                            LgcForm.cv_IsCycleStop = true;
-                        }
-                        else
-                        {
-                                LgcForm.cv_IsCycleStop = false;
-                                LgcForm.PSystemData.POperationMode = OperationMode.Manual;
-                            }
-                        }
-                        else
-                        {
-                            LgcForm.PSystemData.POperationMode = OperationMode.Manual;
-                        }
-                    }
-                    else
-                    {
-                        LgcForm.PSystemData.POperationMode = OperationMode.Auto;
-                    }
-                    //SendOperationMode(false , LgcForm.PSystemData.POperationMode, MmfEventClientEventType.etReply, false, m_Ticket);
-                }
-                else
-                {
-                    SendMsgToUi(true, false, 10000, "Can't change Operation mode ( check alarm and Robot status)!!!");
-                    //SendOperationMode(false , LgcForm.PSystemData.POperationMode, MmfEventClientEventType.etReply, false, m_Ticket);
-                }
-            }
-            WriteLog(LogLevelType.General, log);
-            WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
-            */
-        }
         protected void ProcessRobotInlineChange(FdModule m_SourceModule, string m_MessageId, Object m_Object)
         {
             //WriteIn
@@ -348,7 +309,7 @@ namespace LGC
                 }
                 else
                 {
-                    if (lgcBase.PSystemData.POperationModeLeft != OperationMode.Manual)
+                    if (lgcBase.PSystemData.POperationMode != OperationMode.Manual)
                     {
                         LgcModule.ShowMsg("CIM OFF unload , Please change to manual mode.", true, false);
                         return;
@@ -495,7 +456,7 @@ namespace LGC
             WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
             */
         }
-        protected override void ProcessChangePortSlotType( Object m_Object)
+        protected void ProcessChangePortSlotType(FdModule m_SourceModule, string m_MessageId, Object m_Object)
         {
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
             base.ProcessChangePortSlotType(m_Object);
@@ -504,7 +465,8 @@ namespace LGC
             int type = obj.PSlotType;
             if ((port.PPortStatus != PortStaus.LDRQ) || (port.PLotStatus != LotStatus.Empty))
             {
-                //SendPortSlotTypeChange(obj.PPortId, obj.PSlotType, MmfEventClientEventType.etReply, false, Result.NG, m_Ticket);
+                obj.PResult = Result.NG;
+                LGCController.triggerLgcEvent(typeof(MDChangePortSlotType).Name, obj);
                 LgcModule.ShowMsg("Port not at LDRQ , please remove foup", true, false);
                 return;
             }
@@ -525,8 +487,7 @@ namespace LGC
                     APIEnum.LoadPortCommand.SetType.ToString(), APIEnum.CommnadDevice.P, obj.PPortId, paras);
                 port.SendDataViaMmf();
                 LgcModule.SetPortSlotTypeChange(command_obj);
-               // SendPortSlotTypeChange(obj.PPortId, obj.PSlotType, MmfEventClientEventType.etReply, false, Result.OK, m_Ticket);
-                port.SendDataViaMmf();
+                LGCController.triggerLgcEvent(typeof(MDChangePortSlotType).Name, obj);
             }
             else if (type == 4)
             {
@@ -546,19 +507,19 @@ namespace LGC
                 LgcModule.SetPortSlotTypeChange(command_obj);
                 obj.PResult = Result.OK;
                 port.SendDataViaMmf();
-                //SendPortSlotTypeChange(obj.PPortId, obj.PSlotType, MmfEventClientEventType.etReply, false, Result.OK, m_Ticket);
-                port.SendDataViaMmf();
+                LgcModule.SetPortSlotTypeChange(command_obj);
+                LGCController.triggerLgcEvent(typeof(MDChangePortSlotType).Name, obj);
             }
             else
             {
-                //SendPortSlotTypeChange(obj.PPortId, obj.PSlotType, MmfEventClientEventType.etReply, false, Result.NG, m_Ticket);
+                obj.PResult = Result.NG;
+                LGCController.triggerLgcEvent(typeof(MDChangePortSlotType).Name, obj);
             }
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);
         }
         protected override void ProcessOcrDecideReply( Object m_Object)
         {
             WriteLog(LogLevelType.NormalFunctionInOut, "BaseMmfController." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
-            base.ProcessChangePortSlotType(m_Object);
             MDShowOcrDecideReply obj = m_Object as MDShowOcrDecideReply;
             Aligner aligner = LgcModule.GetAlignerById(1);
             if(lgcBase.PSystemData.POcrMode1 == OCRMode.ErrorHold)
