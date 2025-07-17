@@ -62,5 +62,6 @@ namespace CommonData.HIRATA
         public const int InterfaceErrorGlassDataRecipeUnmatch = 2053;
         public const int FoupDataContainsOverOneRecipe = 2054;
         public const int FoupDataRecipeEFEMNotHas = 2055;
+        public const int ParseFlowError = 2056;
     }
 }

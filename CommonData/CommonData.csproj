@@ -64,6 +64,7 @@
     <Compile Include="Common\EqData.cs" />
     <Compile Include="Common\PortData.cs" />
     <Compile Include="HIRATA\CIMMessageData.cs" />
+    <Compile Include="HIRATA\Flow.cs" />
     <Compile Include="HIRATA\GlassData.cs" />
     <Compile Include="HIRATA\HirataEnum.cs" />
     <Compile Include="HIRATA\HirataMsg.cs" />

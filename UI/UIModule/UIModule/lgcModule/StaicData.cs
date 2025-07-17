@@ -25,7 +25,7 @@ namespace LGC
         public static string g_TimeChartTemplate = "";
         public static string g_TimeChart = "";
 
-        public static string g_FlowStepSettingFile = "";
+        public static string g_FlowStepSettingXmlRoot = "";
 
 
         static CommonStaticData()
@@ -36,13 +36,13 @@ namespace LGC
             g_TimeChart = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_LgcModule + "\\timecharts.xml";
             g_RecipePath = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_LgcModule + "\\PPID.xml";
             g_StatsRecordPath = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_LgcModule + "\\StatusRecord.xml";
-            g_FlowStepSettingFile = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_LgcModule + "\\Flow.ini";
+            g_FlowStepSettingXmlRoot = CommonData.HIRATA.CommonStaticData.g_RootConfigFolderPath + CommonData.HIRATA.CommonStaticData.g_LgcModule + "\\Flow";
             if (!File.Exists(g_RecipePath)) Environment.Exit(CommonData.HIRATA.ReturnCodeDefine.LGC_RecipeFileNotDefined);
             if (!File.Exists(g_StatsRecordPath)) Environment.Exit(CommonData.HIRATA.ReturnCodeDefine.LGC_StatusRecordFileNotDefined);
             if (!File.Exists(g_TimeChartTemplate)) Environment.Exit(CommonData.HIRATA.ReturnCodeDefine.LGC_GIFTimeChartFile);
             if (!File.Exists(g_TimeOutPath)) Environment.Exit(CommonData.HIRATA.ReturnCodeDefine.LGC_TimeOutFileNotDefined);
             if (!File.Exists(g_GlassCountDataPath)) Environment.Exit(CommonData.HIRATA.ReturnCodeDefine.LGC_GlassCountDataFileNotDefined);
-            if (!File.Exists(g_FlowStepSettingFile)) Environment.Exit(CommonData.HIRATA.ReturnCodeDefine.LGC_FlowStepSettingFileNotDefined);
+            if (!Directory.Exists(g_FlowStepSettingXmlRoot)) Environment.Exit(CommonData.HIRATA.ReturnCodeDefine.LGC_FlowStepSettingFileNotDefined);
         }
     }
 }

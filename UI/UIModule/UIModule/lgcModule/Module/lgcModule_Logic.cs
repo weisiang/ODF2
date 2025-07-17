@@ -27,34 +27,39 @@ namespace LGC
             DoRightSideFindJob();
             DoRightSideJob();
         }
-        private void DoLeftSideFindJob( enSideGroup m_Side = enSideGroup.Left)
+        private bool checkConditionForFindJob(enSideGroup m_Side)
         {
-        }
-        private void DoRightSideFindJob( enSideGroup m_Side = enSideGroup.Left)
-        {
-        }
-        private void DoLeftSideJob( enSideGroup m_Side = enSideGroup.Left)
-        {
-            Robot side_robot = GetRobotBySide(m_Side) ;
+            bool rtn = true;
+            Robot side_robot = GetRobotBySide(m_Side);
             bool sidealarm = cv_Alarms.IsHasAlarm(m_Side);
             bool bothalarm = cv_Alarms.IsHasAlarm(enSideGroup.Both);
             bool sideinit = lgcBase.PSystemData.PInitaiizeOkLeft;
-            if (!sideinit) return;
-            if (sidealarm || bothalarm) return; 
-            if(cv_IsCycleStop)
+            if (!sideinit) rtn = false;
+            if (sidealarm || bothalarm) rtn = false;
+            if (cv_IsCycleStop)
             {
-                if(!side_robot.IsBusy)
+                if (!side_robot.IsBusy)
                 {
-                    return;
+                    rtn = false;
                 }
             }
+            if (side_robot.IsBusy) rtn = false;
+
+            return rtn;
+        }
+        private void DoLeftSideFindJob( enSideGroup m_Side = enSideGroup.Left)
+        {
+            if (!checkConditionForFindJob(m_Side)) return;
+        }
+        private void DoRightSideFindJob( enSideGroup m_Side = enSideGroup.Left)
+        {
+            if (!checkConditionForFindJob(m_Side)) return;
+        }
+        private void DoLeftSideJob( enSideGroup m_Side = enSideGroup.Left)
+        {
         }
         private void DoRightSideJob(enSideGroup m_Side = enSideGroup.Right)
         {
-            Robot side_robot = GetRobotBySide(m_Side) ;
-            bool sidealarm = cv_Alarms.IsHasAlarm(m_Side);
-            bool bothalarm = cv_Alarms.IsHasAlarm(enSideGroup.Both);
-            bool sideinit = lgcBase.PSystemData.PInitaiizeOkRight;
         }
         #region Do Robot Action for each Eqp.
         private void ProcessPortGetPutJob(RobotAction m_Type)

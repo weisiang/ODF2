@@ -21,11 +21,10 @@ namespace LGC
         public static LgcModule g_LgcModule = null;
         public static KMemoryIOClient PMio
         {
-            //get { return g_LgcModule.cv_Mio1; }
             get { return g_eventController.cv_TimechartController.GetmemoryIoClient(); }
         }
 
-        public static Dictionary<int, List<AllDevice>> cv_CurRecipeFlowStepSetting = new Dictionary<int, List<AllDevice>>();
+        public static Flow cv_FlowData = new Flow();
         public static List<int> cv_InProcessPort = new List<int>();
         internal static Dictionary<int, Eq> cv_EqContainer = new Dictionary<int, Eq>();
         internal static Dictionary<int, Port> cv_PortContainer = new Dictionary<int, Port>();
@@ -435,71 +434,45 @@ namespace LGC
         private void ParserFlowStep()
         {
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Enter);
-            cv_CurRecipeFlowStepSetting = null;
-            cv_CurRecipeFlowStepSetting = new Dictionary<int, List<AllDevice>>();
-            KIniFile stepIni = new KIniFile(CommonStaticData.g_FlowStepSettingFile);
-            Dictionary<string, string> tmp = new Dictionary<string, string>();
             RecipeItem recipe = null;
+            string log = "[ParserFlowStep]";
             if (lgcBase.cv_Recipes.GetCurRecipe(out recipe))
             {
-                string section = recipe.PFlow.ToString().Substring(4);
-                stepIni.ReadSection(section, tmp);
-                foreach (KeyValuePair<string, string> pair in tmp)
+                log += " : recipe : " + recipe.cv_Id + ". Flow : " + recipe.PFlow.ToString() + Environment.NewLine;
+                string flowname = recipe.PFlow.ToString().Substring(4); //Flow1-1, give 1-1
+                cv_FlowData.clearDic();
+                if (cv_FlowData.Parser(CommonStaticData.g_FlowStepSettingXmlRoot, flowname))
                 {
-                    Match match = Match.Empty;
-                    match = Regex.Match(pair.Key, @"\d", RegexOptions.IgnoreCase);
-                    if (match.Success)
-                    {
-                        int step_id = Convert.ToInt16(match.Value);
-                        List<string> steps = pair.Value.Split(',').ToList();
-                        List<AllDevice> step_devices = new List<AllDevice>();
-                        foreach (string step_item in steps)
-                        {
-                            if (Regex.Match(step_item, @"LP").Success)
-                            {
-                                step_devices.Add(AllDevice.LP);
-                            }
-                            else if (Regex.Match(step_item, @"UP").Success)
-                            {
-                                step_devices.Add(AllDevice.UP);
-                            }
-                            else if (Regex.Match(step_item, @"Buffer1").Success)
-                            {
-                                step_devices.Add(AllDevice.Buffer1_Left);
-                            }
-                            else if (Regex.Match(step_item, @"Buffer2").Success)
-                            {
-                                step_devices.Add(AllDevice.Buffer2_Mid);
-                            }
-                            else if (Regex.Match(step_item, @"Aligner1").Success)
-                            {
-                                step_devices.Add(AllDevice.Aligner1_Left);
-                            }
-                            else if (Regex.Match(step_item, @"Aligner2").Success)
-                            {
-                                step_devices.Add(AllDevice.Aligner2_Right);
-                            }
-                            else if (Regex.Match(step_item, @"EQ").Success)
-                            {
-                                int eq_id = Convert.ToInt16(step_item.Substring(2));
-                                EqId enumid = (EqId)eq_id;
-                                AllDevice all_device_item = (AllDevice)Enum.Parse(typeof(AllDevice), enumid.ToString());
-                                step_devices.Add(all_device_item);
-                            }
-                        }
-                        cv_CurRecipeFlowStepSetting[step_id] = step_devices;
-                    }
+                    log += cv_FlowData.getLogStr();
+                }
+                else
+                {
+                    log += "ERROR";
+                    CommonData.HIRATA.AlarmItem alarm = new AlarmItem();
+                    alarm.PCode = Alarmtable.ParseFlowError.ToString();
+                    alarm.PMainDescription = "Parse Flow Error : " + recipe.PFlow.ToString();
+                    alarm.PSubDescription = "";
+                    alarm.PUnit = 0;
+                    alarm.PLevel = AlarmLevele.Serious;
+                    alarm.PStatus = AlarmStatus.Occur;
+                    alarm.PSide = enSideGroup.Both;
+                    alarm.PTime = DateTime.Now.ToString("yyyyMMDDHHmmss");
+                    EditAlarm(alarm);
                 }
             }
-            string log = "Set recipe flow : " + Environment.NewLine;
-            foreach (KeyValuePair<int, List<AllDevice>> item in cv_CurRecipeFlowStepSetting)
+            else
             {
-                log += "Step : " + item.Key + " : ";
-                foreach (AllDevice device_item in item.Value)
-                {
-                    log += device_item.ToString() + "  ";
-                }
-                log += Environment.NewLine;
+                log += "get current recipe error";
+                CommonData.HIRATA.AlarmItem alarm = new AlarmItem();
+                alarm.PCode = Alarmtable.ParseFlowError.ToString();
+                alarm.PMainDescription = "Parse Flow Error : " + recipe.PFlow.ToString();
+                alarm.PSubDescription = "";
+                alarm.PUnit = 0;
+                alarm.PLevel = AlarmLevele.Serious;
+                alarm.PStatus = AlarmStatus.Occur;
+                alarm.PSide = enSideGroup.Both;
+                alarm.PTime = DateTime.Now.ToString("yyyyMMDDHHmmss");
+                EditAlarm(alarm);
             }
             WriteLog(LogLevelType.General, log);
             WriteLog(LogLevelType.NormalFunctionInOut, this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name, CommonData.HIRATA.FunInOut.Leave);

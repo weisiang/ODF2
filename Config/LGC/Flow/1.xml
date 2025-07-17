@@ -1,0 +1,62 @@
+<!--
+Name="EQ1" 	ToolId="SDP1"
+Name="EQ2" 	ToolId="SDP2"
+Name="EQ3" 	ToolId="SDP3"
+Name="EQ4" 	ToolId="SDP4"
+Name="EQ5" 	ToolId="SDP5"
+Name="EQ6" 	ToolId="SDP6"
+
+Name="EQ7" 	ToolId="AOI1"
+
+Name="EQ8" 	ToolId="IJP1"
+Name="EQ9" 	ToolId="IJP2"
+
+Name="EQ10" ToolId="VAS1"
+Name="EQ11" ToolId="VAS2"
+
+Name="EQ12" ToolId="UV1" 
+Name="EQ13" ToolId="UV2" 
+-->
+<Data>
+	<Flow Name="1-1" Rework="1" LoadUnloadPort="0">
+		<LefSteps>
+			<NormalSteps>
+				<Step Order="1">LP</Step>
+				<Step Order="2">Buffer1</Step>
+				<Step Order="3">Aligner1</Step>
+				<Step Order="4">EQ1,EQ2,EQ3,EQ4,EQ5,EQ6</Step>
+				<Step Order="5">Aligner1</Step>
+				<Step Order="6">EQ7</Step>
+				<Step Order="7">EQ8,EQ9</Step>
+				<Step Order="8">Buffer2</Step>
+			</NormalSteps>
+			<ReworkSteps>
+				<Step Order="1">Buffer1</Step>
+				<Step Order="2">Aligner1</Step>
+				<Step Order="3">EQ1,EQ2,EQ3,EQ4,EQ5,EQ6</Step>
+				<Step Order="4">Aligner1</Step>
+				<Step Order="5">EQ8,EQ9</Step>
+				<Step Order="6">Buffer2</Step>
+			</ReworkSteps>
+		</LefSteps>
+		<RightSteps>
+			<Wafer StepNumber="3">
+				<Step Order="1">Buffer2</Step>
+				<Step Order="2">Aligner1</Step>
+				<Step Order="3">EQ10,EQ11</Step>
+			</Wafer>
+			<Glass StepNumber="4">
+				<Step Order="1">LP</Step>
+				<Step Order="2">Aligner1</Step>
+				<Step Order="3">Buffer2</Step>
+				<Step Order="4">EQ10,EQ11</Step>
+			</Glass>
+			<Combination>
+				<Step Order="1">EQ10,EQ11</Step>
+				<Step Order="2">EQ12,EQ13</Step>
+				<Step Order="3">UP</Step>
+			</Combination>
+		</RightSteps>
+
+	</Flow> 
+</Data>
