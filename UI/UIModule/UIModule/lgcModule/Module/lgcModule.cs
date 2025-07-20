@@ -18,6 +18,9 @@ namespace LGC
 {
     public partial class LgcModule : lgcBase
     {
+        public RobotArm cv_GetPortArm = RobotArm.rbaDown;
+        public RobotArm cv_GetAlignerArm = RobotArm.rbaUp;
+        public RobotArm cv_GetBufferArm = RobotArm.rbaUp;
         public static LgcModule g_LgcModule = null;
         public static KMemoryIOClient PMio
         {
@@ -796,7 +799,7 @@ namespace LGC
                 {
                     if ((init_side == rb1.PSideGroup) || (init_side == enSideGroup.Both))
                     {
-                        if (rb1.PIsSensorUnmatch)
+                        if (rb1.cv_Data.IsSensorDataMatch())
                         {
                             error = true;
                             break;
@@ -1815,10 +1818,12 @@ namespace LGC
                 int max_slot = Convert.ToInt16(CommonData.HIRATA.CommonStaticData.g_AlignerXml.Items[i].Attributes["Capacity"].Trim());
                 string side = CommonData.HIRATA.CommonStaticData.g_AlignerXml.Items[i].Attributes["SideGroup"].Trim();
                 int enable = Convert.ToInt16(CommonData.HIRATA.CommonStaticData.g_AlignerXml.Items[i].Attributes["Enable"].Trim());
+                int Ocrenable = Convert.ToInt16(CommonData.HIRATA.CommonStaticData.g_AlignerXml.Items[i].Attributes["OcrEnable"].Trim());
                 Aligner aligner_control = new Aligner(eq_no, max_slot);
                 aligner_control.PSideGroup = Regex.Match(side , "left").Success ? enSideGroup.Left : enSideGroup.Right;
                 aligner_control.cv_Data.LoadFromFile();
-                aligner_control.cv_Data.PEnable = enable == 1 ? true : false;
+                aligner_control.cv_Data.PEnable =( enable == 1 ? true : false);
+                aligner_control.cv_Data.POcrEnable =(Ocrenable == 1 ? true : false);
                 aligner_control.cv_Data.SaveToFile();
                 cv_AlignerContainer.Add(eq_no, aligner_control);
                 aligner_control.SendDataViaMmf();
@@ -2584,29 +2589,6 @@ namespace LGC
             return rtn;
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            /*
-            for (int i = 3 , j=1; i < 7; i++,  j++)
-            {
-                GlassData tmp = new GlassData();
-                tmp.PCimMode = OnlineMode.Control;
-                tmp.PFoupSeq = 1;
-                tmp.PWorkOrderNo = 1;
-                tmp.PWorkSlot = 3;
-                tmp.PId = "RSI1M145RX" ;
-
-                CommonData.HIRATA.MDBCWorkTransferReport obj = new MDBCWorkTransferReport();
-                obj.PAction = DataFlowAction.Store;
-                obj.PGlassData = tmp;
-                obj.PPortNo = 2;
-                obj.PSlotNo = 3;
-                obj.PUnitNo = 0;
-                obj.PType = MmfEventClientEventType.etNotify;
-                cv_MmfController.SendMmfNotifyObject(typeof(CommonData.HIRATA.MDBCWorkTransferReport).Name, obj, KParseObjToXmlPropertyType.Field);
-            }
-            */
-        }
         public static string FindHightestPriorityPPID(int m_PortId)
         {
             //Args : 1.priority , 2.slot

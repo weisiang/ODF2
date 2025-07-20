@@ -18,6 +18,12 @@ namespace LGC
         private delegate void DeleProcessCommand(CommandData m_Command);
         private Dictionary<APIEnum.CommandType, DeleProcessCommand> cv_ProcessCommandPtr = new Dictionary<APIEnum.CommandType, DeleProcessCommand>();
 
+        private StepJob cv_CurStepJob = null;
+        public StepJob CurStepJob
+        {
+            get { return cv_CurStepJob; }
+            set { cv_CurStepJob = value; }
+        }
         private RobotJob cv_CurJob = null;
         public RobotJob CurJob
         {

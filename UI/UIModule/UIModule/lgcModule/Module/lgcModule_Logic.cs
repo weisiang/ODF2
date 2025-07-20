@@ -20,12 +20,467 @@ namespace LGC
     {
         private void OnRobotActionTimer()
         {
+            //FindAlignerJob just search substrate in aligner and the data not preAction.
             DerivedTimer();
             CalculateSystemStatus();
-            DoLeftSideFindJob();
-            DoLeftSideJob();
-            DoRightSideFindJob();
-            DoRightSideJob();
+
+            StepJob left_job = null;
+            StepJob right_job = null;
+
+            //processLeftAlignerAction(enSideGroup.Left);
+            //processLeftAlignerAction(enSideGroup.Right);
+
+            if (left_job == null)
+            {
+                DoLeftSideFindJob(out left_job);
+                if(left_job != null)
+                {
+                    Robot left_robot = GetRobotBySide(enSideGroup.Left);
+                    if (left_robot.CurStepJob != null)
+                    {
+                        left_robot.CurStepJob = left_job;
+                    }
+                }
+            }
+            /*
+            if(left_job != null)
+            {
+                DoLeftSideJob(left_job);
+            }
+
+            if (right_job != null)
+            {
+                DoRightSideFindJob(out right_job);
+            }
+            if (right_job != null)
+            {
+                DoLeftSideJob(right_job);
+            }
+            */
+        }
+        private bool checkEqAskLoad(List<AllDevice> m_Devs , out AllDevice m_Dev)
+        {
+            bool rtn = false;
+            m_Dev = AllDevice.None;
+            for(int i=0; i<m_Devs.Count;i++)
+            {
+                AllDevice dev = m_Devs[i];
+                EqId eq_id = EqId.None;
+                int time_chart_instance = 0;
+                int eq_time_chart_cur_step = 0;
+                if(Enum.TryParse<EqId>(dev.ToString() , out eq_id))
+                {
+                    if(eq_id == EqId.VAS1) //|| eq_id == EqId.VAS2)
+                    {
+                        eq_time_chart_cur_step = GetEqById((int)eq_id).GetTimeChatCurStep(1);
+                        time_chart_instance = (int)EqGifTimeChartId.TIMECHART_ID_VAS1_DOWN;
+                    }
+                    else if(eq_id == EqId.VAS2) //|| eq_id == EqId.VAS2)
+                    {
+                        eq_time_chart_cur_step = GetEqById((int)eq_id).GetTimeChatCurStep(1);
+                        time_chart_instance = (int)EqGifTimeChartId.TIMECHART_ID_VAS2_DOWN;
+                    }
+                    else
+                    {
+                        eq_time_chart_cur_step = GetEqById((int)eq_id).GetTimeChatCurStep(1);
+                        time_chart_instance = GetEqById((int)eq_id).cv_Comm.cv_TimeChatId;
+                    }
+                }
+                if (eq_time_chart_cur_step == (int)TimechartNormal.STEP_ID_ActionReady)
+                {
+                    EqInterFaceType gif_type = g_eventController.cv_TimechartController.GetTimeChartInstance(time_chart_instance).cv_ActionType;
+                    if (gif_type == EqInterFaceType.Load ||gif_type == EqInterFaceType.Exchange )
+                    {
+                        rtn = true;
+                        m_Dev = dev;
+                        break;
+                    }
+                }
+            }
+            return rtn;
+        }
+
+        private void DoLeftSideFindJob( out StepJob m_Job , enSideGroup m_Side = enSideGroup.Left)
+        {
+            m_Job = null;
+            if (!checkConditionForFindJob(m_Side))
+            { return; } 
+            Robot robot = GetRobotBySide(m_Side);
+            List<int> checkdatasensormatch = new List<int>();
+            if (!robot.cv_Data.IsSensorDataMatch(out checkdatasensormatch))
+            {
+                CommonData.HIRATA.AlarmItem alarm = new AlarmItem();
+                alarm.PCode = Alarmtable.DataAndSensorUnmatch.ToString();
+                alarm.PMainDescription = "Data And Sensor Unmatch. Robot : " + m_Side.ToString();
+                alarm.PSubDescription = "";
+                alarm.PUnit = 0;
+                alarm.PLevel = AlarmLevele.Serious;
+                alarm.PStatus = AlarmStatus.Occur;
+                alarm.PSide = m_Side;
+                alarm.PTime = DateTime.Now.ToString("yyyyMMDDHHmmss");
+                EditAlarm(alarm);
+                return;
+            }
+            Buffer left_buffer = GetBufferBySide(enSideGroup.Left);
+            Buffer mid_buffer = GetBufferBySide(enSideGroup.Both);
+            Aligner left_ali = GetAlignerBySide(enSideGroup.Left);
+            Aligner right_ali = GetAlignerBySide(enSideGroup.Right);
+
+            FLowFirstStepType first_type = cv_FlowData.whatIsNextPort(); //left flow has three types: 1.port->aligner->buffer. 2. port->EQ. 3. port->buffer2.
+
+            if (robot.cv_Data.GlassDataMap[(int)RobotArm.rbaDown].PHasSensor && robot.cv_Data.GlassDataMap[(int)RobotArm.rbaDown].PHasData &&
+                robot.cv_Data.GlassDataMap[(int)RobotArm.rbaUp].PHasSensor && robot.cv_Data.GlassDataMap[(int)RobotArm.rbaUp].PHasData)
+            {
+                GlassData up_glass = robot.cv_Data.GlassDataMap[(int)RobotArm.rbaUp];
+                GlassData down_glass = robot.cv_Data.GlassDataMap[(int)RobotArm.rbaDown];
+            }
+            else if (robot.cv_Data.GlassDataMap[(int)RobotArm.rbaUp].PHasSensor && robot.cv_Data.GlassDataMap[(int)RobotArm.rbaUp].PHasData)
+            {
+                MakeLeftSideRobotSingleArmStepData(RobotArm.rbaUp, out m_Job);
+            }
+            else if (robot.cv_Data.GlassDataMap[(int)RobotArm.rbaDown].PHasSensor && robot.cv_Data.GlassDataMap[(int)RobotArm.rbaDown].PHasData)
+            {
+                MakeLeftSideRobotSingleArmStepData(RobotArm.rbaUp, out m_Job);
+            }
+            else if (!robot.cv_Data.GlassDataMap[(int)RobotArm.rbaDown].PHasSensor && !robot.cv_Data.GlassDataMap[(int)RobotArm.rbaDown].PHasData &&
+                !robot.cv_Data.GlassDataMap[(int)RobotArm.rbaUp].PHasSensor && !robot.cv_Data.GlassDataMap[(int)RobotArm.rbaUp].PHasData)
+            {
+                if (first_type == FLowFirstStepType.Aligner)
+                {
+                    List<AllDevice> after_buffer_eqs;
+                    FLowStepTarget after_buffer1 = cv_FlowData.WahtIsAfterBuffer1(out after_buffer_eqs);
+                    AlignerPreAction ali_status = left_ali.cv_Data.PPreAction;
+                    bool enterAlignerOverOnce = cv_FlowData.IsEnterAlignerOverOnce();
+                    int howmany_wafer_can_into_buffer1 = left_buffer.cv_Data.howManyFreeSlot(BufferSlotType.Wafer);
+                    if (after_buffer1 == FLowStepTarget.EQ)
+                    {
+                        AllDevice which_eq_want_load = AllDevice.None;
+                        bool eq_want_load = checkEqAskLoad(after_buffer_eqs, out which_eq_want_load);
+                        if (left_ali.cv_Data.GlassDataMap[1].PHasData && left_ali.cv_Data.GlassDataMap[1].PHasSensor)
+                        {
+                            GlassData ali_data = left_ali.cv_Data.GlassDataMap[1];
+                            if (ali_data.IsEnterEq())
+                            {
+                                //wait substate that already into flow.
+                                m_Job = new StepJob(robot.cv_Id, RobotArm.rabNone, cv_GetAlignerArm, RobotAction.Get, ActionTarget.Aligner, left_ali.cv_Id,
+                                    1, false, false, true, ali_data.IsInReowrkFlow((int)EqId.AOI1) ? FlowType.LeftRework : FlowType.LeftNormal,
+                                    ali_data.PCurFlowStep);
+                            }
+                            else
+                            {
+                                Buffer bf1 = GetBufferBySide(m_Side);
+                                if (bf1.cv_Data.IsFreeSlot(BufferSlotType.Wafer) == -1)
+                                {
+                                    //get aligner because buffer1 is FIFO. maybe can change to don't care order by setting.
+                                    m_Job = new StepJob(robot.cv_Id, RobotArm.rabNone, cv_GetAlignerArm, RobotAction.Get, ActionTarget.Aligner, left_ali.cv_Id,
+                                    1, false, false, true, ali_data.IsInReowrkFlow((int)EqId.AOI1) ? FlowType.LeftRework : FlowType.LeftNormal,
+                                    ali_data.PCurFlowStep);
+                                }
+                                else
+                                {
+                                    //pre-action : maximum is buffer1 full and aligner has one. (aligner one step is in pre-action step).
+                                    int port = 0;
+                                    int slot = 0;
+                                    if (GetPortUnloadSlot(enSideGroup.Left, ProductCategory.Wafer, out port, out slot))
+                                    {
+                                        GlassData port_substrate = GetPortById(port).cv_Data.GlassDataMap[slot];
+                                        m_Job = new StepJob(robot.cv_Id, RobotArm.rabNone, cv_GetPortArm, RobotAction.Get, ActionTarget.Port, port, slot,
+                                            false, false, true, FlowType.LeftNormal, port_substrate.PCurFlowStep);
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (eq_want_load)
+                            {
+                                // if aligner1 is empty and Eq send load , we get substrate in buffer1 directly , then go EQ.
+                                Buffer bf1 = GetBufferBySide(m_Side);
+                                int bf_slot = 0;
+                                if (bf1.cv_Data.GetUnloadSlot(BufferSlotType.Wafer, out bf_slot))
+                                {
+                                    GlassData bf1_substrate = bf1.cv_Data.GlassDataMap[bf_slot];
+                                    m_Job = new StepJob(robot.cv_Id, RobotArm.rabNone, cv_GetBufferArm, RobotAction.Get, ActionTarget.Buffer, bf1.cv_Id,
+                                        bf_slot, false, false, true, FlowType.LeftNormal, bf1_substrate.PCurFlowStep);
+                                }
+                            }
+                            else
+                            {
+                                //if aligner1 and buffer1 are empty. we just get port.
+                                int port = 0;
+                                int slot = 0;
+                                if (GetPortUnloadSlot(enSideGroup.Left, ProductCategory.Wafer, out port, out slot))
+                                {
+                                    GlassData port_substrate = GetPortById(port).cv_Data.GlassDataMap[slot];
+                                    m_Job = new StepJob(robot.cv_Id, RobotArm.rabNone, cv_GetPortArm, RobotAction.Get, ActionTarget.Port, port, slot,
+                                        false, false, true, FlowType.LeftNormal, port_substrate.PCurFlowStep);
+                                }
+                            }
+                        }
+                    }
+                    else if (after_buffer1 == FLowStepTarget.LP)
+                    {//flow 22. LP-aligner1-buffer1-LP
+                        int port = 0;
+                        int slot = 0;
+                        if (GetPortUnloadSlot(enSideGroup.Left, ProductCategory.Wafer, out port, out slot))
+                        {
+                            GlassData port_substrate = GetPortById(port).cv_Data.GlassDataMap[slot];
+                            m_Job = new StepJob(robot.cv_Id, RobotArm.rabNone, cv_GetPortArm, RobotAction.Get, ActionTarget.Port, port, slot,
+                                false, false, true, FlowType.LeftNormal, port_substrate.PCurFlowStep);
+                        }
+                        else
+                        {
+                            if (left_ali.cv_Data.GlassDataMap[1].PHasData && left_ali.cv_Data.GlassDataMap[1].PHasSensor)
+                            {
+                                GlassData ali_substrate = left_ali.cv_Data.GlassDataMap[1];
+                                m_Job = new StepJob(robot.cv_Id, RobotArm.rabNone, cv_GetAlignerArm, RobotAction.Get, ActionTarget.Aligner, left_ali.cv_Id,
+                                    1, false, false, true, FlowType.LeftNormal, ali_substrate.PCurFlowStep);
+                            }
+                            else
+                            {
+                                Buffer bf1 = GetBufferBySide(m_Side);
+                                int bf_slot = 0;
+                                if (bf1.cv_Data.GetUnloadSlot(BufferSlotType.Wafer, out bf_slot))
+                                {
+                                    GlassData bf1_substrate = bf1.cv_Data.GlassDataMap[bf_slot];
+                                    m_Job = new StepJob(robot.cv_Id, RobotArm.rabNone, cv_GetBufferArm, RobotAction.Get, ActionTarget.Buffer, bf1.cv_Id,
+                                        bf_slot, false, false, true, FlowType.LeftNormal, bf1_substrate.PCurFlowStep);
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (first_type == FLowFirstStepType.Buffer)
+                {//flow23. LP->buffer->LP
+                    int port = 0;
+                    int slot = 0;
+                    Buffer buffer2 = GetBufferBySide(enSideGroup.Both);
+                    if(buffer2.cv_Data.GetUnloadSlot(BufferSlotType.Wafer , out slot))
+                    {
+                        GlassData buffer2_substrate = buffer2.cv_Data.GlassDataMap[slot];
+                        m_Job = new StepJob(robot.cv_Id, RobotArm.rabNone, cv_GetBufferArm, RobotAction.Get, ActionTarget.Buffer, buffer2.cv_Id, slot,
+                            false, false, true, FlowType.LeftNormal, buffer2_substrate.PCurFlowStep);
+                    }
+                    else if (GetPortUnloadSlot(enSideGroup.Left , ProductCategory.Wafer, out port, out slot))
+                    {
+                        GlassData port_substrate = GetPortById(port).cv_Data.GlassDataMap[slot];
+                        m_Job = new StepJob(robot.cv_Id, RobotArm.rabNone, cv_GetPortArm, RobotAction.Get, ActionTarget.Port, port, slot,
+                            false, false, true, FlowType.LeftNormal, port_substrate.PCurFlowStep);
+                    }
+                }
+                else if (first_type == FLowFirstStepType.EQ)
+                {//means this flow don't need pre-action.
+                    if (left_ali.cv_Data.GlassDataMap[1].PHasData && left_ali.cv_Data.GlassDataMap[1].PHasSensor)
+                    {//actually , we don't care normal and rework flow in this flow. becase in case , we just focus on aligner 1 when it has substrate.
+                        GlassData ali_substrate = left_ali.cv_Data.GlassDataMap[1];
+                        if (ali_substrate.IsInReowrkFlow((int)EqId.AOI1))
+                        {
+                            m_Job = new StepJob(robot.cv_Id, RobotArm.rabNone, cv_GetAlignerArm, RobotAction.Get, ActionTarget.Aligner, left_ali.cv_Id,
+                             1, false, false, true, FlowType.LeftRework, ali_substrate.PCurFlowStep);
+                        }
+                        else
+                        {
+                            m_Job = new StepJob(robot.cv_Id, RobotArm.rabNone, cv_GetAlignerArm, RobotAction.Get, ActionTarget.Aligner, left_ali.cv_Id,
+                             1, false, false, true, FlowType.LeftNormal, ali_substrate.PCurFlowStep);
+                        }
+                    }
+                    else
+                    {
+                        int port = 0;
+                        int slot = 0;
+                        if (GetPortUnloadSlot(enSideGroup.Left, ProductCategory.Wafer, out port, out slot))
+                        {
+                            GlassData port_substrate = GetPortById(port).cv_Data.GlassDataMap[slot];
+                            m_Job = new StepJob(robot.cv_Id, RobotArm.rabNone, cv_GetBufferArm, RobotAction.Get, ActionTarget.Port, port, slot,
+                                false, false, true, FlowType.LeftNormal, port_substrate.PCurFlowStep);
+                        }
+                        else
+                        {
+                            //todo : not wafer can load to eq , we need check eq unload singnal. before that we need think throught.
+                        }
+                    }
+                }
+            }
+
+        }
+        private void MakeLeftSideRobotSingleArmStepData( RobotArm m_Arm , out StepJob m_Job , enSideGroup m_Side= enSideGroup.Left)
+        {
+            m_Job = null;
+            Robot robot = null;
+            robot = GetRobotBySide(m_Side);
+            GlassData down_glass = robot.cv_Data.GlassDataMap[(int)m_Arm];
+            RobotArm put_arm = m_Arm;
+            RobotArm get_arm = (m_Arm == RobotArm.rbaDown ? RobotArm.rbaUp : RobotArm.rbaDown);
+            int cur_step = down_glass.PCurFlowStep;
+            Aligner ali = GetAlignerBySide(m_Side);
+            
+            if (down_glass.IsInReowrkFlow((int)EqId.AOI1))
+            {
+                if (cv_FlowData.cv_LeftRework.ContainsKey(cur_step))
+                {
+                    FLowStepTarget next_target_type = cv_FlowData.GetLeftStepTargetType(cur_step, true);
+                    if (next_target_type == FLowStepTarget.EQ)
+                    {
+                        //For Eq , becase we don't know eq signal. so we just prepare stepjob to wait eq.(just go to standby position).
+                        m_Job = new StepJob(robot.cv_Id, put_arm , get_arm , RobotAction.Exchange, ActionTarget.Eq, 0, 1,
+                            false, false, false, FlowType.LeftRework, down_glass.PCurFlowStep);
+                    }
+                    else if (next_target_type == FLowStepTarget.Aligner)
+                    {
+                        if (ali.cv_Data.GlassDataMap[1].PHasData && ali.cv_Data.GlassDataMap[1].PHasSensor)
+                        {
+                            m_Job = new StepJob(robot.cv_Id, put_arm, get_arm , RobotAction.Exchange, ActionTarget.Aligner, 1, 1,
+                                false, false, true, FlowType.LeftRework, down_glass.PCurFlowStep);
+                        }
+                        else
+                        {
+                            m_Job = new StepJob(robot.cv_Id, put_arm, get_arm, RobotAction.Put, ActionTarget.Aligner, 1, 1,
+                                false, false, true, FlowType.LeftRework, down_glass.PCurFlowStep);
+                        }
+                    }
+                    else if (next_target_type == FLowStepTarget.Buffer1)
+                    {
+                            m_Job = new StepJob(robot.cv_Id, put_arm, get_arm , RobotAction.Exchange, ActionTarget.Buffer, 1, 0,
+                                false, false, false , FlowType.LeftRework, down_glass.PCurFlowStep);
+                    }
+                    else if (next_target_type == FLowStepTarget.Buffer2)
+                    {
+                        Buffer buffer2 = GetBufferBySide(enSideGroup.Both);
+                        int slot = 0;
+                        //buffer2.cv_Data.GetUnloadSlot(BufferSlotType.Wafer, out slot);
+                        slot = buffer2.cv_Data.IsFreeSlot(BufferSlotType.Wafer);
+                        m_Job = new StepJob(robot.cv_Id, put_arm, get_arm, RobotAction.Put, ActionTarget.Buffer, 2, 0,
+                            false, false, false, FlowType.LeftRework, down_glass.PCurFlowStep);
+                    }
+                }
+            }
+            else
+            {
+                if (cv_FlowData.cv_LeftNormal.ContainsKey(cur_step))
+                {
+                    FLowStepTarget next_target_type = cv_FlowData.GetLeftStepTargetType(cur_step, false);
+                    if (next_target_type == FLowStepTarget.EQ)
+                    {
+                        m_Job = new StepJob(robot.cv_Id, put_arm, get_arm, RobotAction.Exchange, ActionTarget.Eq, 0, 1,
+                            false, false, false, FlowType.LeftRework, down_glass.PCurFlowStep);
+                    }
+                    else if (next_target_type == FLowStepTarget.Aligner)
+                    {
+                        if (ali.cv_Data.GlassDataMap[1].PHasData && ali.cv_Data.GlassDataMap[1].PHasSensor)
+                        {
+                            m_Job = new StepJob(robot.cv_Id, put_arm, get_arm, RobotAction.Exchange, ActionTarget.Aligner, 1, 1,
+                                false, false, true, FlowType.LeftRework, down_glass.PCurFlowStep);
+                        }
+                        else
+                        {
+                            m_Job = new StepJob(robot.cv_Id, put_arm, get_arm, RobotAction.Put, ActionTarget.Aligner, 1, 1,
+                                false, false, true, FlowType.LeftRework, down_glass.PCurFlowStep);
+                        }
+                    }
+                    else if (next_target_type == FLowStepTarget.Buffer1)
+                    {
+                        m_Job = new StepJob(robot.cv_Id, put_arm, get_arm, RobotAction.Exchange, ActionTarget.Buffer, 1, 0,
+                            false, false, false, FlowType.LeftRework, down_glass.PCurFlowStep);
+                    }
+                    else if (next_target_type == FLowStepTarget.Buffer2)
+                    {
+                        m_Job = new StepJob(robot.cv_Id, put_arm, get_arm, RobotAction.Put, ActionTarget.Buffer, 2, 0,
+                            false, false, false, FlowType.LeftRework, down_glass.PCurFlowStep);
+                    }
+                }
+            }
+        }
+        private void processLeftAlignerAction(enSideGroup m_Side = enSideGroup.Left)
+        {
+            /*
+            None, WaitHome, AlignerHome, SetToAngle, VuccumOff1, PutAligner, VuccumOn,
+            WaitVuccumOn, FindNotch, WaitFindNotch, OcrConnect, WaitConnect, ReadOcr, WaitReadOct, ToAngle,
+            WaitToAngle, VuccumOff2, WaitVuccomOff2, GetAligner,
+            */
+            Aligner aligner = GetAlignerBySide(m_Side);
+            //if (aligner.cv_Data.GlassDataMap[1].PHasData && aligner.cv_Data.GlassDataMap[1].PHasSensor)
+            GlassData ali_data = aligner.cv_Data.GlassDataMap[1];
+            if (aligner.cv_Data.PPreAction == AlignerPreAction.None)
+            {
+                SetHome(APIEnum.CommnadDevice.Aligner, aligner.cv_Id);
+                aligner.cv_Data.PPreAction = AlignerPreAction.WaitHome;
+            }
+            else if (aligner.cv_Data.PPreAction == AlignerPreAction.WaitHome)
+            {
+                //change to alignerHome by API reply.
+            }
+            else if (aligner.cv_Data.PPreAction == AlignerPreAction.AlignerHome)
+            {
+            }
+            else if (aligner.cv_Data.PPreAction == AlignerPreAction.SetToAngle)
+            {
+                //wait aligner job to set. and change to Vucccrm off1.
+            }
+            else if (aligner.cv_Data.PPreAction == AlignerPreAction.VuccumOff1)
+            {
+                SetAlignerVaccum(false, aligner.cv_Id);
+            }
+            else if (aligner.cv_Data.PPreAction == AlignerPreAction.PutAligner)
+            {
+            }
+            else if (aligner.cv_Data.PPreAction == AlignerPreAction.VuccumOn)
+            {
+                SetAlignerVaccum(false, aligner.cv_Id);
+                aligner.cv_Data.PPreAction = AlignerPreAction.WaitVuccumOn;
+            }
+            else if (aligner.cv_Data.PPreAction == AlignerPreAction.WaitVuccumOn)
+            {
+            }
+            else if (aligner.cv_Data.PPreAction == AlignerPreAction.FindNotch)
+            {
+                SetAlignerFindNotch(aligner.cv_Id);
+                aligner.cv_Data.PPreAction = AlignerPreAction.WaitFindNotch;
+            }
+            else if (aligner.cv_Data.PPreAction == AlignerPreAction.WaitFindNotch)
+            {
+            }
+            else if (aligner.cv_Data.PPreAction == AlignerPreAction.OcrConnect)
+            {
+                if (!aligner.cv_Data.POcrEnable)
+                {
+                    aligner.cv_Data.PPreAction = AlignerPreAction.ToAngle;
+                }
+                else
+                {
+                    SetOcrConnect(aligner.cv_Id);
+                    aligner.cv_Data.PPreAction = AlignerPreAction.WaitConnect;
+                }
+            }
+            else if (aligner.cv_Data.PPreAction == AlignerPreAction.WaitConnect)
+            {
+            }
+            else if (aligner.cv_Data.PPreAction == AlignerPreAction.ReadOcr)
+            {
+                SetOcrRead(aligner.cv_Id);
+                aligner.cv_Data.PPreAction = AlignerPreAction.WaitReadOct;
+            }
+            else if (aligner.cv_Data.PPreAction == AlignerPreAction.WaitReadOct)
+            {
+            }
+            else if (aligner.cv_Data.PPreAction == AlignerPreAction.ToAngle)
+            {
+                SetAlignerToAngle(aligner.cv_Id);
+                aligner.cv_Data.PPreAction = AlignerPreAction.WaitToAngle;
+            }
+            else if (aligner.cv_Data.PPreAction == AlignerPreAction.WaitToAngle)
+            {
+            }
+            else if (aligner.cv_Data.PPreAction == AlignerPreAction.VuccumOff2)
+            {
+                SetAlignerVaccum(false, aligner.cv_Id);
+                aligner.cv_Data.PPreAction = AlignerPreAction.WaitVuccomOff2;
+            }
+            else if (aligner.cv_Data.PPreAction == AlignerPreAction.WaitVuccomOff2)
+            {
+            }
+            else if (aligner.cv_Data.PPreAction == AlignerPreAction.GetAligner)
+            {
+            }
         }
         private bool checkConditionForFindJob(enSideGroup m_Side)
         {
@@ -47,19 +502,70 @@ namespace LGC
 
             return rtn;
         }
-        private void DoLeftSideFindJob( enSideGroup m_Side = enSideGroup.Left)
+        private void DoRightSideFindJob(out RobotJob m_Job , enSideGroup m_Side = enSideGroup.Left)
         {
+            m_Job = null;
             if (!checkConditionForFindJob(m_Side)) return;
         }
-        private void DoRightSideFindJob( enSideGroup m_Side = enSideGroup.Left)
+        private void DoLeftSideJob(RobotJob m_Job , enSideGroup m_Side = enSideGroup.Left)
         {
-            if (!checkConditionForFindJob(m_Side)) return;
-        }
-        private void DoLeftSideJob( enSideGroup m_Side = enSideGroup.Left)
-        {
+            Robot robot = GetRobotBySide(m_Side);
+            if(m_Job != null)
+            {
+
+            }
         }
         private void DoRightSideJob(enSideGroup m_Side = enSideGroup.Right)
         {
+        }
+
+        private bool GetPortUnloadSlot(enSideGroup m_Side , ProductCategory m_Type , out int m_Port , out int m_Slot) 
+        {
+            bool rtn = false;
+            m_Port = 0;
+            m_Slot = 0;
+            for (int port_id = 0; port_id < cv_InProcessPort.Count; port_id++)
+            {
+                Port port = LgcModule.GetPortById(cv_InProcessPort[port_id]);
+                if (port.PSideGroup == m_Side)
+                {
+                    if (port.cv_Data.PPortMode == PortMode.Both || port.cv_Data.PPortMode == PortMode.Loader)
+                    {
+                        if (port.PLotStatus == LotStatus.Process && port.PPortStatus == PortStaus.LDCM)
+                        {
+                            if (port.cv_Data.PProductionType == m_Type)
+                            {
+                                int slot = 0;
+                                if (FindHightestSlotForPPID(port.cv_Data.PCurPPID, port.cv_Id, out slot))
+                                {
+                                    if (!port.cv_Data.HasDataAndSensor(slot)) continue;
+                                    if (port.cv_Data.GlassDataMap[slot].PProcessFlag == ProcessFlag.Need)
+                                    {
+                                        if (port.cv_Data.GlassDataMap[slot].POcrResult == OCRResult.None)
+                                        {
+                                            if (!port.cv_Data.GlassDataMap[slot].IsEnterEq())
+                                            {
+                                                rtn = true;
+                                                m_Port = port_id;
+                                                m_Slot = slot;
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    port.cv_Data.PCurPPID = FindHightestPriorityPPID(port.cv_Id);
+                                }
+                                if (rtn)
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return rtn;
         }
         #region Do Robot Action for each Eqp.
         private void ProcessPortGetPutJob(RobotAction m_Type)

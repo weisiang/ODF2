@@ -17,7 +17,6 @@ namespace LGC
         public bool cv_IsHome = false;
         public bool cv_IsStatus = false;
         public bool cv_StatusError = false;
-        public bool cv_IsSensorunmatch = false;
 
         public bool cv_IsResetError = false;
         public bool cv_IsRemapping = false;
@@ -76,11 +75,7 @@ namespace LGC
             get { return cv_StatusError; }
             set { cv_StatusError = value; }
         }
-        public bool PIsSensorUnmatch
-        {
-            get { return cv_IsSensorunmatch; }
-            set { cv_IsSensorunmatch = value; }
-        }
+        
         public virtual bool CanAccess(bool m_IsLoad, int m_Slot , bool m_IsExchange=false)
         {
             return false;

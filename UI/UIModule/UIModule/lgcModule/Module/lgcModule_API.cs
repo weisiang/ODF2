@@ -1107,13 +1107,10 @@ namespace LGC
             bool rtn = false;
             Aligner aligner = LgcModule.GetAlignerById(m_Command.cv_DeviceId);
             aligner.PIsHome = true;
-            if ((lgcBase.PSystemData.PWhichSideInInitilation == aligner.PSideGroup) || (lgcBase.PSystemData.PWhichSideInInitilation == enSideGroup.Both))
-            {
 
-            }
-            else if (aligner.cv_Data.PPreAction == AlignerPreAction.WaitHome)
+            if (aligner.cv_Data.PPreAction == AlignerPreAction.WaitHome)
             {
-                aligner.cv_Data.PPreAction = AlignerPreAction.SetToAngle;
+                aligner.cv_Data.PPreAction = AlignerPreAction.AlignerHome;
             }
             return rtn;
         }
@@ -1202,7 +1199,6 @@ namespace LGC
             //00,GetStatus,Robot,StatusCode, Lower EE Wafer Presence, Upper EE Wafe Presence 
             Robot rb = GetRobotById(m_Command.cv_DeviceId);
             bool ok = true;
-            rb.PIsSensorUnmatch = false;
             if (m_Command.cv_ReplyParaList[1].Trim() == "1")
             {
                 rb.cv_Data.GlassDataMap[(int)RobotArm.rbaDown].PHasSensor = true;
@@ -1312,7 +1308,6 @@ namespace LGC
                         alarm.PStatus = AlarmStatus.Occur;
                         alarm.PSide = rb.PSideGroup;
                         EditAlarm(alarm);
-                        rb.PIsSensorUnmatch = true;
                     }
                 }
             }
